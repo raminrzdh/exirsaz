@@ -1,0 +1,170 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  FAILED
+}
+
+enum ProductType {
+  SIMPLE
+  VARIABLE
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_CART
+}
+
+model User {
+  id            String    @id @default(cuid())
+  phoneNumber   String    @unique
+  firstName     String?
+  lastName      String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  addresses     Address[]
+  orders        Order[]
+}
+
+model Address {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  province    String
+  city        String
+  postalCode  String
+  addressLine String
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?
+  parentId    String?
+  parent      Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  children    Category[] @relation("SubCategories")
+  products    Product[]
+  createdAt   DateTime   @default(now())
+}
+
+model Product {
+  id              String      @id @default(cuid())
+  name            String
+  slug            String      @unique
+  description     String?
+  shortDesc       String?
+  price           Int         // Store in Tomans
+  salePrice       Int?
+  stock           Int         @default(0)
+  type            ProductType @default(SIMPLE)
+  categoryId      String?
+  category        Category?   @relation(fields: [categoryId], references: [id])
+  sku             String?     @unique
+  images          String[]
+  metaTitle       String?
+  metaDescription String?
+  
+  variants        ProductVariant[]
+  orderItems      OrderItem[]
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model ProductVariant {
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name        String   // e.g., "Color: Red, Size: L"
+  price       Int
+  stock       Int      @default(0)
+  sku         String?  @unique
+}
+
+model Coupon {
+  id           String       @id @default(cuid())
+  code         String       @unique
+  type         DiscountType
+  value        Int          // Percentage (1-100) or Fixed amount
+  minSpend     Int?
+  maxSpend     Int?
+  usageLimit   Int?
+  usedCount    Int          @default(0)
+  expiresAt    DateTime?
+  isActive     Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  
+  orders       Order[]
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  status        OrderStatus   @default(PENDING)
+  paymentStatus PaymentStatus @default(UNPAID)
+  totalAmount   Int
+  discount      Int           @default(0)
+  couponId      String?
+  coupon        Coupon?       @relation(fields: [couponId], references: [id])
+  shippingCost  Int           @default(0)
+  
+  // Snapshot of shipping address at the time of order
+  shippingAddress String?     
+  
+  items         OrderItem[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  variantId  String?
+  productName String   // snapshot
+  price      Int      // snapshot price at time of order
+  quantity   Int
+}
+
+model Redirect {
+  id         String   @id @default(cuid())
+  sourceUrl  String   @unique
+  targetUrl  String
+  type       Int      @default(301) // 301 or 302
+  createdAt  DateTime @default(now())
+}
+
+model NotFoundLog {
+  id        String   @id @default(cuid())
+  url       String   @unique
+  hitCount  Int      @default(1)
+  lastHit   DateTime @default(now())
+}

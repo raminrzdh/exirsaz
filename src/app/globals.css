@@ -1,15 +1,24 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  
+  /* Emil's Animation Easing Curves */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-drawer: cubic-bezier(0.32, 0.72, 0, 1);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-vazirmatn), ui-sans-serif, system-ui, sans-serif;
+  --font-vazirmatn: var(--font-vazirmatn);
+  
+  --ease-out-strong: var(--ease-out-strong);
+  --ease-in-out-strong: var(--ease-in-out-strong);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,5 +31,19 @@
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-vazirmatn), Arial, Helvetica, sans-serif;
+}
+
+/* Stagger animation utility */
+.animate-stagger-item {
+  opacity: 0;
+  transform: translateY(8px) scale(0.98);
+  animation: fadeInStagger 400ms var(--ease-out-strong) forwards;
+}
+
+@keyframes fadeInStagger {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
