@@ -1,13 +1,12 @@
 import Link from 'next/link';
 import { Plus, Search, Edit, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { prisma } from '@/lib/db/prisma';
 
-export default function AdminPostsPage() {
-  const MOCK_POSTS = [
-    { id: 1, title: 'راهنمای خرید بهترین گوشی‌های ۲۰۲۴', category: 'راهنمای خرید', status: 'published', views: 1200, date: '۱۴۰۲/۱۲/۰۵' },
-    { id: 2, title: 'مقایسه مک‌بوک پرو M3 با M2', category: 'مقایسه', status: 'published', views: 3450, date: '۱۴۰۲/۱۱/۲۰' },
-    { id: 3, title: 'چگونه باتری گوشی خود را سالم نگه داریم؟', category: 'آموزش', status: 'draft', views: 0, date: '۱۴۰۲/۱۲/۱۰' },
-  ];
+export default async function AdminPostsPage() {
+  const posts = await prisma.post.findMany({
+    orderBy: { createdAt: 'desc' }
+  });
 
   return (
     <div className="space-y-6 animate-stagger-item">
@@ -47,7 +46,7 @@ export default function AdminPostsPage() {
             </tr>
           </thead>
           <tbody className="divide-y divide-slate-100">
-            {MOCK_POSTS.map((post) => (
+            {posts.map((post) => (
               <tr key={post.id} className="hover:bg-slate-50/50 transition-colors">
                 <td className="px-6 py-4 font-bold text-slate-900">{post.title}</td>
                 <td className="px-6 py-4">{post.category}</td>
@@ -61,7 +60,7 @@ export default function AdminPostsPage() {
                 <td className="px-6 py-4 text-slate-500">{post.date}</td>
                 <td className="px-6 py-4">
                   <div className="flex items-center justify-end gap-2">
-                    <Link href="/admin/posts/new">
+                    <Link href={`/admin/posts/${post.id}`}>
                       <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
                         <Edit className="w-4 h-4" />
                       </button>

@@ -3,37 +3,8 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
-}
-
-enum Role {
-  USER
-  ADMIN
-}
-
-enum OrderStatus {
-  PENDING
-  PROCESSING
-  COMPLETED
-  CANCELLED
-  REFUNDED
-}
-
-enum PaymentStatus {
-  UNPAID
-  PAID
-  FAILED
-}
-
-enum ProductType {
-  SIMPLE
-  VARIABLE
-}
-
-enum DiscountType {
-  PERCENTAGE
-  FIXED_CART
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model User {
@@ -41,7 +12,7 @@ model User {
   phoneNumber   String    @unique
   firstName     String?
   lastName      String?
-  role          Role      @default(USER)
+  role          String    @default("USER")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   
@@ -70,6 +41,8 @@ model Category {
   parent      Category?  @relation("SubCategories", fields: [parentId], references: [id])
   children    Category[] @relation("SubCategories")
   products    Product[]
+  agencyExclusions ProductAgencyExclusion[]
+  isAgencyRouted   Boolean    @default(true) // Category-level routing rule
   createdAt   DateTime   @default(now())
 }
 
@@ -78,20 +51,34 @@ model Product {
   name            String
   slug            String      @unique
   description     String?
+  longContent     String?
   shortDesc       String?
-  price           Int         // Store in Tomans
+  price           Int?        // Store in Tomans
   salePrice       Int?
   stock           Int         @default(0)
-  type            ProductType @default(SIMPLE)
+  type            String      @default("SIMPLE")
+  salesType       String      @default("DIRECT_SALE")
+  inquiryAction   String?
+  salesTypeOverride String    @default("USE_CATEGORY") // Product-level routing override
+  
   categoryId      String?
   category        Category?   @relation(fields: [categoryId], references: [id])
   sku             String?     @unique
-  images          String[]
+  // SQLite doesn't support String[] natively in Prisma, we use a single String to store JSON
+  images          String      @default("[]")
+  
   metaTitle       String?
   metaDescription String?
+  seoTitle        String?
+  seoDescription  String?
+  schemaMarkup    String?
   
   variants        ProductVariant[]
   orderItems      OrderItem[]
+  agencies        Agency[]    @relation("AgencyProducts")
+  comments        Comment[]
+  productAttributes ProductAttribute[]
+  
   createdAt       DateTime    @default(now())
   updatedAt       DateTime    @updatedAt
 }
@@ -100,16 +87,18 @@ model ProductVariant {
   id          String   @id @default(cuid())
   productId   String
   product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
-  name        String   // e.g., "Color: Red, Size: L"
   price       Int
   stock       Int      @default(0)
   sku         String?  @unique
+  image       String?
+  
+  attributes  ProductVariantAttribute[]
 }
 
 model Coupon {
   id           String       @id @default(cuid())
   code         String       @unique
-  type         DiscountType
+  type         String
   value        Int          // Percentage (1-100) or Fixed amount
   minSpend     Int?
   maxSpend     Int?
@@ -126,8 +115,8 @@ model Order {
   id            String        @id @default(cuid())
   userId        String
   user          User          @relation(fields: [userId], references: [id])
-  status        OrderStatus   @default(PENDING)
-  paymentStatus PaymentStatus @default(UNPAID)
+  status        String        @default("PENDING")
+  paymentStatus String        @default("UNPAID")
   totalAmount   Int
   discount      Int           @default(0)
   couponId      String?
@@ -167,4 +156,127 @@ model NotFoundLog {
   url       String   @unique
   hitCount  Int      @default(1)
   lastHit   DateTime @default(now())
+}
+
+// --- Geo-Targeted Agency Models ---
+
+model Province {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  cities    City[]
+}
+
+model City {
+  id         String   @id @default(cuid())
+  name       String
+  provinceId String
+  province   Province @relation(fields: [provinceId], references: [id], onDelete: Cascade)
+  agencies   Agency[] @relation("AgencyCities")
+  
+  @@unique([name, provinceId])
+}
+
+model Agency {
+  id                  String   @id @default(cuid())
+  name                String
+  phone               String?
+  address             String?
+  locationCoordinates String?  // e.g., "lat,lng"
+  cities              City[]   @relation("AgencyCities") // Multi-city coverage
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  
+  productExclusions   ProductAgencyExclusion[]
+  leadEvents          LeadEvent[]
+  products            Product[] @relation("AgencyProducts")
+}
+
+model ProductAgencyExclusion {
+  id         String   @id @default(cuid())
+  agencyId   String
+  agency     Agency   @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  categoryId String?  // Optional: If null, agency handles ALL products in their city
+  category   Category? @relation(fields: [categoryId], references: [id])
+  
+  @@unique([agencyId, categoryId])
+}
+
+// --- Rule Engine & Analytics Models ---
+
+model StoreSettings {
+  id                   String   @id @default(cuid()) // Will just have one row 'global'
+  agencyRoutingEnabled Boolean  @default(true)       // Master toggle
+  updatedAt            DateTime @updatedAt
+}
+
+model LeadEvent {
+  id        String        @id @default(cuid())
+  agencyId  String
+  agency    Agency        @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  type      String
+  createdAt DateTime      @default(now())
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  category  String
+  status    String   @default("published")
+  views     Int      @default(0)
+  date      String
+  thumbnail String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// --- Variable Products & Comments ---
+
+model Comment {
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  authorName  String
+  content     String
+  rating      Int?
+  isApproved  Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Attribute {
+  id      String @id @default(cuid())
+  name    String @unique // e.g. "ابعاد", "رنگ"
+  
+  values  AttributeValue[]
+  productMappings ProductAttribute[]
+}
+
+model AttributeValue {
+  id           String @id @default(cuid())
+  attributeId  String
+  attribute    Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  value        String
+  
+  variantMappings ProductVariantAttribute[]
+  
+  @@unique([attributeId, value])
+}
+
+model ProductAttribute {
+  productId   String
+  product     Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+  attributeId String
+  attribute   Attribute @relation(fields: [attributeId], references: [id], onDelete: Cascade)
+  
+  @@id([productId, attributeId])
+}
+
+model ProductVariantAttribute {
+  id               String @id @default(cuid())
+  variantId        String
+  variant          ProductVariant @relation(fields: [variantId], references: [id], onDelete: Cascade)
+  attributeValueId String
+  attributeValue   AttributeValue @relation(fields: [attributeValueId], references: [id], onDelete: Cascade)
+  
+  @@unique([variantId, attributeValueId])
 }

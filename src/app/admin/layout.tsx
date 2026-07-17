@@ -1,11 +1,17 @@
 import Link from 'next/link';
 import { 
   LayoutDashboard, 
-  Package, 
-  ShoppingCart, 
+  ShoppingBag, 
   Users, 
   Settings,
+  FileText,
   LogOut,
+  ChevronRight,
+  Package,
+  Tags,
+  Store,
+  BarChart3,
+  ShieldAlert,
   Bell
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
@@ -39,16 +45,36 @@ export default function AdminLayout({
             محصولات
           </Link>
           <Link href="/admin/orders" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-            <ShoppingCart className="w-5 h-5" />
+            <ShoppingBag className="w-5 h-5" />
             سفارشات
           </Link>
+          <Link href="/admin/media" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
+            رسانه‌ها
+          </Link>
           <Link href="/admin/posts" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+            <FileText className="w-5 h-5" />
             محتوا و سئو
+          </Link>
+          <Link href="/admin/posts/categories" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors ps-8 opacity-80 text-sm">
+            <Tags className="w-4 h-4" />
+            دسته‌بندی‌ها
           </Link>
           <Link href="/admin/users" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
             <Users className="w-5 h-5" />
             کاربران
+          </Link>
+          <Link href="/admin/agencies" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+            <Store className="w-5 h-5" />
+            نمایندگی‌ها
+          </Link>
+          <Link href="/admin/settings/geo-rules" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+            <ShieldAlert className="w-5 h-5" />
+            قوانین فروش منطقه‌ای
+          </Link>
+          <Link href="/admin/analytics" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+            <BarChart3 className="w-5 h-5" />
+            آمار ارجاعات
           </Link>
           <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
             <Settings className="w-5 h-5" />

@@ -1,0 +1,283 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { X, Save, Plus, MapPin, Trash2 } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { createAgency, updateAgency } from './actions';
+import { Agency } from './AgencyTableClient';
+
+interface AgencyFormModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  agency?: Agency;
+  allCategories: string[];
+  allProducts: { id: string, name: string }[];
+  allLocations: Record<string, string[]>;
+  onSuccess: (agency: Agency) => void;
+}
+
+
+
+export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allProducts, allLocations, onSuccess }: AgencyFormModalProps) {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState<Partial<Agency>>({
+    name: '',
+    phone: '',
+    address: '',
+    cities: [],
+    categories: [],
+    isActive: true,
+  });
+
+  const [selectedProvince, setSelectedProvince] = useState<string>('');
+  const [selectedCity, setSelectedCity] = useState<string>('');
+
+  useEffect(() => {
+    if (agency) {
+      setFormData(agency);
+    } else {
+      setFormData({
+        name: '',
+        phone: '',
+        address: '',
+        cities: [],
+        categories: [],
+        products: [],
+        isActive: true,
+      });
+    }
+    setSelectedProvince('');
+    setSelectedCity('');
+  }, [agency, isOpen]);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!formData.name || !formData.phone || !formData.cities?.length) {
+      alert('لطفا فیلدهای ضروری (نام، تلفن و حداقل یک شهر) را پر کنید.');
+      return;
+    }
+    
+    setIsSubmitting(true);
+    try {
+      if (agency?.id) {
+        const res = await updateAgency(agency.id, formData as Partial<Agency>);
+        if (res.success) onSuccess(res.agency);
+      } else {
+        const res = await createAgency(formData as Omit<Agency, 'id'>);
+        if (res.success) onSuccess(res.agency);
+      }
+      onClose();
+    } catch (err) {
+      console.error(err);
+      alert('خطا در ذخیره اطلاعات');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const addCity = () => {
+    if (selectedProvince && selectedCity) {
+      const exists = formData.cities?.some(c => c.province === selectedProvince && c.city === selectedCity);
+      if (!exists) {
+        setFormData({
+          ...formData,
+          cities: [...(formData.cities || []), { province: selectedProvince, city: selectedCity }]
+        });
+      }
+      setSelectedCity('');
+    }
+  };
+
+  const removeCity = (index: number) => {
+    const newCities = [...(formData.cities || [])];
+    newCities.splice(index, 1);
+    setFormData({ ...formData, cities: newCities });
+  };
+
+  const toggleCategory = (cat: string) => {
+    const cats = formData.categories || [];
+    if (cats.includes(cat)) {
+      setFormData({ ...formData, categories: cats.filter(c => c !== cat) });
+    } else {
+      setFormData({ ...formData, categories: [...cats, cat] });
+    }
+  };
+
+  const toggleProduct = (productId: string) => {
+    const prods = formData.products || [];
+    if (prods.includes(productId)) {
+      setFormData({ ...formData, products: prods.filter(p => p !== productId) });
+    } else {
+      setFormData({ ...formData, products: [...prods, productId] });
+    }
+  };
+
+  return (
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
+      <div className="bg-white rounded-3xl w-full max-w-2xl overflow-hidden shadow-2xl animate-scale-in">
+        <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-slate-50">
+          <h2 className="text-xl font-bold text-slate-800">
+            {agency ? 'ویرایش نمایندگی' : 'افزودن نمایندگی جدید'}
+          </h2>
+          <button onClick={onClose} className="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-200 rounded-full transition-colors">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="p-6 overflow-y-auto max-h-[70vh] space-y-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-slate-700">نام نمایندگی *</label>
+              <input 
+                type="text" 
+                value={formData.name || ''}
+                onChange={e => setFormData({ ...formData, name: e.target.value })}
+                className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+                required
+              />
+            </div>
+            
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-slate-700">شماره تماس *</label>
+              <input 
+                type="text" 
+                value={formData.phone || ''}
+                onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm font-mono focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-right"
+                placeholder="021..."
+                dir="ltr"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-slate-700">آدرس کامل</label>
+            <input 
+              type="text" 
+              value={formData.address || ''}
+              onChange={e => setFormData({ ...formData, address: e.target.value })}
+              className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+            />
+          </div>
+
+          <div className="border border-slate-200 rounded-2xl p-4 bg-slate-50 space-y-4">
+            <label className="text-sm font-bold text-slate-800 block">شهرهای تحت پوشش *</label>
+            
+            <div className="flex flex-col sm:flex-row gap-2">
+              <select 
+                value={selectedProvince}
+                onChange={(e) => { setSelectedProvince(e.target.value); setSelectedCity(''); }}
+                className="flex-1 h-11 rounded-xl border border-slate-200 px-4 text-sm focus:border-indigo-500 outline-none"
+              >
+                <option value="">انتخاب استان...</option>
+                {Object.keys(allLocations).sort().map(prov => (
+                  <option key={prov} value={prov}>{prov}</option>
+                ))}
+              </select>
+
+              <select 
+                value={selectedCity}
+                onChange={(e) => setSelectedCity(e.target.value)}
+                disabled={!selectedProvince}
+                className="flex-1 h-11 rounded-xl border border-slate-200 px-4 text-sm focus:border-indigo-500 outline-none disabled:bg-slate-100"
+              >
+                <option value="">انتخاب شهر...</option>
+                {selectedProvince && allLocations[selectedProvince]?.sort().map(city => (
+                  <option key={city} value={city}>{city}</option>
+                ))}
+              </select>
+
+              <Button type="button" onClick={addCity} disabled={!selectedCity} className="h-11 bg-indigo-600 px-4 gap-2">
+                <Plus className="w-4 h-4" />
+                افزودن
+              </Button>
+            </div>
+
+            {formData.cities && formData.cities.length > 0 ? (
+              <div className="flex flex-wrap gap-2 pt-2">
+                {formData.cities.map((city, idx) => (
+                  <div key={idx} className="flex items-center gap-2 bg-white border border-indigo-100 text-indigo-800 px-3 py-1.5 rounded-lg text-sm shadow-sm">
+                    <MapPin className="w-4 h-4 text-indigo-500" />
+                    <span className="font-medium">{city.province} - {city.city}</span>
+                    <button type="button" onClick={() => removeCity(idx)} className="text-slate-400 hover:text-rose-500 pr-2 border-r border-indigo-50 ml-1">
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-sm text-rose-500">حداقل یک شهر باید انتخاب شود.</p>
+            )}
+          </div>
+
+          <div className="space-y-3">
+            <label className="text-sm font-bold text-slate-800 block">دسته‌بندی‌های اختصاصی</label>
+            <p className="text-xs text-slate-500 mb-2">اگر هیچ دسته‌ای انتخاب نشود، نمایندگی برای تمام محصولات شهر فعال خواهد بود.</p>
+            <div className="flex flex-wrap gap-2">
+              {allCategories.map(cat => (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => toggleCategory(cat)}
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors border ${
+                    formData.categories?.includes(cat) 
+                      ? 'bg-indigo-50 border-indigo-200 text-indigo-700' 
+                      : 'bg-white border-slate-200 text-slate-600 hover:border-indigo-300'
+                  }`}
+                >
+                  {cat}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <label className="text-sm font-bold text-slate-800 block">محصولات اختصاصی</label>
+            <p className="text-xs text-slate-500 mb-2">محصولات خاصی را به این نمایندگی لینک کنید. (اولویت بالاتر از دسته‌بندی)</p>
+            <div className="flex flex-wrap gap-2">
+              {allProducts.map(prod => (
+                <button
+                  key={prod.id}
+                  type="button"
+                  onClick={() => toggleProduct(prod.id)}
+                  className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors border ${
+                    formData.products?.includes(prod.id) 
+                      ? 'bg-emerald-50 border-emerald-200 text-emerald-700' 
+                      : 'bg-white border-slate-200 text-slate-600 hover:border-emerald-300'
+                  }`}
+                >
+                  {prod.name}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 pt-2">
+            <div className={`w-12 h-6 rounded-full p-1 cursor-pointer transition-colors ${formData.isActive ? 'bg-emerald-500' : 'bg-slate-300'}`} onClick={() => setFormData({...formData, isActive: !formData.isActive})}>
+              <div className={`w-4 h-4 rounded-full bg-white transition-transform ${formData.isActive ? '-translate-x-6' : 'translate-x-0'}`} />
+            </div>
+            <span className="text-sm font-medium text-slate-700">نمایندگی فعال است</span>
+          </div>
+
+        </form>
+
+        <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
+          <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>
+            انصراف
+          </Button>
+          <Button onClick={handleSubmit} className="bg-indigo-600 hover:bg-indigo-700 gap-2 min-w-[120px]" disabled={isSubmitting}>
+            {isSubmitting ? 'در حال ذخیره...' : (
+              <>
+                <Save className="w-4 h-4" />
+                ذخیره اطلاعات
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+}

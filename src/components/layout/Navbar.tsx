@@ -1,8 +1,18 @@
+'use client';
+
 import Link from 'next/link';
-import { ShoppingCart, User, Search, Menu } from 'lucide-react';
+import { ShoppingCart, User, Search, Menu, MapPin } from 'lucide-react';
 import { Button } from '../ui/Button';
+import { useCart } from '@/lib/store/CartContext';
+import { toPersianDigits } from '@/lib/utils/currency';
+import { LocationGateModal } from '../storefront/LocationGateModal';
+import { useState } from 'react';
 
 export function Navbar() {
+  const { items, userLocation } = useCart();
+  const cartCount = items.reduce((sum, item) => sum + item.quantity, 0);
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+
   return (
     <header className="sticky top-0 z-50 w-full border-b border-slate-200 bg-white/80 backdrop-blur-md">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
@@ -32,6 +42,18 @@ export function Navbar() {
 
         {/* Left side (RTL End) - Search, User, Cart */}
         <div className="flex items-center gap-2 sm:gap-4">
+          
+          {/* Global Location Badge */}
+          <button 
+            onClick={() => setIsLocationModalOpen(true)}
+            className="hidden lg:flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-full text-xs font-medium transition-colors"
+          >
+            <MapPin className="w-3.5 h-3.5" />
+            <span className="max-w-[120px] truncate">
+              {userLocation ? `ارسال به: ${userLocation.city}` : 'انتخاب شهر'}
+            </span>
+          </button>
+
           <div className="hidden md:flex items-center relative">
             <input 
               type="text" 
@@ -41,12 +63,14 @@ export function Navbar() {
             <Search className="w-4 h-4 text-slate-400 absolute end-3" />
           </div>
 
-          <Link href="/cart">
+          <Link href="/checkout">
             <Button variant="ghost" size="sm" className="relative h-10 w-10 p-0 rounded-full">
               <ShoppingCart className="w-5 h-5" />
-              <span className="absolute top-0 end-0 w-4 h-4 bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center rounded-full">
-                0
-              </span>
+              {cartCount > 0 && (
+                <span className="absolute top-0 end-0 w-4 h-4 bg-indigo-600 text-white text-[10px] font-bold flex items-center justify-center rounded-full">
+                  {toPersianDigits(cartCount.toString())}
+                </span>
+              )}
             </Button>
           </Link>
           
@@ -61,6 +85,12 @@ export function Navbar() {
           </Link>
         </div>
       </div>
+      
+      <LocationGateModal 
+        isOpen={isLocationModalOpen} 
+        onClose={() => setIsLocationModalOpen(false)}
+        onLocationSet={() => setIsLocationModalOpen(false)}
+      />
     </header>
   );
 }

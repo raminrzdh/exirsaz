@@ -1,0 +1,275 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  CANCELLED
+  REFUNDED
+}
+
+enum PaymentStatus {
+  UNPAID
+  PAID
+  FAILED
+}
+
+enum ProductType {
+  SIMPLE
+  VARIABLE
+}
+
+enum SalesType {
+  DIRECT_SALE
+  INQUIRY_ONLY
+}
+
+enum InquiryActionType {
+  CALL_TO_PRICE
+  LEAD_FORM
+  WHATSAPP_REDIRECT
+}
+
+enum SalesTypeOverride {
+  USE_CATEGORY
+  FORCE_DIRECT
+  FORCE_AGENCY
+}
+
+enum LeadEventType {
+  CALL
+  WHATSAPP
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_CART
+}
+
+model User {
+  id            String    @id @default(cuid())
+  phoneNumber   String    @unique
+  firstName     String?
+  lastName      String?
+  role          Role      @default(USER)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  addresses     Address[]
+  orders        Order[]
+}
+
+model Address {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  province    String
+  city        String
+  postalCode  String
+  addressLine String
+  isDefault   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+}
+
+model Category {
+  id          String     @id @default(cuid())
+  name        String
+  slug        String     @unique
+  description String?
+  parentId    String?
+  parent      Category?  @relation("SubCategories", fields: [parentId], references: [id])
+  children    Category[] @relation("SubCategories")
+  products    Product[]
+  agencyExclusions ProductAgencyExclusion[]
+  isAgencyRouted   Boolean    @default(true) // Category-level routing rule
+  createdAt   DateTime   @default(now())
+}
+
+model Product {
+  id              String      @id @default(cuid())
+  name            String
+  slug            String      @unique
+  description     String?
+  shortDesc       String?
+  price           Int?        // Store in Tomans
+  salePrice       Int?
+  stock           Int         @default(0)
+  type            ProductType @default(SIMPLE)
+  salesType       SalesType   @default(DIRECT_SALE)
+  inquiryAction   InquiryActionType?
+  salesTypeOverride SalesTypeOverride @default(USE_CATEGORY) // Product-level routing override
+  
+  categoryId      String?
+  category        Category?   @relation(fields: [categoryId], references: [id])
+  sku             String?     @unique
+  images          String[]
+  
+  metaTitle       String?
+  metaDescription String?
+  seoTitle        String?
+  seoDescription  String?
+  schemaMarkup    Json?
+  
+  variants        ProductVariant[]
+  orderItems      OrderItem[]
+  agencies        Agency[]    @relation("AgencyProducts")
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+}
+
+model ProductVariant {
+  id          String   @id @default(cuid())
+  productId   String
+  product     Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  name        String   // e.g., "Color: Red, Size: L"
+  price       Int
+  stock       Int      @default(0)
+  sku         String?  @unique
+}
+
+model Coupon {
+  id           String       @id @default(cuid())
+  code         String       @unique
+  type         DiscountType
+  value        Int          // Percentage (1-100) or Fixed amount
+  minSpend     Int?
+  maxSpend     Int?
+  usageLimit   Int?
+  usedCount    Int          @default(0)
+  expiresAt    DateTime?
+  isActive     Boolean      @default(true)
+  createdAt    DateTime     @default(now())
+  
+  orders       Order[]
+}
+
+model Order {
+  id            String        @id @default(cuid())
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  status        OrderStatus   @default(PENDING)
+  paymentStatus PaymentStatus @default(UNPAID)
+  totalAmount   Int
+  discount      Int           @default(0)
+  couponId      String?
+  coupon        Coupon?       @relation(fields: [couponId], references: [id])
+  shippingCost  Int           @default(0)
+  
+  // Snapshot of shipping address at the time of order
+  shippingAddress String?     
+  
+  items         OrderItem[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+}
+
+model OrderItem {
+  id         String   @id @default(cuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  productId  String
+  product    Product  @relation(fields: [productId], references: [id])
+  variantId  String?
+  productName String   // snapshot
+  price      Int      // snapshot price at time of order
+  quantity   Int
+}
+
+model Redirect {
+  id         String   @id @default(cuid())
+  sourceUrl  String   @unique
+  targetUrl  String
+  type       Int      @default(301) // 301 or 302
+  createdAt  DateTime @default(now())
+}
+
+model NotFoundLog {
+  id        String   @id @default(cuid())
+  url       String   @unique
+  hitCount  Int      @default(1)
+  lastHit   DateTime @default(now())
+}
+
+// --- Geo-Targeted Agency Models ---
+
+model Province {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  cities    City[]
+}
+
+model City {
+  id         String   @id @default(cuid())
+  name       String
+  provinceId String
+  province   Province @relation(fields: [provinceId], references: [id], onDelete: Cascade)
+  agencies   Agency[] @relation("AgencyCities")
+  
+  @@unique([name, provinceId])
+}
+
+model Agency {
+  id                  String   @id @default(cuid())
+  name                String
+  phone               String?
+  address             String?
+  locationCoordinates String?  // e.g., "lat,lng"
+  cities              City[]   @relation("AgencyCities") // Multi-city coverage
+  isActive            Boolean  @default(true)
+  createdAt           DateTime @default(now())
+  
+  productExclusions   ProductAgencyExclusion[]
+  leadEvents          LeadEvent[]
+  products            Product[] @relation("AgencyProducts")
+}
+
+model ProductAgencyExclusion {
+  id         String   @id @default(cuid())
+  agencyId   String
+  agency     Agency   @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  categoryId String?  // Optional: If null, agency handles ALL products in their city
+  category   Category? @relation(fields: [categoryId], references: [id])
+  
+  @@unique([agencyId, categoryId])
+}
+
+// --- Rule Engine & Analytics Models ---
+
+model StoreSettings {
+  id                   String   @id @default(cuid()) // Will just have one row 'global'
+  agencyRoutingEnabled Boolean  @default(true)       // Master toggle
+  updatedAt            DateTime @updatedAt
+}
+
+model LeadEvent {
+  id        String        @id @default(cuid())
+  agencyId  String
+  agency    Agency        @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  type      LeadEventType
+  createdAt DateTime      @default(now())
+}
+
+model Post {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  category  String
+  status    String   @default("published")
+  views     Int      @default(0)
+  date      String
+  thumbnail String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

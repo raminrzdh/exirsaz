@@ -35,10 +35,12 @@ export default async function AdminProductsPage() {
           <h1 className="text-2xl font-bold text-slate-900">مدیریت محصولات</h1>
           <p className="text-sm text-slate-500 mt-1">لیست تمامی محصولات، موجودی و قیمت‌ها را در اینجا مدیریت کنید.</p>
         </div>
-        <Button className="gap-2 shrink-0">
-          <Plus className="w-5 h-5" />
-          افزودن محصول جدید
-        </Button>
+        <Link href="/admin/products/new">
+          <Button className="gap-2 shrink-0">
+            <Plus className="w-5 h-5" />
+            افزودن محصول جدید
+          </Button>
+        </Link>
       </div>
 
       {/* Toolbar */}
@@ -108,9 +110,11 @@ export default async function AdminProductsPage() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-end gap-2">
-                      <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
-                        <Edit className="w-4 h-4" />
-                      </button>
+                      <Link href={`/admin/products/edit/${product.id}`}>
+                        <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
+                          <Edit className="w-4 h-4" />
+                        </button>
+                      </Link>
                       <button className="p-2 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors">
                         <Trash2 className="w-4 h-4" />
                       </button>

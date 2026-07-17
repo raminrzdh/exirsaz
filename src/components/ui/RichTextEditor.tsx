@@ -2,12 +2,40 @@
 
 import { useEditor, EditorContent } from '@tiptap/react';
 import StarterKit from '@tiptap/starter-kit';
+import Image from '@tiptap/extension-image';
 import { 
   Bold, Italic, Strikethrough, Code, 
   Heading1, Heading2, Heading3, 
-  List, ListOrdered, Quote, 
-  Undo, Redo, RemoveFormatting 
+  List, ListOrdered, Quote, ImageIcon,
+  Undo, Redo, RemoveFormatting,
+  AlignLeft, AlignCenter, AlignRight, Maximize, Minimize
 } from 'lucide-react';
+import { MediaPickerModal } from '../admin/MediaPickerModal';
+import { useState } from 'react';
+
+const CustomImage = Image.extend({
+  addAttributes() {
+    return {
+      ...this.parent?.(),
+      width: {
+        default: '100%',
+        renderHTML: attributes => {
+          return {
+            width: attributes.width,
+          };
+        },
+      },
+      style: {
+        default: 'display: block; margin: 1rem auto;',
+        renderHTML: attributes => {
+          return {
+            style: attributes.style,
+          };
+        },
+      },
+    };
+  },
+});
 
 interface RichTextEditorProps {
   content: string;
@@ -15,7 +43,7 @@ interface RichTextEditorProps {
   placeholder?: string;
 }
 
-const MenuBar = ({ editor }: { editor: any }) => {
+const MenuBar = ({ editor, onOpenMediaModal }: { editor: any, onOpenMediaModal: () => void }) => {
   if (!editor) {
     return null;
   }
@@ -110,9 +138,61 @@ const MenuBar = ({ editor }: { editor: any }) => {
         >
           <Quote className="w-4 h-4" />
         </button>
+        <button
+          onClick={onOpenMediaModal}
+          className="p-2 rounded-lg transition-colors text-slate-600 hover:bg-slate-200"
+          title="افزودن تصویر"
+        >
+          <ImageIcon className="w-4 h-4" />
+        </button>
       </div>
 
-      <div className="flex items-center gap-1 px-2">
+      {editor.isActive('image') && (
+        <>
+          <div className="flex items-center gap-1 px-2 border-e border-slate-200 bg-indigo-50 rounded-lg animate-in fade-in duration-200">
+            <button 
+              onClick={() => editor.chain().focus().updateAttributes('image', { style: 'float: right; margin: 0 0 1rem 1rem;' }).run()}
+              className="p-2 rounded-lg transition-colors text-indigo-700 hover:bg-indigo-100"
+              title="راست‌چین"
+            >
+              <AlignRight className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={() => editor.chain().focus().updateAttributes('image', { style: 'display: block; margin: 1rem auto;' }).run()}
+              className="p-2 rounded-lg transition-colors text-indigo-700 hover:bg-indigo-100"
+              title="وسط‌چین"
+            >
+              <AlignCenter className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={() => editor.chain().focus().updateAttributes('image', { style: 'float: left; margin: 0 1rem 1rem 0;' }).run()}
+              className="p-2 rounded-lg transition-colors text-indigo-700 hover:bg-indigo-100"
+              title="چپ‌چین"
+            >
+              <AlignLeft className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1 px-2 border-e border-slate-200 bg-indigo-50 rounded-lg animate-in fade-in duration-200">
+            <button 
+              onClick={() => editor.chain().focus().updateAttributes('image', { width: '50%' }).run()}
+              className="p-2 rounded-lg transition-colors text-indigo-700 hover:bg-indigo-100"
+              title="کوچک (۵۰٪)"
+            >
+              <Minimize className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={() => editor.chain().focus().updateAttributes('image', { width: '100%' }).run()}
+              className="p-2 rounded-lg transition-colors text-indigo-700 hover:bg-indigo-100"
+              title="بزرگ (۱۰۰٪)"
+            >
+              <Maximize className="w-4 h-4" />
+            </button>
+          </div>
+        </>
+      )}
+
+      <div className="flex items-center gap-1 px-2 ml-auto">
         <button
           onClick={() => editor.chain().focus().undo().run()}
           disabled={!editor.can().chain().focus().undo().run()}
@@ -135,9 +215,16 @@ const MenuBar = ({ editor }: { editor: any }) => {
 };
 
 export function RichTextEditor({ content, onChange, placeholder }: RichTextEditorProps) {
+  const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
+
   const editor = useEditor({
     extensions: [
       StarterKit,
+      CustomImage.configure({
+        HTMLAttributes: {
+          class: 'rounded-xl shadow-sm border border-slate-200 max-w-full h-auto cursor-pointer transition-all hover:ring-2 hover:ring-indigo-400',
+        },
+      }),
     ],
     content,
     editorProps: {
@@ -152,8 +239,23 @@ export function RichTextEditor({ content, onChange, placeholder }: RichTextEdito
 
   return (
     <div className="border border-slate-200 rounded-2xl overflow-hidden bg-white focus-within:border-indigo-500 focus-within:ring-1 focus-within:ring-indigo-500 transition-colors">
-      <MenuBar editor={editor} />
+      <MenuBar editor={editor} onOpenMediaModal={() => setIsMediaModalOpen(true)} />
       <EditorContent editor={editor} />
+
+      <MediaPickerModal 
+        isOpen={isMediaModalOpen}
+        onClose={() => setIsMediaModalOpen(false)}
+        requireSeo={true}
+        onSelect={(data) => {
+          if (editor && data.url) {
+            editor.chain().focus().setImage({ 
+              src: data.url, 
+              alt: data.alt || '', 
+              title: data.title || '' 
+            }).run();
+          }
+        }}
+      />
     </div>
   );
 }
