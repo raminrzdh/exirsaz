@@ -19,6 +19,7 @@ As an expert SEO and developer, you MUST ALWAYS follow these rules for every pag
 - Maintain a strict heading hierarchy. Every page MUST have exactly ONE `<h1>` tag. Do not skip heading levels (e.g., going from `<h2>` directly to `<h4>`).
 - Every `<img>` or `next/image` MUST have a descriptive `alt` attribute. Avoid generic alts like "image" or "picture".
 - Use `aria-label` for interactive elements that don't have text (like icon-only buttons).
+- **UX Rules**: Always apply `cursor-pointer` to interactive/clickable elements (buttons, selectable cards, custom radios, list items acting as links) to provide clear visual feedback.
 
 ## 3. Metadata & Head Tags
 - Always implement the Next.js `generateMetadata` API for dynamic pages.

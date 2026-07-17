@@ -1,21 +1,18 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, useMapEvents, Tooltip, useMap } from 'react-leaflet';
 import L from 'leaflet';
+import { LocateFixed, Loader2 } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
 
-// Fix for default marker icon in leaflet + next.js
-const DefaultIcon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-  iconRetinaUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon-2x.png',
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41]
+// Custom Text Badge Icon
+const CustomBadgeIcon = L.divIcon({
+  className: 'custom-badge-icon',
+  html: `<div style="background-color: #059669; color: white; padding: 6px 14px; border-radius: 9999px; font-size: 12px; font-weight: bold; white-space: nowrap; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transform: translate(-50%, -50%); border: 2px solid white; position: absolute; left: 0; top: 0; font-family: inherit; display: flex; align-items: center; justify-content: center;">📍 شهر تحویل سفارش</div>`,
+  iconSize: [0, 0],
+  iconAnchor: [0, 0],
 });
-L.Marker.prototype.options.icon = DefaultIcon;
 
 interface MapPickerProps {
   onLocationSelect: (lat: number, lng: number) => void;
@@ -28,6 +25,40 @@ function LocationClick({ onSelect }: { onSelect: (lat: number, lng: number) => v
     },
   });
   return null;
+}
+
+function LocateControl({ onSelect }: { onSelect: (lat: number, lng: number) => void }) {
+  const map = useMap();
+  const [isLocating, setIsLocating] = useState(false);
+
+  const handleLocate = () => {
+    setIsLocating(true);
+    map.locate().on("locationfound", function (e) {
+      setIsLocating(false);
+      map.flyTo(e.latlng, 14);
+      onSelect(e.latlng.lat, e.latlng.lng);
+    }).on("locationerror", function (e) {
+      setIsLocating(false);
+      alert("دسترسی به موقعیت مکانی امکان‌پذیر نیست. لطفاً دسترسی GPS را باز کنید.");
+    });
+  };
+
+  return (
+    <div className="absolute bottom-4 right-4 z-[400]">
+      <button 
+        type="button"
+        onClick={(e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          handleLocate();
+        }}
+        className="bg-white p-3 rounded-xl shadow-lg border border-slate-200 text-slate-700 hover:text-emerald-600 hover:bg-emerald-50 transition-all flex items-center justify-center"
+        title="موقعیت من"
+      >
+        {isLocating ? <Loader2 className="w-5 h-5 animate-spin" /> : <LocateFixed className="w-5 h-5" />}
+      </button>
+    </div>
+  );
 }
 
 export default function MapPicker({ onLocationSelect }: MapPickerProps) {
@@ -50,7 +81,10 @@ export default function MapPicker({ onLocationSelect }: MapPickerProps) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <LocationClick onSelect={handleSelect} />
-        {position && <Marker position={position} />}
+        <LocateControl onSelect={handleSelect} />
+        {position && (
+          <Marker position={position} icon={CustomBadgeIcon} />
+        )}
       </MapContainer>
       
       {!position && (

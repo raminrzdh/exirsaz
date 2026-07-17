@@ -37,11 +37,14 @@ export function ProductClientLayout({ productProp, attributes, variants }: { pro
 
   const handleAttributeSelect = (attrName: string, value: string) => {
     setSelectedAttributes(prev => {
-      const next = { ...prev, [attrName]: value };
-      return next;
+      if (prev[attrName] === value) {
+        const next = { ...prev };
+        delete next[attrName];
+        return next;
+      }
+      return { ...prev, [attrName]: value };
     });
   };
-
   const currentPrice = selectedVariant ? selectedVariant.price : productProp.price;
   const currentStock = selectedVariant ? selectedVariant.stock : productProp.stock;
   const currentImage = selectedVariant?.image || productProp.image;
@@ -116,9 +119,9 @@ export function ProductClientLayout({ productProp, attributes, variants }: { pro
                         onClick={() => handleAttributeSelect(attr.name, val)}
                         className={`px-4 py-2 rounded-xl border text-sm font-medium transition-all duration-200
                           ${isSelected 
-                            ? 'border-emerald-600 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600' 
+                            ? 'border-emerald-600 bg-emerald-50 text-emerald-700 ring-1 ring-emerald-600 cursor-pointer' 
                             : isAvailable
-                              ? 'border-slate-200 text-slate-700 hover:border-emerald-400 hover:bg-emerald-50/50'
+                              ? 'border-slate-200 text-slate-700 hover:border-emerald-400 hover:bg-emerald-50/50 cursor-pointer'
                               : 'border-slate-100 bg-slate-50 text-slate-300 cursor-not-allowed'
                           }
                         `}

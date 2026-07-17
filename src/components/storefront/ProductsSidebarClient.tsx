@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Filter, Check, MapPin } from 'lucide-react';
+import { Filter, Check, MapPin, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useCart } from '@/lib/store/CartContext';
 import { LocationGateModal } from './LocationGateModal';
@@ -27,6 +27,7 @@ export function ProductsSidebarClient({ categories }: ProductsSidebarClientProps
   const initialMaxPrice = searchParams.get('maxPrice') || '';
   const { userLocation, clearLocation } = useCart();
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [isMobileFiltersOpen, setIsMobileFiltersOpen] = useState(false);
 
   const [minPrice, setMinPrice] = useState(initialMinPrice);
   const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
@@ -65,6 +66,7 @@ export function ProductsSidebarClient({ categories }: ProductsSidebarClientProps
     else params.delete('maxPrice');
 
     router.push(`/products?${params.toString()}`);
+    setIsMobileFiltersOpen(false); // Close mobile filters on apply
   };
 
   const buildCategoryUrl = (catSlug: string) => {
@@ -80,8 +82,21 @@ export function ProductsSidebarClient({ categories }: ProductsSidebarClientProps
 
   return (
     <aside className="w-full md:w-64 shrink-0">
-      <div className="bg-white p-6 rounded-2xl border border-slate-200 sticky top-24">
-        <h3 className="font-bold text-lg mb-6 flex items-center gap-2">
+      {/* Mobile Toggle Button */}
+      <button 
+        onClick={() => setIsMobileFiltersOpen(!isMobileFiltersOpen)}
+        className="md:hidden w-full flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200 mb-4"
+      >
+        <div className="flex items-center gap-2">
+          <Filter className="w-5 h-5 text-indigo-600" />
+          <span className="font-bold text-slate-700">فیلترها و دسته‌بندی</span>
+        </div>
+        <ChevronDown className={`w-5 h-5 text-slate-400 transition-transform ${isMobileFiltersOpen ? 'rotate-180' : ''}`} />
+      </button>
+
+      {/* Filter Content */}
+      <div className={`bg-white p-6 rounded-2xl border border-slate-200 md:sticky md:top-24 mb-6 md:mb-0 ${isMobileFiltersOpen ? 'block' : 'hidden md:block'}`}>
+        <h3 className="font-bold text-lg mb-6 hidden md:flex items-center gap-2">
           <Filter className="w-5 h-5 text-indigo-600" />
           فیلترها
         </h3>
