@@ -5,6 +5,8 @@ import Image from 'next/image';
 import { X, Upload, CheckCircle2, RefreshCw } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { getMediaFiles } from '@/app/admin/posts/actions';
+import { toast } from 'react-hot-toast';
+
 
 interface MediaPickerModalProps {
   isOpen: boolean;
@@ -67,10 +69,10 @@ export function MediaPickerModal({ isOpen, onClose, onSelect, requireSeo = false
       if (result.success) {
         await fetchFiles(); // Refresh list
       } else {
-        alert(result.error || 'آپلود ناموفق بود.');
+        toast.error(result.error || 'آپلود ناموفق بود.');
       }
     } catch (error) {
-      alert('خطای شبکه.');
+      toast.error('خطای شبکه.');
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {

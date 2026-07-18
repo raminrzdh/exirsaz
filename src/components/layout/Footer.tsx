@@ -61,6 +61,7 @@ export function Footer() {
             <h4 className="font-bold text-slate-900 mb-4">لینک‌های مفید</h4>
             <ul className="space-y-2 text-sm text-slate-600">
               <li><Link href="/about" className="hover:text-indigo-600">درباره ما</Link></li>
+              <li><Link href="/services" className="hover:text-indigo-600">نمونه بافت‌ها</Link></li>
               <li><Link href="/contact" className="hover:text-indigo-600">تماس با ما</Link></li>
               <li><Link href="/faq" className="hover:text-indigo-600">سوالات متداول</Link></li>
               <li><Link href="/blog" className="hover:text-indigo-600">مجله اکسیرساز</Link></li>
@@ -70,19 +71,17 @@ export function Footer() {
           <div>
             <h4 className="font-bold text-slate-900 mb-4">راهنمای خرید</h4>
             <ul className="space-y-2 text-sm text-slate-600">
-              <li><Link href="/shipping" className="hover:text-indigo-600">نحوه ارسال</Link></li>
-              <li><Link href="/payment" className="hover:text-indigo-600">شیوه‌های پرداخت</Link></li>
-              <li><Link href="/return-policy" className="hover:text-indigo-600">رویه‌های بازگرداندن کالا</Link></li>
               <li><Link href="/terms" className="hover:text-indigo-600">شرایط و قوانین</Link></li>
+              <li><Link href="/privacy" className="hover:text-indigo-600">حریم خصوصی</Link></li>
             </ul>
           </div>
 
           <div>
             <h4 className="font-bold text-slate-900 mb-4">ارتباط با ما</h4>
             <ul className="space-y-2 text-sm text-slate-600">
-              <li>تلفن پشتیبانی: ۰۲۱-۱۲۳۴۵۶۷۸</li>
+              <li>تلفن پشتیبانی: ۰۱۱-۳۲۰۲۵</li>
               <li>ایمیل: info@exirsaz.com</li>
-              <li>آدرس: تهران، خیابان ولیعصر، برج اکسیر، طبقه ۱۰</li>
+              <li>آدرس: مازندران، بابل، شهرک صنعتی منصورکنده</li>
             </ul>
           </div>
         </div>

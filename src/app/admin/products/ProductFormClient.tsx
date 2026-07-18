@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { ArrowRight, Save, Image as ImageIcon, Plus, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { createProduct, updateProduct } from './actions';
+import { toast } from 'react-hot-toast';
+
 
 interface ProductFormClientProps {
   isEdit?: boolean;
@@ -158,11 +160,11 @@ export function ProductFormClient({ isEdit, agencies, categories, initialData }:
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name) {
-      alert("لطفا نام محصول را وارد کنید.");
+      toast.error("لطفا نام محصول را وارد کنید.");
       return;
     }
     if (productType === 'SIMPLE' && !formData.price) {
-      alert("لطفا قیمت محصول را وارد کنید.");
+      toast.error("لطفا قیمت محصول را وارد کنید.");
       return;
     }
 
@@ -189,7 +191,7 @@ export function ProductFormClient({ isEdit, agencies, categories, initialData }:
       router.push('/admin/products');
       router.refresh();
     } else {
-      alert("خطا در ذخیره محصول: " + (res.error || ''));
+      toast.error("خطا در ذخیره محصول: " + (res.error || ''));
       setIsSubmitting(false);
     }
   };

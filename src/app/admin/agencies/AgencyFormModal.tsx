@@ -5,6 +5,8 @@ import { X, Save, Plus, MapPin, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { createAgency, updateAgency } from './actions';
 import { Agency } from './AgencyTableClient';
+import { toast } from 'react-hot-toast';
+
 
 interface AgencyFormModalProps {
   isOpen: boolean;
@@ -38,6 +40,12 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
     } else {
       setFormData({
         name: '',
+        slug: '',
+        company: '',
+        manager: '',
+        mobile: '',
+        image: '',
+        description: '',
         phone: '',
         address: '',
         cities: [],
@@ -55,7 +63,7 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.name || !formData.phone || !formData.cities?.length) {
-      alert('لطفا فیلدهای ضروری (نام، تلفن و حداقل یک شهر) را پر کنید.');
+      toast.error('لطفا فیلدهای ضروری (نام، تلفن و حداقل یک شهر) را پر کنید.');
       return;
     }
     
@@ -71,7 +79,7 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
       onClose();
     } catch (err) {
       console.error(err);
-      alert('خطا در ذخیره اطلاعات');
+      toast.error('خطا در ذخیره اطلاعات');
     } finally {
       setIsSubmitting(false);
     }
@@ -129,18 +137,56 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto max-h-[70vh] space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700">نام نمایندگی *</label>
+              <label className="text-sm font-medium text-slate-700">نام نمایشی (استان / منطقه) *</label>
               <input 
                 type="text" 
                 value={formData.name || ''}
                 onChange={e => setFormData({ ...formData, name: e.target.value })}
                 className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+                placeholder="مثال: آذربایجان شرقی (تبریز)"
                 required
               />
             </div>
             
             <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700">شماره تماس *</label>
+              <label className="text-sm font-medium text-slate-700">اسلاگ URL (نامک) *</label>
+              <input 
+                type="text" 
+                value={formData.slug || ''}
+                onChange={e => setFormData({ ...formData, slug: e.target.value })}
+                className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm font-mono focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-left"
+                placeholder="azerbaijan-sharghi"
+                dir="ltr"
+                required
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-slate-700">نام شرکت / فروشگاه</label>
+              <input 
+                type="text" 
+                value={formData.company || ''}
+                onChange={e => setFormData({ ...formData, company: e.target.value })}
+                className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm focus:border-indigo-500 outline-none"
+              />
+            </div>
+            
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-slate-700">نام مدیریت</label>
+              <input 
+                type="text" 
+                value={formData.manager || ''}
+                onChange={e => setFormData({ ...formData, manager: e.target.value })}
+                className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm focus:border-indigo-500 outline-none"
+              />
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-slate-700">تلفن ثابت</label>
               <input 
                 type="text" 
                 value={formData.phone || ''}
@@ -148,18 +194,49 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
                 className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm font-mono focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-right"
                 placeholder="021..."
                 dir="ltr"
-                required
+              />
+            </div>
+            
+            <div className="space-y-1">
+              <label className="text-sm font-medium text-slate-700">تلفن همراه</label>
+              <input 
+                type="text" 
+                value={formData.mobile || ''}
+                onChange={e => setFormData({ ...formData, mobile: e.target.value })}
+                className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm font-mono focus:border-indigo-500 outline-none text-right"
+                placeholder="0912..."
+                dir="ltr"
               />
             </div>
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700">آدرس کامل</label>
+            <label className="text-sm font-medium text-slate-700">آدرس کامل مراجعه حضوری</label>
             <input 
               type="text" 
               value={formData.address || ''}
               onChange={e => setFormData({ ...formData, address: e.target.value })}
               className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-slate-700">آدرس تصویر (URL)</label>
+            <input 
+              type="text" 
+              value={formData.image || ''}
+              onChange={e => setFormData({ ...formData, image: e.target.value })}
+              className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm focus:border-indigo-500 outline-none"
+              dir="ltr"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-sm font-medium text-slate-700">توضیحات (درباره نمایندگی)</label>
+            <textarea 
+              value={formData.description || ''}
+              onChange={e => setFormData({ ...formData, description: e.target.value })}
+              className="w-full h-24 rounded-xl border border-slate-200 p-4 text-sm focus:border-indigo-500 outline-none resize-none"
             />
           </div>
 

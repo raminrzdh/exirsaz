@@ -67,6 +67,7 @@ export function Navbar({ categories = [] }: { categories?: CategoryItem[] }) {
               )}
             </div>
 
+            <Link href="/agencies" className="hover:text-indigo-600 transition-colors">عاملین فروش</Link>
             <Link href="/about" className="hover:text-indigo-600 transition-colors">درباره ما</Link>
             <Link href="/contact" className="hover:text-indigo-600 transition-colors">تماس با ما</Link>
           </nav>
@@ -153,6 +154,7 @@ export function Navbar({ categories = [] }: { categories?: CategoryItem[] }) {
                 </div>
               </div>
 
+              <Link href="/agencies" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-indigo-600 py-3 border-b border-slate-100">عاملین فروش</Link>
               <Link href="/about" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-indigo-600 py-3 border-b border-slate-100">درباره ما</Link>
               <Link href="/contact" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-indigo-600 py-3 border-b border-slate-100">تماس با ما</Link>
             </nav>

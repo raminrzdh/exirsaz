@@ -179,6 +179,12 @@ model City {
 model Agency {
   id                  String   @id @default(cuid())
   name                String
+  slug                String?  @unique
+  company             String?
+  manager             String?
+  mobile              String?
+  image               String?
+  description         String?
   phone               String?
   address             String?
   locationCoordinates String?  // e.g., "lat,lng"

@@ -6,6 +6,8 @@ import { useRouter } from 'next/navigation';
 import { Upload, FileImage, Trash2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { deleteMediaFile } from '@/app/admin/posts/actions';
+import { toast } from 'react-hot-toast';
+
 
 export interface MediaFile {
   name: string;
@@ -53,10 +55,10 @@ export function MediaLibraryClient({ initialFiles }: { initialFiles: MediaFile[]
         // Refresh the page to show the new file in the grid
         router.refresh();
       } else {
-        alert(result.error || 'آپلود ناموفق بود.');
+        toast.error(result.error || 'آپلود ناموفق بود.');
       }
     } catch (error) {
-      alert('خطای شبکه در هنگام آپلود.');
+      toast.error('خطای شبکه در هنگام آپلود.');
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {
@@ -82,10 +84,10 @@ export function MediaLibraryClient({ initialFiles }: { initialFiles: MediaFile[]
       if (result.success) {
         router.refresh();
       } else {
-        alert(result.error || 'خطا در حذف فایل.');
+        toast.error(result.error || 'خطا در حذف فایل.');
       }
     } catch (error) {
-      alert('خطای شبکه.');
+      toast.error('خطای شبکه.');
     } finally {
       setIsUploading(false);
     }

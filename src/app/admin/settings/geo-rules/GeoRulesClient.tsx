@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { ShieldAlert, Store, ServerCog, Check } from 'lucide-react';
 import { saveGlobalRoutingSetting, toggleCategoryRouting } from './actions';
+import { toast } from 'react-hot-toast';
+
 
 interface GeoRulesClientProps {
   initialSettings: { agencyRoutingEnabled: boolean };
@@ -23,7 +25,7 @@ export function GeoRulesClient({ initialSettings, initialCategories }: GeoRulesC
       setGlobalEnabled(newValue);
     } catch (err) {
       console.error(err);
-      alert('خطا در ذخیره تنظیمات');
+      toast.error('خطا در ذخیره تنظیمات');
     } finally {
       setIsSavingGlobal(false);
     }
@@ -37,7 +39,7 @@ export function GeoRulesClient({ initialSettings, initialCategories }: GeoRulesC
       setCategories(categories.map(c => c.name === catName ? { ...c, isAgencyRouted: newValue } : c));
     } catch (err) {
       console.error(err);
-      alert('خطا در ذخیره تنظیمات دسته');
+      toast.error('خطا در ذخیره تنظیمات دسته');
     } finally {
       setSavingCategory(null);
     }

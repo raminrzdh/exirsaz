@@ -9,6 +9,12 @@ import { AgencyFormModal } from './AgencyFormModal';
 export interface Agency {
   id: string;
   name: string;
+  slug: string;
+  company: string;
+  manager: string;
+  mobile: string;
+  image: string;
+  description: string;
   phone: string;
   address: string;
   cities: { province: string; city: string }[];
@@ -79,6 +85,7 @@ export function AgencyTableClient({ initialAgencies, allCategories, allProducts,
         <table className="w-full text-sm text-right">
           <thead className="bg-slate-50 text-slate-500 font-medium border-b border-slate-200">
             <tr>
+              <th className="px-6 py-4">استان (URL)</th>
               <th className="px-6 py-4">نام نمایندگی / تلفن</th>
               <th className="px-6 py-4">شهرهای تحت پوشش</th>
               <th className="px-6 py-4">دسته‌بندی‌های اختصاصی</th>
@@ -90,8 +97,11 @@ export function AgencyTableClient({ initialAgencies, allCategories, allProducts,
             {filteredAgencies.map(agency => (
               <tr key={agency.id} className="hover:bg-slate-50/50 transition-colors">
                 <td className="px-6 py-4">
+                  <div className="font-bold text-slate-900 mb-1" dir="ltr">/{agency.slug}</div>
+                </td>
+                <td className="px-6 py-4">
                   <div className="font-bold text-slate-900 mb-1">{agency.name}</div>
-                  <div className="text-slate-500 font-mono text-xs">{agency.phone}</div>
+                  <div className="text-slate-500 font-mono text-xs">{agency.phone || agency.mobile}</div>
                 </td>
                 <td className="px-6 py-4">
                   <div className="flex flex-wrap gap-1">

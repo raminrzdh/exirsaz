@@ -9,6 +9,8 @@ import { formatToman, toPersianDigits } from '@/lib/utils/currency';
 import { useCart } from '@/lib/store/CartContext';
 import { LocationGateModal } from './LocationGateModal';
 import { checkRepresentative } from '@/app/(storefront)/products/actions';
+import { toast } from 'react-hot-toast';
+
 
 interface Representative {
   name: string;
@@ -59,7 +61,7 @@ export function ProductCardClient({ product }: { product: Product }) {
         image: product.image,
         quantity: 1,
       });
-      alert('محصول به سبد خرید اضافه شد!'); // Basic feedback for now
+      toast.success('محصول به سبد خرید اضافه شد!'); // Basic feedback for now
     }
   };
 

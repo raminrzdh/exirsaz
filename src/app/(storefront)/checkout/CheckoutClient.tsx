@@ -7,6 +7,8 @@ import { formatToman, toPersianDigits } from '@/lib/utils/currency';
 import { Button } from '@/components/ui/Button';
 import { ShieldCheck, MapPin, Building2, User, CreditCard, Trash2 } from 'lucide-react';
 import Link from 'next/link';
+import { toast } from 'react-hot-toast';
+
 
 export function CheckoutClient() {
   const { items, userLocation, updateQuantity, removeItem } = useCart();
@@ -30,7 +32,7 @@ export function CheckoutClient() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('انتقال به درگاه پرداخت در حال پیاده‌سازی است...');
+    toast.success('انتقال به درگاه پرداخت در حال پیاده‌سازی است...');
   };
 
   if (items.length === 0) {

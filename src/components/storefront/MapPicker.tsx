@@ -5,11 +5,13 @@ import { MapContainer, TileLayer, Marker, useMapEvents, Tooltip, useMap } from '
 import L from 'leaflet';
 import { LocateFixed, Loader2 } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
+import { toast } from 'react-hot-toast';
+
 
 // Custom Text Badge Icon
 const CustomBadgeIcon = L.divIcon({
   className: 'custom-badge-icon',
-  html: `<div style="background-color: #059669; color: white; padding: 6px 14px; border-radius: 9999px; font-size: 12px; font-weight: bold; white-space: nowrap; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transform: translate(-50%, -50%); border: 2px solid white; position: absolute; left: 0; top: 0; font-family: inherit; display: flex; align-items: center; justify-content: center;">📍 شهر تحویل سفارش</div>`,
+  html: `<div style="background-color: #059669; color: white; padding: 6px 14px; border-radius: 9999px; font-size: 12px; font-weight: bold; white-space: nowrap; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transform: translate(-50%, -50%); border: 2px solid white; position: absolute; left: 0; top: 0; font-family: var(--font-vazirmatn), Vazirmatn, Tahoma, sans-serif !important; display: flex; align-items: center; justify-content: center;">📍 شهر تحویل سفارش</div>`,
   iconSize: [0, 0],
   iconAnchor: [0, 0],
 });
@@ -39,7 +41,7 @@ function LocateControl({ onSelect }: { onSelect: (lat: number, lng: number) => v
       onSelect(e.latlng.lat, e.latlng.lng);
     }).on("locationerror", function (e) {
       setIsLocating(false);
-      alert("دسترسی به موقعیت مکانی امکان‌پذیر نیست. لطفاً دسترسی GPS را باز کنید.");
+      toast.error("دسترسی به موقعیت مکانی امکان‌پذیر نیست. لطفاً دسترسی GPS را باز کنید.");
     });
   };
 

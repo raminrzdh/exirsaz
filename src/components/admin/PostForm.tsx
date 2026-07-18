@@ -8,6 +8,8 @@ import { Button } from '@/components/ui/Button';
 import { RichTextEditor } from '@/components/ui/RichTextEditor';
 import { createPost, updatePost, createCategory } from '@/app/admin/posts/actions';
 import { MediaPickerModal } from './MediaPickerModal';
+import { toast } from 'react-hot-toast';
+
 
 export interface PostFormProps {
   initialData?: {
@@ -86,7 +88,7 @@ export function PostForm({ initialData, categories }: PostFormProps) {
 
   const savePost = async (status: 'published' | 'draft') => {
     if (!title) {
-      alert('لطفاً عنوان مقاله را وارد کنید.');
+      toast.error('لطفاً عنوان مقاله را وارد کنید.');
       return;
     }
     
@@ -94,14 +96,14 @@ export function PostForm({ initialData, categories }: PostFormProps) {
     try {
       if (initialData?.id) {
         await updatePost(initialData.id, { title, content, category, status, thumbnail });
-        alert(status === 'published' ? 'تغییرات با موفقیت منتشر شد!' : 'تغییرات به عنوان پیش‌نویس ذخیره شد.');
+        toast.success(status === 'published' ? 'تغییرات با موفقیت منتشر شد!' : 'تغییرات به عنوان پیش‌نویس ذخیره شد.');
       } else {
         await createPost({ title, content, category, status, thumbnail });
-        alert(status === 'published' ? 'مقاله با موفقیت منتشر شد!' : 'مقاله به عنوان پیش‌نویس ذخیره شد.');
+        toast.success(status === 'published' ? 'مقاله با موفقیت منتشر شد!' : 'مقاله به عنوان پیش‌نویس ذخیره شد.');
       }
       router.push('/admin/posts');
     } catch (error) {
-      alert('خطا در ذخیره مقاله.');
+      toast.error('خطا در ذخیره مقاله.');
       setIsSubmitting(false);
     }
   };

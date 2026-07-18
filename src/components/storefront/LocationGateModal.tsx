@@ -7,6 +7,8 @@ import { Button } from '@/components/ui/Button';
 import { useCart } from '@/lib/store/CartContext';
 import dynamic from 'next/dynamic';
 import { LOCATIONS } from '@/lib/constants/locations';
+import { toast } from 'react-hot-toast';
+
 
 const MapPicker = dynamic(() => import('./MapPicker'), {
   ssr: false,
@@ -126,7 +128,7 @@ export function LocationGateModal({ isOpen, onClose, onLocationSet }: LocationGa
     }
 
     if (!finalProvince || !finalCity) {
-      alert("لطفاً استان و شهر خود را به درستی وارد کنید.");
+      toast.error("لطفاً استان و شهر خود را به درستی وارد کنید.");
       return;
     }
     

@@ -8,6 +8,8 @@ import { useCart } from '@/lib/store/CartContext';
 import { InquiryLeadModal } from './InquiryLeadModal';
 import { LocationGateModal } from './LocationGateModal';
 import { checkRepresentative, recordLeadEvent } from '@/app/(storefront)/products/actions';
+import { toast } from 'react-hot-toast';
+
 
 interface Product {
   id: string;
@@ -68,7 +70,7 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
       image: product.image,
       quantity,
     });
-    alert('محصول به سبد خرید اضافه شد!');
+    toast.success('محصول به سبد خرید اضافه شد!');
   };
 
   const handleAgencyContact = async (type: 'CALL' | 'WHATSAPP') => {
