@@ -29,5 +29,8 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     }
   });
 
-  return <ProductFormClient agencies={agencies} categories={categories} isEdit={true} initialData={product} />;
+  const attributes = await prisma.attribute.findMany({ orderBy: { name: 'asc' } });
+  const availableFeatures = attributes.map(a => a.name);
+
+  return <ProductFormClient agencies={agencies} categories={categories} availableFeatures={availableFeatures} isEdit={true} initialData={product} />;
 }

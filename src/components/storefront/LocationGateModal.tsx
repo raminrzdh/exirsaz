@@ -6,7 +6,7 @@ import { MapPin, ArrowLeft, X, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { useCart } from '@/lib/store/CartContext';
 import dynamic from 'next/dynamic';
-import { LOCATIONS } from '@/lib/constants/locations';
+
 import { toast } from 'react-hot-toast';
 
 
@@ -33,6 +33,7 @@ export function LocationGateModal({ isOpen, onClose, onLocationSet }: LocationGa
   const [isGeocoding, setIsGeocoding] = useState(false);
 
   const [mounted, setMounted] = useState(false);
+  const LOCATIONS: Record<string, string[]> = typeof window !== 'undefined' ? (window as any).__LOCATIONS__ || {} : {};
 
   useEffect(() => {
     setMounted(true);
@@ -164,7 +165,7 @@ export function LocationGateModal({ isOpen, onClose, onLocationSet }: LocationGa
         <div className="flex-1 overflow-hidden p-6 flex flex-col gap-4">
           
           <form id="location-form" onSubmit={handleSubmit} className="space-y-5">
-            <div className="relative">
+            <div className="relative z-20">
               <label className="block text-sm font-medium text-slate-700 mb-1.5">استان خود را انتخاب کنید</label>
               <input
                 type="text"
@@ -201,7 +202,7 @@ export function LocationGateModal({ isOpen, onClose, onLocationSet }: LocationGa
               )}
             </div>
             
-            <div className="relative">
+            <div className="relative z-10">
               <label className="block text-sm font-medium text-slate-700 mb-1.5">شهر خود را وارد کنید</label>
               <input
                 type="text"

@@ -163,6 +163,7 @@ export function ProductClientLayout({ productProp, attributes, variants }: { pro
               ...productProp,
               id: selectedVariant ? selectedVariant.id : productProp.id, // Replace ID so cart adds the variant ID
               price: currentPrice,
+              salePrice: selectedVariant ? null : productProp.salePrice, // variants don't have salePrice in schema yet, fallback to product
               stock: currentStock,
               image: currentImage
             }} 

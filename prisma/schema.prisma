@@ -66,6 +66,7 @@ model Product {
   sku             String?     @unique
   // SQLite doesn't support String[] natively in Prisma, we use a single String to store JSON
   images          String      @default("[]")
+  features        String      @default("[]")
   
   metaTitle       String?
   metaDescription String?

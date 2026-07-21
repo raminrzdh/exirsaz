@@ -114,46 +114,54 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* Visual Category Showcase */}
+      {/* Visual Category Showcase - New Structure */}
       <section className="container mx-auto px-4 mt-8">
         <div className="text-center mb-12">
           <h2 className="text-3xl font-black text-slate-900 mb-4">دسته‌بندی‌های اصلی</h2>
           <p className="text-slate-500 max-w-2xl mx-auto text-lg">تنوع بی‌نظیر محصولات پلیمری و شبکه‌های توری مناسب برای مصارف کشاورزی، ساختمانی و خانگی.</p>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
-          <Link href="/categories/shade-nets" className="group relative aspect-[4/5] rounded-[2rem] overflow-hidden block cursor-pointer">
-            <Image src="https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg" alt="خرید انواع توری سایبان و شید گلخانه با تراکم بالا" fill className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out-strong" unoptimized />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-8 flex flex-col items-center text-center">
-              <h3 className="text-2xl font-bold text-white mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">توری سایبان (شید)</h3>
-              <p className="text-emerald-100 text-sm mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">در درصدهای تراکم ۳۰ تا ۹۰ درصد</p>
-              <div className="bg-white/20 backdrop-blur-md text-white px-6 py-2.5 rounded-full font-medium opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-200 border border-white/30 hover:bg-white hover:text-slate-900">
-                مشاهده محصولات
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6 lg:gap-8">
+          {[
+            { title: 'توری سایبان (شید گلخانه)', slug: 'greenhouse-shade-net', img: 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg', color: 'bg-emerald-50 border-emerald-100' },
+            { title: 'توری سایبان دامداری‌ها', slug: 'livestock-shade-net', img: 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg', color: 'bg-emerald-50 border-emerald-100' },
+            { title: 'توری سایبان پارکینگ', slug: 'parking-shade-net', img: 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg', color: 'bg-emerald-50 border-emerald-100' },
+            { title: 'جلوگیری از آفتاب سوختگی', slug: 'sunburn-protection-net', img: 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg', color: 'bg-emerald-50 border-emerald-100' },
+            { title: 'توری پوشش استخر', slug: 'pool-cover-net', img: 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg', color: 'bg-emerald-50 border-emerald-100' },
+            
+            { title: 'کیسه محافظ خرما', slug: 'date-protection-bag', img: 'https://exirsaz.com/wp-content/uploads/2023/02/توری-سایبان-شید-گلخانه.jpg', color: 'bg-amber-50 border-amber-100' },
+            { title: 'بسته‌بندی پرتقال', slug: 'orange-packaging-net', img: 'https://exirsaz.com/wp-content/uploads/2023/02/توری-سایبان-شید-گلخانه.jpg', color: 'bg-amber-50 border-amber-100' },
+            { title: 'کیسه توری راشل', slug: 'raschel-mesh-bag', img: 'https://exirsaz.com/wp-content/uploads/2023/02/توری-سایبان-شید-گلخانه.jpg', color: 'bg-amber-50 border-amber-100' },
+            { title: 'بسته‌بندی علوفه', slug: 'forage-packaging-net', img: 'https://exirsaz.com/wp-content/uploads/2023/02/توری-سایبان-شید-گلخانه.jpg', color: 'bg-amber-50 border-amber-100' },
+            { title: 'بسته‌بندی کلم', slug: 'cabbage-packaging-net', img: 'https://exirsaz.com/wp-content/uploads/2023/02/توری-سایبان-شید-گلخانه.jpg', color: 'bg-amber-50 border-amber-100' },
+            
+            { title: 'توری حصاری', slug: 'fence-net', img: 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg', color: 'bg-indigo-50 border-indigo-100' },
+            { title: 'توری ضد پرنده', slug: 'anti-bird-net', img: 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg', color: 'bg-indigo-50 border-indigo-100' },
+            { title: 'توری جمع‌آوری محصول', slug: 'harvest-collection-net', img: 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg', color: 'bg-indigo-50 border-indigo-100' },
+            { title: 'توری ضد تگرگ', slug: 'anti-hail-net', img: 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg', color: 'bg-indigo-50 border-indigo-100' },
+            { title: 'توری ایمنی ساختمان', slug: 'safety-net', img: 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg', color: 'bg-indigo-50 border-indigo-100' },
+            
+            { title: 'گیره نصب سایبان', slug: 'shade-net-clips', img: 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg', color: 'bg-cyan-50 border-cyan-100' },
+          ].map((item, idx) => (
+            <Link 
+              key={idx} 
+              href={`/products/${item.slug}`}
+              className="group flex flex-col gap-3 animate-stagger-item bg-white p-3 md:p-4 rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl hover:-translate-y-1 transition-all duration-300"
+              style={{ animationDelay: `${idx * 30}ms` }}
+            >
+              <div className={`w-full aspect-[4/3] rounded-2xl ${item.color} border overflow-hidden relative transition-all duration-300`}>
+                <Image 
+                  src={item.img} 
+                  alt={item.title} 
+                  fill 
+                  className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out-strong mix-blend-multiply" 
+                  unoptimized 
+                />
               </div>
-            </div>
-          </Link>
-          <Link href="/categories/raschel-bags" className="group relative aspect-[4/5] rounded-[2rem] overflow-hidden block cursor-pointer">
-            <Image src="https://exirsaz.com/wp-content/uploads/2023/02/توری-سایبان-شید-گلخانه.jpg" alt="خرید عمده کیسه راشل جهت بسته‌بندی محصولات کشاورزی" fill className="object-cover group-hover:scale-105 transition-transform duration-700 ease-out-strong" unoptimized />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-8 flex flex-col items-center text-center">
-              <h3 className="text-2xl font-bold text-white mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">کیسه راشل</h3>
-              <p className="text-emerald-100 text-sm mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">بسته‌بندی مطمئن محصولات کشاورزی</p>
-              <div className="bg-white/20 backdrop-blur-md text-white px-6 py-2.5 rounded-full font-medium opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-200 border border-white/30 hover:bg-white hover:text-slate-900">
-                مشاهده محصولات
-              </div>
-            </div>
-          </Link>
-          <Link href="/categories/safety-nets" className="group relative aspect-[4/5] rounded-[2rem] overflow-hidden block cursor-pointer">
-            <div className="absolute inset-0 bg-emerald-800" />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
-            <div className="absolute inset-x-0 bottom-0 p-8 flex flex-col items-center text-center">
-              <h3 className="text-2xl font-bold text-white mb-2 translate-y-4 group-hover:translate-y-0 transition-transform duration-500">توری ایمنی ساختمان</h3>
-              <p className="text-emerald-100 text-sm mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">حفاظت و ایمنی در پروژه‌های عمرانی</p>
-              <div className="bg-white/20 backdrop-blur-md text-white px-6 py-2.5 rounded-full font-medium opacity-0 translate-y-4 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-500 delay-200 border border-white/30 hover:bg-white hover:text-slate-900">
-                مشاهده محصولات
-              </div>
-            </div>
-          </Link>
+              <span className="text-base font-bold text-center text-slate-800 group-hover:text-indigo-600 transition-colors px-1 leading-relaxed mt-1">
+                {item.title}
+              </span>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -175,6 +183,7 @@ export default async function Home() {
               id: rawProduct.id,
               name: rawProduct.name,
               price: rawProduct.price || 0,
+              salePrice: rawProduct.salePrice,
               slug: rawProduct.slug,
               image: (typeof rawProduct.images === 'string' ? JSON.parse(rawProduct.images) : rawProduct.images)?.[0] || 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg',
               rating: 5,
@@ -221,19 +230,19 @@ export default async function Home() {
             <div className="flex-1 w-full max-w-xl lg:max-w-none mx-auto">
               <div className="grid grid-cols-2 gap-4 md:gap-6">
                 <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10 text-center backdrop-blur-md hover:bg-white/10 transition-colors">
-                  <div className="text-5xl md:text-6xl font-black text-emerald-400 mb-3">+۲۰</div>
+                  <div className="text-5xl md:text-6xl font-black text-emerald-400 mb-3">{toPersianDigits('+20')}</div>
                   <div className="text-slate-300 font-medium text-lg">سال سابقه تولید</div>
                 </div>
                 <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10 text-center backdrop-blur-md hover:bg-white/10 transition-colors">
-                  <div className="text-5xl md:text-6xl font-black text-cyan-400 mb-3">+۵۰</div>
+                  <div className="text-5xl md:text-6xl font-black text-cyan-400 mb-3">{toPersianDigits('+50')}</div>
                   <div className="text-slate-300 font-medium text-lg">نمایندگی در کشور</div>
                 </div>
                 <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10 text-center backdrop-blur-md hover:bg-white/10 transition-colors">
-                  <div className="text-5xl md:text-6xl font-black text-indigo-400 mb-3">+۱۰۰۰</div>
+                  <div className="text-5xl md:text-6xl font-black text-indigo-400 mb-3">{toPersianDigits('+1000')}</div>
                   <div className="text-slate-300 font-medium text-lg">مشتری سازمانی</div>
                 </div>
                 <div className="bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10 text-center backdrop-blur-md hover:bg-white/10 transition-colors">
-                  <div className="text-5xl md:text-6xl font-black text-amber-400 mb-3">%۱۰۰</div>
+                  <div className="text-5xl md:text-6xl font-black text-amber-400 mb-3">{toPersianDigits('%100')}</div>
                   <div className="text-slate-300 font-medium text-lg">تضمین کیفیت کالا</div>
                 </div>
               </div>

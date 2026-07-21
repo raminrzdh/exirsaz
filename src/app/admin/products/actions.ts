@@ -90,6 +90,8 @@ export async function createProduct(data: any) {
         salesType: data.salesType || "DIRECT_SALE",
         inquiryAction: data.salesType === 'INQUIRY' ? data.inquiryAction : null,
         salesTypeOverride: "USE_CATEGORY",
+        images: data.images || "[]",
+        features: data.features || "[]",
         agencies: data.agencies ? {
           connect: data.agencies.map((id: string) => ({ id }))
         } : undefined,
@@ -126,6 +128,8 @@ export async function updateProduct(id: string, data: any) {
         type: isVariable ? "VARIABLE" : "SIMPLE",
         salesType: data.salesType || "DIRECT_SALE",
         inquiryAction: data.salesType === 'INQUIRY' ? data.inquiryAction : null,
+        images: data.images || "[]",
+        features: data.features || "[]",
         agencies: data.agencies ? {
           set: data.agencies.map((agencyId: string) => ({ id: agencyId }))
         } : undefined,

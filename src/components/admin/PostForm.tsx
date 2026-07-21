@@ -9,6 +9,7 @@ import { RichTextEditor } from '@/components/ui/RichTextEditor';
 import { createPost, updatePost, createCategory } from '@/app/admin/posts/actions';
 import { MediaPickerModal } from './MediaPickerModal';
 import { toast } from 'react-hot-toast';
+import { InternalLinkingWidget } from './InternalLinkingWidget';
 
 
 export interface PostFormProps {
@@ -329,6 +330,8 @@ export function PostForm({ initialData, categories }: PostFormProps) {
               </Button>
             </div>
           </div>
+          
+          <InternalLinkingWidget content={content} />
         </div>
 
       </div>
@@ -336,7 +339,7 @@ export function PostForm({ initialData, categories }: PostFormProps) {
       <MediaPickerModal 
         isOpen={isMediaModalOpen}
         onClose={() => setIsMediaModalOpen(false)}
-        onSelect={(url) => setThumbnail(url)}
+        onSelect={(img) => setThumbnail(typeof img === 'string' ? img : img.url)}
       />
     </div>
   );

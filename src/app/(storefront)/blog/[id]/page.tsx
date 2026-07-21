@@ -31,8 +31,35 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
     notFound();
   }
 
+  const jsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    image: post.thumbnail ? [post.thumbnail] : [],
+    datePublished: new Date(post.createdAt).toISOString(),
+    dateModified: new Date(post.updatedAt).toISOString(),
+    author: [{
+      '@type': 'Person',
+      name: 'مدیریت اکسیرساز',
+      url: 'https://exirsaz.com/about'
+    }],
+    publisher: {
+      '@type': 'Organization',
+      name: 'فروشگاه اکسیرساز شمال',
+      logo: {
+        '@type': 'ImageObject',
+        url: 'https://exirsaz.com/logo.png'
+      }
+    }
+  };
+
   return (
     <article className="min-h-screen bg-slate-50 pb-20">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+
 
       {/* Hero Section */}
       <div className="bg-slate-900 text-white relative py-20 px-4">
@@ -48,7 +75,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             />
           </>
         )}
-        <div className="container mx-auto max-w-4xl relative z-20">
+        <header className="container mx-auto max-w-4xl relative z-20">
           <Link href="/blog" className="inline-flex items-center gap-2 text-indigo-300 hover:text-white transition-colors mb-8 font-medium">
             <ArrowRight className="w-4 h-4" />
             بازگشت به مجله
@@ -71,7 +98,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
           <h1 className="text-3xl md:text-5xl font-black leading-tight">
             {post.title}
           </h1>
-        </div>
+        </header>
       </div>
 
       {/* Content */}
@@ -90,7 +117,7 @@ export default async function BlogPostPage({ params }: BlogPostPageProps) {
             </div>
           )}
 
-          <div
+          <section
             className="prose prose-slate prose-lg prose-indigo prose-rtl max-w-none prose-img:rounded-xl prose-img:shadow-sm"
             dangerouslySetInnerHTML={{ __html: post.content }}
           />

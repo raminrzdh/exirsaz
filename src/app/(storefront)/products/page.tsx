@@ -117,9 +117,23 @@ export default async function ProductsPage({
                       </h3>
                       <div className="mt-auto flex items-center justify-between">
                         {product.salesType === 'DIRECT_SALE' && product.price ? (
-                          <div className="text-lg font-bold text-slate-900">
-                            {formatToman(product.price)}
-                          </div>
+                          product.salePrice ? (
+                            <div className="flex flex-col">
+                              <div className="flex items-center gap-2">
+                                <span className="text-sm text-slate-400 line-through decoration-rose-500/50">{formatToman(product.price)}</span>
+                                <span className="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                                  {toPersianDigits(Math.round(((product.price - product.salePrice) / product.price) * 100))}٪
+                                </span>
+                              </div>
+                              <div className="text-lg font-bold text-rose-600">
+                                {formatToman(product.salePrice)}
+                              </div>
+                            </div>
+                          ) : (
+                            <div className="text-lg font-bold text-slate-900">
+                              {formatToman(product.price)}
+                            </div>
+                          )
                         ) : (
                           <div className="text-sm font-bold text-indigo-600">
                             استعلام موجودی و قیمت

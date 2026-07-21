@@ -95,7 +95,7 @@ export default async function AdminProductsPage() {
                     </span>
                   </td>
                   <td className="px-6 py-4 font-medium text-slate-900">
-                    {formatToman(product.price)}
+                    {product.price != null ? formatToman(product.price) : 'بدون قیمت'}
                   </td>
                   <td className="px-6 py-4">
                     {product.stock > 0 ? (

@@ -22,7 +22,9 @@ interface Representative {
 interface Product {
   id: string;
   name: string;
+  slug: string;
   price: number;
+  salePrice?: number | null;
   image: string;
   rating: number;
 }
@@ -51,7 +53,12 @@ export function ProductCardClient({ product }: { product: Product }) {
     setIsCheckingRep(false);
 
     if (rep) {
-      setFoundRep(rep);
+      setFoundRep({
+        name: rep.name,
+        province,
+        city,
+        contactUrl: rep.phone ? `tel:${rep.phone}` : undefined
+      });
     } else {
       // Add to cart directly!
       addItem({
@@ -88,18 +95,34 @@ export function ProductCardClient({ product }: { product: Product }) {
             <span className="text-sm font-medium text-slate-700">{toPersianDigits(product.rating.toString())}</span>
           </div>
           
-          <div className="mt-auto flex items-center justify-between">
-            <div className="text-lg font-bold text-emerald-700">
-              {formatToman(product.price)}
+          <div className="mt-auto flex flex-col gap-1">
+            {product.salePrice ? (
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-slate-400 line-through decoration-rose-500/50">{formatToman(product.price)}</span>
+                  <span className="bg-rose-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-md">
+                    {toPersianDigits(Math.round(((product.price - product.salePrice) / product.price) * 100))}٪
+                  </span>
+                </div>
+                <div className="text-lg font-bold text-rose-600">
+                  {formatToman(product.salePrice)}
+                </div>
+              </div>
+            ) : (
+              <div className="text-lg font-bold text-emerald-700">
+                {formatToman(product.price)}
+              </div>
+            )}
+            <div className="flex justify-end mt-1">
+              <Button 
+                size="sm" 
+                className="rounded-full px-4 bg-emerald-100 text-emerald-800 hover:bg-emerald-200 disabled:opacity-50"
+                onClick={handleBuyClick}
+                disabled={isCheckingRep}
+              >
+                {isCheckingRep ? 'در حال بررسی...' : 'مشاهده و خرید'}
+              </Button>
             </div>
-            <Button 
-              size="sm" 
-              className="rounded-full px-4 bg-emerald-100 text-emerald-800 hover:bg-emerald-200 disabled:opacity-50"
-              onClick={handleBuyClick}
-              disabled={isCheckingRep}
-            >
-              {isCheckingRep ? 'در حال بررسی...' : 'خرید'}
-            </Button>
           </div>
         </div>
       </div>

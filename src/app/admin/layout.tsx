@@ -12,7 +12,10 @@ import {
   Store,
   BarChart3,
   ShieldAlert,
-  Bell
+  Bell,
+  ListTree,
+  SlidersHorizontal,
+  LineChart
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 
@@ -40,13 +43,29 @@ export default function AdminLayout({
             <LayoutDashboard className="w-5 h-5" />
             داشبورد
           </Link>
-          <Link href="/admin/products" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-            <Package className="w-5 h-5" />
-            محصولات
-          </Link>
+          <div className="space-y-1 py-1">
+            <div className="px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">مدیریت فروشگاه</div>
+            <Link href="/admin/products" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+              <Package className="w-5 h-5" />
+              همه محصولات
+            </Link>
+            <Link href="/admin/products/categories" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors ps-8 opacity-90 text-sm">
+              <ListTree className="w-4 h-4" />
+              دسته‌بندی محصولات
+            </Link>
+            <Link href="/admin/products/features" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors ps-8 opacity-90 text-sm">
+              <SlidersHorizontal className="w-4 h-4" />
+              ویژگی‌های محصولات
+            </Link>
+          </div>
+          
           <Link href="/admin/orders" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
             <ShoppingBag className="w-5 h-5" />
             سفارشات
+          </Link>
+          <Link href="/admin/reports" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
+            <LineChart className="w-5 h-5 text-emerald-400" />
+            گزارشات و فروش
           </Link>
           <Link href="/admin/media" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>

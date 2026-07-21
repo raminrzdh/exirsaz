@@ -6,6 +6,7 @@ import { Button } from '../ui/Button';
 import { useCart } from '@/lib/store/CartContext';
 import { toPersianDigits } from '@/lib/utils/currency';
 import { LocationGateModal } from '../storefront/LocationGateModal';
+import { LiveSearch } from './LiveSearch';
 import { useState } from 'react';
 
 interface CategoryItem {
@@ -50,21 +51,44 @@ export function Navbar({ categories = [] }: { categories?: CategoryItem[] }) {
               <Link href="/products" className="hover:text-indigo-600 transition-colors flex items-center gap-1 py-4">
                 دسته‌بندی‌ها
               </Link>
-              {categories.length > 0 && (
-                <div className="absolute top-full right-0 w-48 bg-white border border-slate-100 shadow-xl rounded-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 z-50 overflow-hidden">
-                  <div className="py-2">
-                    {categories.map((cat) => (
-                      <Link 
-                        key={cat.id} 
-                        href={`/products?category=${cat.slug}`}
-                        className="block px-4 py-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-slate-50 transition-colors"
-                      >
-                        {cat.name}
-                      </Link>
-                    ))}
-                  </div>
+              <div className="absolute top-full right-0 w-[600px] bg-white border border-slate-100 shadow-xl rounded-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform translate-y-2 group-hover:translate-y-0 z-50 overflow-hidden p-6 grid grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-bold text-emerald-700 mb-3 text-sm">محصولات توری سایبان</h4>
+                  <ul className="space-y-2">
+                    <li><Link href="/products/greenhouse-shade-net" className="text-xs text-slate-500 hover:text-emerald-600">توری سایبان ( شید گلخانه )</Link></li>
+                    <li><Link href="/products/livestock-shade-net" className="text-xs text-slate-500 hover:text-emerald-600">توری سایبان برای دامداری ها</Link></li>
+                    <li><Link href="/products/parking-shade-net" className="text-xs text-slate-500 hover:text-emerald-600">توری سایبان پارکینگ</Link></li>
+                    <li><Link href="/products/sunburn-protection-net" className="text-xs text-slate-500 hover:text-emerald-600">توری سایبان برای جلوگیری از آفتاب سوختگی</Link></li>
+                    <li><Link href="/products/pool-cover-net" className="text-xs text-slate-500 hover:text-emerald-600">توری سایبان برای پوشش استخر</Link></li>
+                  </ul>
                 </div>
-              )}
+                <div>
+                  <h4 className="font-bold text-amber-600 mb-3 text-sm">محصولات توری بسته بندی</h4>
+                  <ul className="space-y-2">
+                    <li><Link href="/products/date-protection-bag" className="text-xs text-slate-500 hover:text-amber-500">کیسه محافظ خرما</Link></li>
+                    <li><Link href="/products/orange-packaging-net" className="text-xs text-slate-500 hover:text-amber-500">توری بسته بندی پرتقال</Link></li>
+                    <li><Link href="/products/raschel-mesh-bag" className="text-xs text-slate-500 hover:text-amber-500">کیسه توری راشل</Link></li>
+                    <li><Link href="/products/forage-packaging-net" className="text-xs text-slate-500 hover:text-amber-500">توری بسته بندی علوفه</Link></li>
+                    <li><Link href="/products/cabbage-packaging-net" className="text-xs text-slate-500 hover:text-amber-500">کیسه بسته بندی کلم</Link></li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold text-indigo-700 mb-3 text-sm">دیگر محصولات</h4>
+                  <ul className="space-y-2">
+                    <li><Link href="/products/fence-net" className="text-xs text-slate-500 hover:text-indigo-600">توری حصاری</Link></li>
+                    <li><Link href="/products/anti-bird-net" className="text-xs text-slate-500 hover:text-indigo-600">توری ضد پرنده</Link></li>
+                    <li><Link href="/products/harvest-collection-net" className="text-xs text-slate-500 hover:text-indigo-600">توری جمع آوری محصول</Link></li>
+                    <li><Link href="/products/anti-hail-net" className="text-xs text-slate-500 hover:text-indigo-600">توری ضد تگرگ</Link></li>
+                    <li><Link href="/products/safety-net" className="text-xs text-slate-500 hover:text-indigo-600">توری ایمنی ساختمان</Link></li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold text-cyan-700 mb-3 text-sm">لوازم جانبی</h4>
+                  <ul className="space-y-2">
+                    <li><Link href="/products/shade-net-clips" className="text-xs text-slate-500 hover:text-cyan-600">گیره نصب توری سایبان</Link></li>
+                  </ul>
+                </div>
+              </div>
             </div>
 
             <Link href="/agencies" className="hover:text-indigo-600 transition-colors">عاملین فروش</Link>
@@ -90,14 +114,7 @@ export function Navbar({ categories = [] }: { categories?: CategoryItem[] }) {
             </span>
           </button>
 
-          <div className="hidden md:flex items-center relative">
-            <input 
-              type="text" 
-              placeholder="جستجوی محصولات..." 
-              className="h-10 w-64 rounded-full bg-slate-100 border-transparent px-4 pe-10 text-sm focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200 transition-all outline-none"
-            />
-            <Search className="w-4 h-4 text-slate-400 absolute end-3" />
-          </div>
+          <LiveSearch />
 
           <Link href="/checkout" className="hidden md:block">
             <Button variant="ghost" size="sm" className="relative h-10 w-10 p-0 rounded-full">
@@ -138,19 +155,37 @@ export function Navbar({ categories = [] }: { categories?: CategoryItem[] }) {
               <Link href="/products" onClick={() => setIsMobileMenuOpen(false)} className="hover:text-indigo-600 py-3 border-b border-slate-100">فروشگاه</Link>
               
               <div className="py-2 border-b border-slate-100">
-                <span className="text-slate-400 text-sm mb-2 block">دسته‌بندی‌ها</span>
-                <div className="flex flex-col gap-1 pr-4 border-r-2 border-slate-100">
-                  {categories.map((cat) => (
-                    <Link 
-                      key={cat.id} 
-                      href={`/products?category=${cat.slug}`}
-                      onClick={() => setIsMobileMenuOpen(false)}
-                      className="py-2 text-sm text-slate-600 hover:text-indigo-600"
-                    >
-                      {cat.name}
-                    </Link>
-                  ))}
-                  <Link href="/products" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm font-bold text-indigo-600">همه محصولات</Link>
+                <span className="text-slate-400 text-sm mb-2 block font-bold">دسته‌بندی‌ها</span>
+                <div className="flex flex-col gap-3 pr-2 border-r-2 border-slate-100">
+                  <div>
+                    <span className="text-xs font-bold text-emerald-700 mb-1 block">محصولات توری سایبان</span>
+                    <Link href="/products/greenhouse-shade-net" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-emerald-600">توری سایبان ( شید گلخانه )</Link>
+                    <Link href="/products/livestock-shade-net" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-emerald-600">توری سایبان برای دامداری ها</Link>
+                    <Link href="/products/parking-shade-net" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-emerald-600">توری سایبان پارکینگ</Link>
+                    <Link href="/products/sunburn-protection-net" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-emerald-600">توری سایبان برای جلوگیری از آفتاب سوختگی</Link>
+                    <Link href="/products/pool-cover-net" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-emerald-600">توری سایبان برای پوشش استخر</Link>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-amber-600 mb-1 block">محصولات توری بسته بندی</span>
+                    <Link href="/products/date-protection-bag" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-amber-500">کیسه محافظ خرما</Link>
+                    <Link href="/products/orange-packaging-net" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-amber-500">توری بسته بندی پرتقال</Link>
+                    <Link href="/products/raschel-mesh-bag" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-amber-500">کیسه توری راشل</Link>
+                    <Link href="/products/forage-packaging-net" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-amber-500">توری بسته بندی علوفه</Link>
+                    <Link href="/products/cabbage-packaging-net" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-amber-500">کیسه بسته بندی کلم</Link>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-indigo-700 mb-1 block">دیگر محصولات</span>
+                    <Link href="/products/fence-net" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-indigo-600">توری حصاری</Link>
+                    <Link href="/products/anti-bird-net" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-indigo-600">توری ضد پرنده</Link>
+                    <Link href="/products/harvest-collection-net" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-indigo-600">توری جمع آوری محصول</Link>
+                    <Link href="/products/anti-hail-net" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-indigo-600">توری ضد تگرگ</Link>
+                    <Link href="/products/safety-net" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-indigo-600">توری ایمنی ساختمان</Link>
+                  </div>
+                  <div>
+                    <span className="text-xs font-bold text-cyan-700 mb-1 block">لوازم جانبی</span>
+                    <Link href="/products/shade-net-clips" onClick={() => setIsMobileMenuOpen(false)} className="block py-1 text-sm text-slate-600 hover:text-cyan-600">گیره نصب توری سایبان</Link>
+                  </div>
+                  <Link href="/products" onClick={() => setIsMobileMenuOpen(false)} className="py-2 text-sm font-bold text-indigo-600 mt-2">همه محصولات</Link>
                 </div>
               </div>
 

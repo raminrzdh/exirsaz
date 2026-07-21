@@ -3,20 +3,25 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { ArrowRight, Save, Image as ImageIcon, Plus, Trash2 } from 'lucide-react';
+import { ArrowRight, Save, Image as ImageIcon, Plus, Trash2, CheckCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { createProduct, updateProduct } from './actions';
 import { toast } from 'react-hot-toast';
+import { InternalLinkingWidget } from '@/components/admin/InternalLinkingWidget';
+import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
+import Image from 'next/image';
+
 
 
 interface ProductFormClientProps {
   isEdit?: boolean;
   agencies: { id: string, name: string }[];
   categories: { id: string, name: string }[];
+  availableFeatures?: string[];
   initialData?: any;
 }
 
-export function ProductFormClient({ isEdit, agencies, categories, initialData }: ProductFormClientProps) {
+export function ProductFormClient({ isEdit, agencies, categories, availableFeatures, initialData }: ProductFormClientProps) {
   const router = useRouter();
   const [selectedAgencies, setSelectedAgencies] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,6 +31,10 @@ export function ProductFormClient({ isEdit, agencies, categories, initialData }:
   const [attributes, setAttributes] = useState<{name: string, valuesString: string}[]>([]);
   // Variants: [ { attributes: {'رنگ': 'قرمز'}, price: '100', stock: '5', sku: 'RED-1' } ]
   const [variants, setVariants] = useState<any[]>([]);
+
+  const [productImages, setProductImages] = useState<string[]>([]);
+  const [productFeaturesList, setProductFeaturesList] = useState<{name: string, value: string}[]>([]);
+  const [isMediaPickerOpen, setIsMediaPickerOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -60,6 +69,26 @@ export function ProductFormClient({ isEdit, agencies, categories, initialData }:
       
       if (initialData.agencies) {
         setSelectedAgencies(initialData.agencies.map((a: any) => a.id));
+      }
+
+      if (initialData.images) {
+        try {
+          const parsed = JSON.parse(initialData.images);
+          if (Array.isArray(parsed)) setProductImages(parsed);
+        } catch(e) {
+          console.error("Failed to parse product images", e);
+        }
+      }
+
+      if (initialData.features) {
+        try {
+          const parsed = JSON.parse(initialData.features);
+          if (Array.isArray(parsed)) {
+            setProductFeaturesList(parsed);
+          }
+        } catch(e) {
+          console.error("Failed to parse product features", e);
+        }
       }
 
       if (initialData.type === 'VARIABLE' && initialData.variants) {
@@ -169,10 +198,15 @@ export function ProductFormClient({ isEdit, agencies, categories, initialData }:
     }
 
     setIsSubmitting(true);
+    
+    const featuresArray = productFeaturesList.filter(f => f.name.trim() && f.value.trim());
+
     const dataToSubmit = {
       ...formData,
       type: productType,
       agencies: selectedAgencies,
+      images: JSON.stringify(productImages),
+      features: JSON.stringify(featuresArray),
       attributes: productType === 'VARIABLE' ? attributes.map(a => ({
         name: a.name,
         values: a.valuesString.split(',').map(v => v.trim()).filter(v => !!v)
@@ -242,10 +276,24 @@ export function ProductFormClient({ isEdit, agencies, categories, initialData }:
                 type="text" 
                 value={formData.name}
                 onChange={e => setFormData({ ...formData, name: e.target.value })}
-                placeholder="مثلاً: گوشی موبایل سامسونگ مدل Galaxy S24 Ultra" 
+                placeholder="مثلاً: توری سایبان گلخانه" 
                 className="w-full h-12 px-4 rounded-lg bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-colors"
                 required
               />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-semibold text-slate-700">آدرس اینترنتی (Slug)</label>
+              <input 
+                type="text" 
+                value={formData.slug}
+                onChange={e => setFormData({ ...formData, slug: e.target.value })}
+                placeholder="مثال: greenhouse-shade-net (استفاده از حروف انگلیسی توصیه می‌شود)" 
+                className="w-full h-12 px-4 rounded-lg bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-colors dir-ltr text-left font-mono"
+              />
+              <p className="text-xs text-slate-500 leading-relaxed">
+                برای اشتراک‌گذاری راحت‌تر لینک در شبکه‌های اجتماعی و پیام‌رسان‌ها (واتس‌اپ و...) بهتر است از <strong>کلمات انگلیسی با خط تیره</strong> استفاده کنید تا آدرس‌های طولانی و ناخوانا ایجاد نشود.
+              </p>
             </div>
 
             <div className="space-y-2">
@@ -287,146 +335,127 @@ export function ProductFormClient({ isEdit, agencies, categories, initialData }:
             </div>
           </div>
 
-          {productType === 'VARIABLE' && (
-            <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-sm">
-              <div className="flex items-center justify-between border-b border-slate-100 pb-4">
-                <h2 className="text-lg font-bold text-slate-900">ویژگی‌ها و متغیرها</h2>
-                <Button type="button" variant="outline" size="sm" onClick={addAttribute} className="gap-2">
-                  <Plus className="w-4 h-4" /> افزودن ویژگی
-                </Button>
-              </div>
-              
-              {attributes.length > 0 ? (
-                <div className="space-y-4">
-                  {attributes.map((attr, index) => (
-                    <div key={index} className="flex gap-4 items-start p-4 bg-slate-50 rounded-xl border border-slate-200">
-                      <div className="flex-1 space-y-2">
-                        <label className="text-xs font-semibold text-slate-500">نام ویژگی (مثال: رنگ)</label>
-                        <input 
-                          type="text" 
-                          value={attr.name}
-                          onChange={e => {
-                            const newAttrs = [...attributes];
-                            newAttrs[index].name = e.target.value;
-                            setAttributes(newAttrs);
-                          }}
-                          className="w-full h-10 px-3 rounded-lg border border-slate-200 outline-none"
-                        />
-                      </div>
-                      <div className="flex-[2] space-y-2">
-                        <label className="text-xs font-semibold text-slate-500">مقادیر (با کاما جدا کنید)</label>
-                        <input 
-                          type="text" 
-                          value={attr.valuesString}
-                          onChange={e => {
-                            const newAttrs = [...attributes];
-                            newAttrs[index].valuesString = e.target.value;
-                            setAttributes(newAttrs);
-                          }}
-                          placeholder="قرمز, آبی, سبز"
-                          className="w-full h-10 px-3 rounded-lg border border-slate-200 outline-none"
-                        />
-                      </div>
-                      <div className="pt-7">
-                        <button type="button" onClick={() => removeAttribute(index)} className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg">
-                          <Trash2 className="w-5 h-5" />
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                  
-                  <div className="flex justify-end pt-4">
-                    <Button type="button" onClick={generateVariants} className="bg-slate-900 text-white hover:bg-slate-800">
-                      تولید ترکیبات متغیرها
-                    </Button>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center py-8 text-slate-500">هیچ ویژگی ثبت نشده است. روی "افزودن ویژگی" کلیک کنید.</div>
-              )}
 
-              {variants.length > 0 && (
-                <div className="mt-8 pt-6 border-t border-slate-100">
-                  <h3 className="font-bold text-slate-800 mb-4">متغیرهای تولید شده ({variants.length})</h3>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm text-right">
-                      <thead className="bg-slate-50 text-slate-600 font-semibold border-b border-slate-200">
-                        <tr>
-                          <th className="p-3">ترکیب</th>
-                          <th className="p-3 w-32">قیمت (تومان)</th>
-                          <th className="p-3 w-24">موجودی</th>
-                          <th className="p-3 w-32">SKU</th>
-                          <th className="p-3 w-10"></th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {variants.map((variant, index) => (
-                          <tr key={index} className="border-b border-slate-100 hover:bg-slate-50/50">
-                            <td className="p-3 font-medium text-slate-700">
-                              {Object.entries(variant.attributes).map(([k, v]) => `${k}: ${v}`).join(' - ')}
-                            </td>
-                            <td className="p-3">
-                              <input 
-                                type="number" 
-                                value={variant.price}
-                                onChange={e => {
-                                  const newVars = [...variants];
-                                  newVars[index].price = e.target.value;
-                                  setVariants(newVars);
-                                }}
-                                className="w-full h-9 px-2 rounded-md border border-slate-200 font-mono text-start dir-ltr"
-                              />
-                            </td>
-                            <td className="p-3">
-                              <input 
-                                type="number" 
-                                value={variant.stock}
-                                onChange={e => {
-                                  const newVars = [...variants];
-                                  newVars[index].stock = e.target.value;
-                                  setVariants(newVars);
-                                }}
-                                className="w-full h-9 px-2 rounded-md border border-slate-200 font-mono text-start dir-ltr"
-                              />
-                            </td>
-                            <td className="p-3">
-                              <input 
-                                type="text" 
-                                value={variant.sku}
-                                onChange={e => {
-                                  const newVars = [...variants];
-                                  newVars[index].sku = e.target.value;
-                                  setVariants(newVars);
-                                }}
-                                className="w-full h-9 px-2 rounded-md border border-slate-200 font-mono text-start dir-ltr"
-                              />
-                            </td>
-                            <td className="p-3">
-                              <button type="button" onClick={() => {
-                                const newVars = [...variants];
-                                newVars.splice(index, 1);
-                                setVariants(newVars);
-                              }} className="text-rose-400 hover:text-rose-600">
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
 
           <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-sm">
-            <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-4">تصاویر محصول</h2>
-            <div className="w-full h-48 rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors cursor-pointer">
-              <ImageIcon className="w-8 h-8 mb-2 text-slate-400" />
-              <p className="text-sm font-medium">برای آپلود تصویر کلیک کنید یا فایل را بکشید</p>
-              <p className="text-xs text-slate-400 mt-1">PNG, JPG, WEBP تا سقف ۵ مگابایت</p>
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <h2 className="text-lg font-bold text-slate-900">ویژگی‌ها و مشخصات فنی</h2>
+              <Button type="button" variant="outline" size="sm" onClick={() => setProductFeaturesList([...productFeaturesList, { name: availableFeatures?.[0] || '', value: '' }])} className="gap-2">
+                <Plus className="w-4 h-4" /> افزودن ویژگی
+              </Button>
             </div>
+            
+            <div className="space-y-3">
+              {productFeaturesList.map((feature, idx) => (
+                <div key={idx} className="flex gap-3">
+                  <select 
+                    value={feature.name}
+                    onChange={e => {
+                      const newList = [...productFeaturesList];
+                      newList[idx].name = e.target.value;
+                      setProductFeaturesList(newList);
+                    }}
+                    className="flex-1 h-11 px-3 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-colors"
+                  >
+                    <option value="">انتخاب ویژگی...</option>
+                    {availableFeatures?.map(f => (
+                       <option key={f} value={f}>{f}</option>
+                    ))}
+                    {!availableFeatures?.includes(feature.name) && feature.name !== '' && (
+                       <option value={feature.name}>{feature.name}</option>
+                    )}
+                  </select>
+                  <input 
+                    type="text" 
+                    value={feature.value}
+                    onChange={e => {
+                      const newList = [...productFeaturesList];
+                      newList[idx].value = e.target.value;
+                      setProductFeaturesList(newList);
+                    }}
+                    placeholder="مقدار ویژگی (مثل: قرمز، 20 کیلوگرم)..."
+                    className="flex-[2] h-11 px-3 rounded-lg border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-colors"
+                  />
+                  <button type="button" onClick={() => {
+                    const newList = [...productFeaturesList];
+                    newList.splice(idx, 1);
+                    setProductFeaturesList(newList);
+                  }} className="w-11 h-11 flex items-center justify-center text-rose-500 hover:bg-rose-50 rounded-lg border border-transparent transition-colors">
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </div>
+              ))}
+              
+              {productFeaturesList.length === 0 && (
+                <div className="text-center py-6 text-slate-500 text-sm">
+                  ویژگی برای این محصول ثبت نشده است. روی "افزودن ویژگی" کلیک کنید.
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="bg-white rounded-2xl border border-slate-200 p-6 space-y-6 shadow-sm">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+              <h2 className="text-lg font-bold text-slate-900">گالری تصاویر محصول</h2>
+              <Button type="button" variant="outline" size="sm" onClick={() => setIsMediaPickerOpen(true)} className="gap-2">
+                <Plus className="w-4 h-4" /> افزودن عکس
+              </Button>
+            </div>
+            
+            {productImages.length === 0 ? (
+              <div 
+                onClick={() => setIsMediaPickerOpen(true)}
+                className="w-full h-48 rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                <ImageIcon className="w-8 h-8 mb-2 text-slate-400" />
+                <p className="text-sm font-medium">برای انتخاب یا آپلود تصویر کلیک کنید</p>
+                <p className="text-xs text-slate-400 mt-1">PNG, JPG, WEBP</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                {productImages.map((imgUrl, idx) => (
+                  <div key={idx} className={`relative aspect-square rounded-xl overflow-hidden border-2 group transition-all ${idx === 0 ? 'border-indigo-500 ring-2 ring-indigo-100' : 'border-slate-200'}`}>
+                    <Image src={imgUrl} alt={`Product image ${idx+1}`} fill className="object-cover" unoptimized />
+                    
+                    {/* Badge for Main Image */}
+                    {idx === 0 && (
+                      <div className="absolute top-2 right-2 bg-indigo-500 text-white text-[10px] font-bold px-2 py-1 rounded-full shadow-md z-10 flex items-center gap-1">
+                        <CheckCircle className="w-3 h-3" /> عکس اصلی
+                      </div>
+                    )}
+
+                    {/* Actions Overlay */}
+                    <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 z-20">
+                      {idx !== 0 && (
+                        <button 
+                          type="button"
+                          onClick={() => {
+                            const newImages = [...productImages];
+                            const [moved] = newImages.splice(idx, 1);
+                            newImages.unshift(moved);
+                            setProductImages(newImages);
+                          }}
+                          className="px-3 py-1.5 bg-white text-slate-800 text-xs font-bold rounded-lg shadow-sm hover:bg-indigo-50 hover:text-indigo-700 transition-colors"
+                        >
+                          انتخاب به عنوان اصلی
+                        </button>
+                      )}
+                      <button 
+                        type="button"
+                        onClick={() => {
+                          const newImages = [...productImages];
+                          newImages.splice(idx, 1);
+                          setProductImages(newImages);
+                        }}
+                        className="px-3 py-1.5 bg-rose-500 text-white text-xs font-bold rounded-lg shadow-sm hover:bg-rose-600 transition-colors"
+                      >
+                        حذف عکس
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
           
         </div>
@@ -568,9 +597,20 @@ export function ProductFormClient({ isEdit, agencies, categories, initialData }:
               )}
             </div>
           </div>
+          
+          <InternalLinkingWidget content={formData.description || formData.shortDesc} />
 
         </div>
       </div>
+      
+      <MediaPickerModal 
+        isOpen={isMediaPickerOpen}
+        onClose={() => setIsMediaPickerOpen(false)}
+        onSelect={(data) => {
+          setProductImages([...productImages, data.url]);
+        }}
+        requireSeo={false}
+      />
     </form>
   );
 }

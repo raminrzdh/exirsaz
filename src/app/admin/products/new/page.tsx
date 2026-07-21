@@ -9,6 +9,8 @@ export default async function NewProductPage() {
   const dbAgencies = await prisma.agency.findMany({ select: { id: true, name: true } });
   const agencies = dbAgencies.map(a => ({ id: a.id, name: a.name }));
   const categories = await prisma.category.findMany({ select: { id: true, name: true } });
+  const attributes = await prisma.attribute.findMany({ orderBy: { name: 'asc' } });
+  const availableFeatures = attributes.map(a => a.name);
   
-  return <ProductFormClient agencies={agencies} categories={categories} />;
+  return <ProductFormClient agencies={agencies} categories={categories} availableFeatures={availableFeatures} />;
 }

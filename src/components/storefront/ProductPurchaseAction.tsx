@@ -9,12 +9,16 @@ import { InquiryLeadModal } from './InquiryLeadModal';
 import { LocationGateModal } from './LocationGateModal';
 import { checkRepresentative, recordLeadEvent } from '@/app/(storefront)/products/actions';
 import { toast } from 'react-hot-toast';
+import { trackEvent } from '@/lib/utils/analytics';
+import { useExitIntent } from '@/hooks/useExitIntent';
+import { ExitIntentModal } from './ExitIntentModal';
 
 
 interface Product {
   id: string;
   name: string;
   price?: number;
+  salePrice?: number | null;
   image: string;
   salesType: string;
   inquiryAction?: string;
@@ -41,13 +45,21 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
 
   const isDirectSale = product.salesType === 'DIRECT_SALE';
 
+  const { shouldShow: showExitIntent, dismiss: dismissExitIntent } = useExitIntent({
+    enabled: !isDirectSale, // Only enable for INQUIRY products
+  });
+
   useEffect(() => {
     async function fetchAgency() {
       if (userLocation && isDirectSale) {
         setIsCheckingRep(true);
         const category = product.categoryName || (product.name.includes('سایبان') ? 'توری سایبان' : 'سایر');
         const rep = await checkRepresentative(userLocation.province, userLocation.city, category, product.id);
-        setLocalAgency(rep);
+        if (rep) {
+          setLocalAgency({ ...rep, phone: rep.phone ?? undefined });
+        } else {
+          setLocalAgency(null);
+        }
         setIsCheckingRep(false);
       } else {
         setLocalAgency(null);
@@ -70,6 +82,7 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
       image: product.image,
       quantity,
     });
+    trackEvent('add_to_cart', { productId: product.id, name: product.name, quantity });
     toast.success('محصول به سبد خرید اضافه شد!');
   };
 
@@ -78,6 +91,7 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
     
     // Fire and forget analytics event
     recordLeadEvent(localAgency.id, type).catch(console.error);
+    trackEvent('contact_agent_clicked', { agencyId: localAgency.id, type, product: product.id });
     
     if (type === 'WHATSAPP') {
       window.open(`https://wa.me/98${localAgency.phone?.substring(1)}?text=${encodeURIComponent(`سلام، درباره محصول ${product.name} سوال داشتم.`)}`, '_blank');
@@ -87,6 +101,8 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
   };
 
   const handleInquiryClick = () => {
+    trackEvent('inquiry_clicked', { action: product.inquiryAction, product: product.id });
+    
     if (product.inquiryAction === 'WHATSAPP_REDIRECT') {
       const message = encodeURIComponent(`سلام، من مایل به استعلام قیمت محصول ${product.name} هستم.`);
       window.open(`https://wa.me/989120000000?text=${message}`, '_blank');
@@ -103,10 +119,24 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
       {isDirectSale ? (
         <>
           <div className="flex items-center justify-between mb-6">
-            <span className="text-slate-500 font-medium">قیمت محصول:</span>
-            <span className="text-2xl font-black text-emerald-700">
-              {product.price ? formatToman(product.price) : 'نامشخص'}
-            </span>
+            <span className="text-slate-500 font-medium">قیمت نهایی:</span>
+            {product.salePrice && product.price ? (
+              <div className="flex flex-col items-end">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="bg-rose-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-md">
+                    {toPersianDigits(Math.round(((product.price - product.salePrice) / product.price) * 100))}٪
+                  </span>
+                  <span className="text-sm text-slate-400 line-through decoration-rose-500/50">{formatToman(product.price * quantity)}</span>
+                </div>
+                <span className="text-2xl font-black text-rose-600">
+                  {formatToman(product.salePrice * quantity)}
+                </span>
+              </div>
+            ) : (
+              <span className="text-2xl font-black text-emerald-700">
+                {product.price ? formatToman(product.price * quantity) : 'نامشخص'}
+              </span>
+            )}
           </div>
           
           <div className="flex items-center gap-4 mb-6">
@@ -212,6 +242,12 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
       <InquiryLeadModal 
         isOpen={isInquiryModalOpen} 
         onClose={() => setIsInquiryModalOpen(false)} 
+        productName={product.name}
+      />
+      
+      <ExitIntentModal 
+        isOpen={showExitIntent}
+        onClose={dismissExitIntent}
         productName={product.name}
       />
     </div>

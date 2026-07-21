@@ -14,7 +14,7 @@ export default async function AnalyticsPage() {
   const data = events.map(e => ({
     id: e.id,
     agencyId: e.agencyId,
-    type: e.type,
+    type: e.type as "CALL" | "WHATSAPP",
     createdAt: e.createdAt.toISOString(),
     agencyName: e.agency?.name || 'نمایندگی نامشخص',
   }));

@@ -13,5 +13,11 @@ export default async function EditPostPage({ params }: { params: Promise<{ id: s
   const dbCategories = await prisma.category.findMany();
   const categories = dbCategories.map(c => c.name);
   
-  return <PostForm initialData={post} categories={categories} />;
+  const postData = {
+    ...post,
+    status: post.status as "published" | "draft" | "archived",
+    thumbnail: post.thumbnail || undefined
+  };
+  
+  return <PostForm initialData={postData} categories={categories} />;
 }

@@ -61,7 +61,7 @@ export function Footer() {
             <h4 className="font-bold text-slate-900 mb-4">لینک‌های مفید</h4>
             <ul className="space-y-2 text-sm text-slate-600">
               <li><Link href="/about" className="hover:text-indigo-600">درباره ما</Link></li>
-              <li><Link href="/services" className="hover:text-indigo-600">نمونه بافت‌ها</Link></li>
+              <li><Link href="/textures" className="hover:text-indigo-600">نمونه بافت‌ها</Link></li>
               <li><Link href="/contact" className="hover:text-indigo-600">تماس با ما</Link></li>
               <li><Link href="/faq" className="hover:text-indigo-600">سوالات متداول</Link></li>
               <li><Link href="/blog" className="hover:text-indigo-600">مجله اکسیرساز</Link></li>
