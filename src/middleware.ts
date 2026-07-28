@@ -13,6 +13,14 @@ const REDIRECT_MAP: Record<string, string> = {
 export function middleware(request: NextRequest) {
   const { pathname, search } = request.nextUrl;
 
+  // Simple Admin Auth Check
+  if (pathname.startsWith('/admin') && !pathname.startsWith('/admin/login')) {
+    const authCookie = request.cookies.get('admin_auth_session');
+    if (!authCookie || authCookie.value !== 'true') {
+      return NextResponse.redirect(new URL('/admin/login', request.url));
+    }
+  }
+
   // Check if the exact pathname exists in our redirect map
   const targetPath = REDIRECT_MAP[pathname];
 
@@ -39,5 +47,6 @@ export const config = {
   matcher: [
     '/portfolio/:path*',
     '/product/:path*',
+    '/admin/:path*'
   ],
 };

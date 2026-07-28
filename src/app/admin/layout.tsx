@@ -18,6 +18,7 @@ import {
   LineChart
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { logoutAction } from './login/actions';
 
 export default function AdminLayout({
   children,
@@ -102,10 +103,12 @@ export default function AdminLayout({
         </nav>
         
         <div className="p-4 border-t border-white/10">
-          <button className="flex items-center gap-3 px-4 py-3 rounded-lg w-full text-slate-300 hover:bg-red-500/10 hover:text-red-400 transition-colors">
-            <LogOut className="w-5 h-5" />
-            خروج
-          </button>
+          <form action={logoutAction}>
+            <button type="submit" className="flex items-center gap-3 px-4 py-3 rounded-lg w-full text-slate-300 hover:bg-red-500/10 hover:text-red-400 transition-colors">
+              <LogOut className="w-5 h-5" />
+              خروج
+            </button>
+          </form>
         </div>
       </aside>
 
