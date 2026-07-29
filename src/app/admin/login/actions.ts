@@ -8,14 +8,14 @@ export async function loginAction(formData: FormData) {
   const password = formData.get('password')
 
   // Hardcoded for now based on user request
-  if (username === 'admin' && password === 'admin') {
+  if (username === 'admin123' && password === 'exir123') {
     (await cookies()).set('admin_auth_session', 'true', {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       maxAge: 60 * 60 * 24 * 7, // 1 week
       path: '/',
     })
-    
+
     redirect('/admin')
   } else {
     return { error: 'نام کاربری یا رمز عبور اشتباه است' }
