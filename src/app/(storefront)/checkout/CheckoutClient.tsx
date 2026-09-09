@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useCart } from '@/lib/store/CartContext';
 import { formatToman, toPersianDigits } from '@/lib/utils/currency';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { ShieldCheck, MapPin, Building2, User, CreditCard, Trash2, ArrowRight, Loader2, Store, PhoneCall } from 'lucide-react';
 import Link from 'next/link';
 import { toast } from 'react-hot-toast';
@@ -64,11 +64,14 @@ export function CheckoutClient() {
         const itemIds = items.map(i => i.productId);
         const related = await getCrossSellProducts(itemIds);
         setCrossSells(related);
+        
+        // 3. Track checkout start
+        trackEvent('CHECKOUT_START', { itemCount: items.length, total });
       }
     }
     
     initCheckout();
-  }, [userLocation, items]);
+  }, [userLocation, items, total]);
 
   const handleMobileSubmit = (e: React.FormEvent) => {
     e.preventDefault();

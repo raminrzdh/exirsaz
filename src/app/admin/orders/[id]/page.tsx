@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { ArrowRight, Package, Truck, CreditCard, User } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { PrintButton } from '@/components/ui/PrintButton';
 import { formatToman, toPersianDigits } from '@/lib/utils/currency';
 import { formatJalaliDateTime } from '@/lib/utils/date';

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Plus, Search, Edit, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { prisma } from '@/lib/db/prisma';
 
 export default async function AdminPostsPage() {

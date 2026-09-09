@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from 'react'
 import { loginAction } from './actions'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/ui/button'
 
 export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)

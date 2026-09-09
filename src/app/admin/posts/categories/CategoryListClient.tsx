@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Edit, Trash2, Check, X, Plus } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { editCategory, removeCategory, createCategory } from '../actions';
 
 export function CategoryListClient({ initialCategories }: { initialCategories: string[] }) {

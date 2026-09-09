@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { Search, Plus, Edit, Trash2, MapPin, CheckCircle2, XCircle } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { deleteAgency } from './actions';
 import { AgencyFormModal } from './AgencyFormModal';
 

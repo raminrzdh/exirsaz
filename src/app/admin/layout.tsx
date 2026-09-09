@@ -17,7 +17,13 @@ import {
   SlidersHorizontal,
   LineChart
 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { logoutAction } from './login/actions';
 
 export default function AdminLayout({
@@ -40,66 +46,117 @@ export default function AdminLayout({
         </div>
         
         <nav className="flex-1 overflow-y-auto py-6 px-4 space-y-1">
-          <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-indigo-600 text-white font-medium">
-            <LayoutDashboard className="w-5 h-5" />
-            داشبورد
-          </Link>
-          <div className="space-y-1 py-1">
-            <div className="px-4 py-2 text-xs font-bold text-slate-400 uppercase tracking-wider">مدیریت فروشگاه</div>
-            <Link href="/admin/products" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-              <Package className="w-5 h-5" />
-              همه محصولات
-            </Link>
-            <Link href="/admin/products/categories" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors ps-8 opacity-90 text-sm">
-              <ListTree className="w-4 h-4" />
-              دسته‌بندی محصولات
-            </Link>
-            <Link href="/admin/products/features" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors ps-8 opacity-90 text-sm">
-              <SlidersHorizontal className="w-4 h-4" />
-              ویژگی‌های محصولات
-            </Link>
-          </div>
-          
-          <Link href="/admin/orders" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-            <ShoppingBag className="w-5 h-5" />
-            سفارشات
-          </Link>
-          <Link href="/admin/reports" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-            <LineChart className="w-5 h-5 text-emerald-400" />
-            گزارشات و فروش
-          </Link>
-          <Link href="/admin/media" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>
-            رسانه‌ها
-          </Link>
-          <Link href="/admin/posts" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-            <FileText className="w-5 h-5" />
-            محتوا و سئو
-          </Link>
-          <Link href="/admin/posts/categories" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors ps-8 opacity-80 text-sm">
-            <Tags className="w-4 h-4" />
-            دسته‌بندی‌ها
-          </Link>
-          <Link href="/admin/users" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-            <Users className="w-5 h-5" />
-            کاربران
-          </Link>
-          <Link href="/admin/agencies" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-            <Store className="w-5 h-5" />
-            نمایندگی‌ها
-          </Link>
-          <Link href="/admin/settings/geo-rules" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-            <ShieldAlert className="w-5 h-5" />
-            قوانین فروش منطقه‌ای
-          </Link>
-          <Link href="/admin/analytics" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-            <BarChart3 className="w-5 h-5" />
-            آمار ارجاعات
-          </Link>
-          <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors">
-            <Settings className="w-5 h-5" />
-            تنظیمات
-          </Link>
+          <Accordion className="w-full space-y-1" defaultValue={['catalog', 'sales']}>
+            
+            {/* Category 1: Dashboard */}
+            <div className="space-y-1 pb-2">
+              <Link href="/admin" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary text-primary-foreground font-medium">
+                <LayoutDashboard className="w-5 h-5" />
+                داشبورد
+              </Link>
+            </div>
+
+            {/* Category 2: Catalog */}
+            <AccordionItem value="catalog" className="border-none">
+              <AccordionTrigger className="px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white hover:no-underline font-medium text-sm">
+                <div className="flex items-center gap-3">
+                  <Package className="w-5 h-5" />
+                  مدیریت کاتالوگ
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-1 pb-1">
+                <div className="space-y-1 ps-8">
+                  <Link href="/admin/products" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    همه محصولات
+                  </Link>
+                  <Link href="/admin/products/categories" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    دسته‌بندی‌ها
+                  </Link>
+                  <Link href="/admin/products/features" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    ویژگی‌ها و متغیرها
+                  </Link>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* Category 3: Sales */}
+            <AccordionItem value="sales" className="border-none">
+              <AccordionTrigger className="px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white hover:no-underline font-medium text-sm">
+                <div className="flex items-center gap-3">
+                  <ShoppingBag className="w-5 h-5" />
+                  فروش و نمایندگان
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-1 pb-1">
+                <div className="space-y-1 ps-8">
+                  <Link href="/admin/orders" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    مدیریت سفارشات
+                  </Link>
+                  <Link href="/admin/agencies" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    نمایندگی‌ها
+                  </Link>
+                  <Link href="/admin/settings/geo-rules" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    قوانین فروش منطقه‌ای
+                  </Link>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* Category 4: Content */}
+            <AccordionItem value="content" className="border-none">
+              <AccordionTrigger className="px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white hover:no-underline font-medium text-sm">
+                <div className="flex items-center gap-3">
+                  <FileText className="w-5 h-5" />
+                  محتوا و رسانه
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-1 pb-1">
+                <div className="space-y-1 ps-8">
+                  <Link href="/admin/posts" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    مقالات و سئو
+                  </Link>
+                  <Link href="/admin/posts/categories" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    دسته‌بندی مقالات
+                  </Link>
+                  <Link href="/admin/media" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    مدیریت رسانه‌ها
+                  </Link>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* Category 5: Settings */}
+            <AccordionItem value="settings" className="border-none">
+              <AccordionTrigger className="px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white hover:no-underline font-medium text-sm">
+                <div className="flex items-center gap-3">
+                  <Settings className="w-5 h-5" />
+                  پیکربندی سیستم
+                </div>
+              </AccordionTrigger>
+              <AccordionContent className="pt-1 pb-1">
+                <div className="space-y-1 ps-8">
+                  <Link href="/admin/users" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    کاربران سیستم
+                  </Link>
+                  <Link href="/admin/settings" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    تنظیمات عمومی
+                  </Link>
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+
+            {/* Standalone: Analytics/Reports */}
+            <div className="pt-2">
+              <Link href="/admin/reports" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+                <LineChart className="w-5 h-5 text-emerald-400" />
+                گزارشات فروش
+              </Link>
+              <Link href="/admin/analytics" className="flex items-center gap-3 px-4 py-3 rounded-lg text-slate-300 hover:bg-white/5 hover:text-white transition-colors text-sm font-medium">
+                <BarChart3 className="w-5 h-5 text-blue-400" />
+                آمار ارجاعات
+              </Link>
+            </div>
+          </Accordion>
         </nav>
         
         <div className="p-4 border-t border-white/10">

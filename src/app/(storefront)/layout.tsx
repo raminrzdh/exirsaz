@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { BottomNav } from "@/components/layout/BottomNav";
 import { CartProvider } from "@/lib/store/CartContext";
 import { prisma } from "@/lib/db/prisma";
+import { PageViewTracker } from "@/components/storefront/PageViewTracker";
 
 export default async function StorefrontLayout({
   children,
@@ -16,6 +17,7 @@ export default async function StorefrontLayout({
 
   return (
     <CartProvider>
+      <PageViewTracker />
       <Navbar categories={categories} />
       <main className="flex-grow flex flex-col pb-16 md:pb-0">{children}</main>
       <Footer />

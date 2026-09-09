@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { ShoppingCart, MessageCircle, PhoneCall, FileText, MapPin, Store } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { formatToman, toPersianDigits } from '@/lib/utils/currency';
 import { useCart } from '@/lib/store/CartContext';
 import { InquiryLeadModal } from './InquiryLeadModal';

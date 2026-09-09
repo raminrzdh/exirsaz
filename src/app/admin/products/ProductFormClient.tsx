@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Save, Image as ImageIcon, Plus, Trash2, CheckCircle, X } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { createProduct, updateProduct } from './actions';
 import { toast } from 'react-hot-toast';
 import { InternalLinkingWidget } from '@/components/admin/InternalLinkingWidget';

@@ -3,7 +3,7 @@
 import { createPortal } from 'react-dom';
 import { useState, useEffect } from 'react';
 import { X, Send, PhoneCall } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { trackEvent } from '@/lib/utils/analytics';
 
 interface ExitIntentModalProps {

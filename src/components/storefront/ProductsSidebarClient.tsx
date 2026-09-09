@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Filter, Check, MapPin, ChevronDown } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { useCart } from '@/lib/store/CartContext';
 import { LocationGateModal } from './LocationGateModal';
 

@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { MapPin, ArrowLeft, X, Loader2 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { useCart } from '@/lib/store/CartContext';
 import dynamic from 'next/dynamic';
 

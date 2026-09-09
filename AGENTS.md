@@ -43,3 +43,43 @@ As an expert SEO and developer, you MUST ALWAYS follow these rules for every pag
   - **Breadcrumbs**: BreadcrumbList for hierarchical navigation.
   - **Articles**: BlogPosting for news and articles.
   - **LocalBusiness**: For the main landing page and contact pages.
+
+# STRICT DESIGN SYSTEM GOVERNANCE: shadcn/ui (RTL-FIRST)
+
+For all UI/UX layouts, wireframes, component code, and design specifications in this project, you MUST strictly adhere to **shadcn/ui** primitives and conventions. DO NOT invent arbitrary custom CSS, bespoke class names, or hallucinated styling patterns.
+
+Follow these non-negotiable rules:
+
+## 1. Zero Custom Hallucinations — Pure shadcn Components Only
+- Compose every single interface strictly using standard shadcn/ui component primitives:
+  - Layout & Containers: `Card` (`CardHeader`, `CardTitle`, `CardDescription`, `CardContent`, `CardFooter`), `Separator`, `AspectRatio`
+  - Feedback & Status: `Badge`, `Alert` (`AlertTitle`, `AlertDescription`), `Toast`, `Skeleton`
+  - Forms & Inputs: `Form`, `Input`, `Select`, `Checkbox`, `RadioGroup`, `Textarea`, `Slider`
+  - Overlays & Popups: `Dialog`, `Sheet`, `Popover`, `Tooltip`, `DropdownMenu`
+  - Data & Navigation: `Table`, `Tabs`, `Accordion`, `Breadcrumb`
+  - Actions: `Button` (strictly using its built-in variants: `default`, `secondary`, `destructive`, `outline`, `ghost`, `link`)
+- **Do not invent arbitrary new wrapper classes or custom button designs.** Everything must be an instance or composition of shadcn primitives.
+
+## 2. Strict Semantic Tailwind Tokens (Theme Variables)
+- Never hardcode arbitrary hex colors (e.g., avoid `#2563eb`, `#f8fafc`).
+- Strictly use shadcn's semantic CSS variable tokens:
+  - Backgrounds: `bg-background`, `bg-card`, `bg-popover`, `bg-muted`, `bg-primary`, `bg-secondary`, `bg-accent`
+  - Foreground/Text: `text-foreground`, `text-card-foreground`, `text-muted-foreground`, `text-primary-foreground`
+  - Borders & Rings: `border-border`, `border-input`, `ring-ring`
+  - Radius tokens: `rounded-lg`, `rounded-md`, `rounded-sm` (governed by `--radius`)
+
+## 3. Native RTL (Right-To-Left) Architecture
+- The entire application runs on `<html lang="fa" dir="rtl">` with the `Vazirmatn` font.
+- Use **Tailwind Logical Properties** instead of physical left/right:
+  - Use `ms-*` (margin-start) and `me-*` (margin-end) instead of `ml-*` / `mr-*`.
+  - Use `ps-*` (padding-start) and `pe-*` (padding-end) instead of `pl-*` / `pr-*`.
+  - Use `start-*` and `end-*` for absolute positioning.
+  - Text alignment: use `text-start` and `text-end`.
+- Flip directional icons from **Lucide Icons** where appropriate (e.g., back arrows, chevrons: `rotate-180` or directional props).
+
+## 4. Component Mapping for the Sales Flow:
+When drafting UI layouts for the Exirsaz flow:
+- **Local Agent Card:** Must be a clean `Card` with `CardHeader` (agent name + `Badge` "نماینده رسمی"), `CardContent` (phone, WhatsApp button, address), and `CardFooter` with shadcn `Button` variants (`variant="default"` and `variant="outline"`).
+- **Order Status Matrix:** Must strictly use the shadcn `Table` primitive (`TableHeader`, `TableRow`, `TableHead`, `TableBody`, `TableCell`).
+- **Territory Selector:** Standard shadcn `Select` or `Combobox` (Popover + Command) for Province/City filtering.
+- **B2B Inquiry / Quick Lead:** Standard shadcn `Form` with React Hook Form + Zod schema validation patterns.

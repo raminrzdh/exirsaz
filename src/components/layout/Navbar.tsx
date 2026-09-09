@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { ShoppingCart, User, Search, Menu, MapPin } from 'lucide-react';
-import { Button } from '../ui/Button';
+import { Button } from '../ui/button';
 import { useCart } from '@/lib/store/CartContext';
 import { toPersianDigits } from '@/lib/utils/currency';
 import { LocationGateModal } from '../storefront/LocationGateModal';

@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { MapPin, Phone, Mail, Clock } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 
 export const metadata: Metadata = {
   title: 'تماس با ما | شرکت اکسیرساز شمال',

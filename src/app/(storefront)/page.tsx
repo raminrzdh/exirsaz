@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { ArrowLeft, Star, TrendingUp, BookOpen, Calendar, Eye, ShieldCheck, Truck, HeadphonesIcon, Factory, Users, Check } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { formatToman, toPersianDigits } from '@/lib/utils/currency';
 import { ProductCardClient } from '@/components/storefront/ProductCardClient';
 import { prisma } from '@/lib/db/prisma';

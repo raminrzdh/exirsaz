@@ -3,6 +3,10 @@ import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 import { LOCATIONS } from "@/lib/constants/locations";
 import "./globals.css";
+import { Geist } from "next/font/google";
+import { cn } from "@/lib/utils";
+
+const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: "Exirsaz - Next-Gen E-commerce",
@@ -18,17 +22,15 @@ export default function RootLayout({
     <html
       lang="fa"
       dir="rtl"
-      className="font-estedad h-full antialiased"
+      className={cn("font-estedad h-full antialiased", "font-sans", geist.variable)}
     >
-      <head>
-        {/* Inject static location data directly into HTML to avoid heavy JS imports on client */}
-        <script
+      <body className="min-h-full flex flex-col font-estedad bg-slate-50 text-slate-900">
+        <Script
+          id="static-locations"
           dangerouslySetInnerHTML={{
             __html: `window.__LOCATIONS__ = ${JSON.stringify(LOCATIONS)};`,
           }}
         />
-      </head>
-      <body className="min-h-full flex flex-col font-estedad bg-slate-50 text-slate-900">
         {/* Google Tag Manager (noscript) can be added here if needed */}
         
         {/* Google Tag Manager Script (Non-blocking) */}

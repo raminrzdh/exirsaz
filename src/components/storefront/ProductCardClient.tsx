@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Star, MapPin, Phone, ArrowLeft } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { formatToman, toPersianDigits } from '@/lib/utils/currency';
 import { useCart } from '@/lib/store/CartContext';
 import { LocationGateModal } from './LocationGateModal';

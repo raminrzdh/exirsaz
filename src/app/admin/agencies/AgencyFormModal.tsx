@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { X, Save, Plus, MapPin, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { createAgency, updateAgency } from './actions';
 import { Agency } from './AgencyTableClient';
 import { toast } from 'react-hot-toast';

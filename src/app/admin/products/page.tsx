@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { Plus, Search, Edit, Trash2, MoreVertical } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { prisma } from '@/lib/db/prisma';
 import { formatToman, toPersianDigits } from '@/lib/utils/currency';
 

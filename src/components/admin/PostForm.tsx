@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Save, CheckCircle2, AlertCircle, RefreshCw, X, Check, Image as ImageIcon, Trash2 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { RichTextEditor } from '@/components/ui/RichTextEditor';
 import { createPost, updatePost, createCategory } from '@/app/admin/posts/actions';
 import { MediaPickerModal } from './MediaPickerModal';

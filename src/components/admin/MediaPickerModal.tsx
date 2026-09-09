@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { X, Upload, CheckCircle2, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { getMediaFiles } from '@/app/admin/posts/actions';
 import { toast } from 'react-hot-toast';
 

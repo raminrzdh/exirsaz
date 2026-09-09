@@ -19,6 +19,7 @@ model User {
   
   addresses     Address[]
   orders        Order[]
+  funnelEvents  FunnelEvent[]
 }
 
 model Address {
@@ -287,4 +288,15 @@ model ProductVariantAttribute {
   attributeValue   AttributeValue @relation(fields: [attributeValueId], references: [id], onDelete: Cascade)
   
   @@unique([variantId, attributeValueId])
+}
+
+model FunnelEvent {
+  id          String   @id @default(cuid())
+  sessionId   String?  // For anonymous user tracking
+  userId      String?  
+  user        User?    @relation(fields: [userId], references: [id])
+  eventType   String   // PAGE_VIEW, PRODUCT_VIEW, ADD_TO_CART, CHECKOUT_START
+  path        String?
+  metadata    String?  // JSON string
+  createdAt   DateTime @default(now())
 }
