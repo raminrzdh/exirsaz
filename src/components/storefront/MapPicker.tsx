@@ -12,12 +12,12 @@ import { toast } from 'react-hot-toast';
 const CustomBadgeIcon = L.divIcon({
   className: 'custom-badge-icon',
   html: `
-    <div class="font-sans" style="position: absolute; transform: translate(-50%, -100%); bottom: 0; left: 0; display: flex; flex-direction: column; align-items: center;">
+    <div class="font-estedad" style="position: absolute; transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; pointer-events: none;">
       <div style="background-color: #059669; color: white; padding: 6px 14px; border-radius: 10px; font-size: 13px; font-weight: 700; white-space: nowrap; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 2px solid white; display: flex; align-items: center; gap: 6px; font-family: inherit;">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
         شهر تحویل سفارش
       </div>
-      <div style="width: 12px; height: 12px; background-color: #059669; transform: rotate(45deg); margin-top: -7px; border-right: 2px solid white; border-bottom: 2px solid white; z-index: -1;"></div>
+      <div style="width: 12px; height: 12px; background-color: #059669; transform: rotate(45deg); margin-top: -6px; margin-bottom: 2px; border-right: 2px solid white; border-bottom: 2px solid white; z-index: -1;"></div>
     </div>
   `,
   iconSize: [0, 0],
@@ -55,7 +55,7 @@ function LocateControl({ onSelect }: { onSelect: (lat: number, lng: number) => v
 
   return (
     <div className="absolute bottom-4 right-4 z-[400]">
-      <button 
+      <button
         type="button"
         onClick={(e) => {
           e.preventDefault();
@@ -81,9 +81,9 @@ export default function MapPicker({ onLocationSelect }: MapPickerProps) {
 
   return (
     <div className="w-full h-full min-h-[350px] relative rounded-xl overflow-hidden border border-slate-200">
-      <MapContainer 
-        center={[32.4279, 53.6880]} 
-        zoom={5} 
+      <MapContainer
+        center={[32.4279, 53.6880]}
+        zoom={5}
         style={{ height: '100%', width: '100%', minHeight: '350px' }}
       >
         <TileLayer
@@ -96,7 +96,7 @@ export default function MapPicker({ onLocationSelect }: MapPickerProps) {
           <Marker position={position} icon={CustomBadgeIcon} />
         )}
       </MapContainer>
-      
+
       {!position && (
         <div className="absolute bottom-4 left-0 right-0 flex justify-center z-[400] pointer-events-none">
           <div className="bg-white/90 backdrop-blur-sm px-4 py-2 rounded-full shadow-md text-sm font-medium text-slate-700 animate-bounce">
