@@ -11,7 +11,15 @@ import { toast } from 'react-hot-toast';
 // Custom Text Badge Icon
 const CustomBadgeIcon = L.divIcon({
   className: 'custom-badge-icon',
-  html: `<div style="background-color: #059669; color: white; padding: 6px 14px; border-radius: 9999px; font-size: 12px; font-weight: bold; white-space: nowrap; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1); transform: translate(-50%, -50%); border: 2px solid white; position: absolute; left: 0; top: 0; font-family: var(--font-vazirmatn), Vazirmatn, Tahoma, sans-serif !important; display: flex; align-items: center; justify-content: center;">📍 شهر تحویل سفارش</div>`,
+  html: `
+    <div class="font-sans" style="position: absolute; transform: translate(-50%, -100%); bottom: 0; left: 0; display: flex; flex-direction: column; align-items: center;">
+      <div style="background-color: #059669; color: white; padding: 6px 14px; border-radius: 10px; font-size: 13px; font-weight: 700; white-space: nowrap; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 2px solid white; display: flex; align-items: center; gap: 6px; font-family: inherit;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+        شهر تحویل سفارش
+      </div>
+      <div style="width: 12px; height: 12px; background-color: #059669; transform: rotate(45deg); margin-top: -7px; border-right: 2px solid white; border-bottom: 2px solid white; z-index: -1;"></div>
+    </div>
+  `,
   iconSize: [0, 0],
   iconAnchor: [0, 0],
 });
