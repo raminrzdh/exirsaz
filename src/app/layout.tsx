@@ -3,10 +3,7 @@ import Script from "next/script";
 import { Toaster } from "react-hot-toast";
 import { LOCATIONS } from "@/lib/constants/locations";
 import "./globals.css";
-import { Geist } from "next/font/google";
 import { cn } from "@/lib/utils";
-
-const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
 export const metadata: Metadata = {
   title: "Exirsaz - Next-Gen E-commerce",
@@ -22,7 +19,7 @@ export default function RootLayout({
     <html
       lang="fa"
       dir="rtl"
-      className={cn("font-estedad h-full antialiased", "font-sans", geist.variable)}
+      className={cn("font-estedad h-full antialiased font-sans")}
     >
       <body className="min-h-full flex flex-col font-estedad bg-slate-50 text-slate-900">
         <Script
