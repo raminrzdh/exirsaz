@@ -1,7 +1,9 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Save, Plus, MapPin, Trash2, Phone, MessageCircle, FileText } from 'lucide-react';
+import { X, Save, Plus, MapPin, Trash2, Phone, MessageCircle, FileText, ImageIcon } from 'lucide-react';
+import Image from 'next/image';
+import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
 import { Button } from '@/components/ui/button';
 import { createAgency, updateAgency } from './actions';
 import { Agency } from './AgencyTableClient';
@@ -27,6 +29,7 @@ interface AgencyFormModalProps {
 
 
 export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allProducts, allLocations, onSuccess }: AgencyFormModalProps) {
+  const [isMediaPickerOpen, setIsMediaPickerOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState<Partial<Agency>>({
     name: '',
@@ -248,14 +251,36 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700">آدرس تصویر (URL) <span className="text-slate-400 font-normal">(اختیاری)</span></label>
-            <input 
-              type="text" 
-              value={formData.image || ''}
-              onChange={e => setFormData({ ...formData, image: e.target.value })}
-              className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm focus:border-indigo-500 outline-none"
-              dir="ltr"
-            />
+            <label className="text-sm font-medium text-slate-700">تصویر نمایندگی <span className="text-slate-400 font-normal">(اختیاری)</span></label>
+            {formData.image ? (
+              <div className="relative w-full h-32 rounded-xl border border-slate-200 overflow-hidden group">
+                <Image src={formData.image} alt="تصویر نمایندگی" fill className="object-cover" unoptimized />
+                <div className="absolute inset-0 bg-slate-900/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                  <button 
+                    type="button"
+                    onClick={() => setIsMediaPickerOpen(true)}
+                    className="px-3 py-1.5 bg-white text-slate-800 text-xs font-bold rounded-lg shadow-sm hover:bg-indigo-50 transition-colors"
+                  >
+                    تغییر عکس
+                  </button>
+                  <button 
+                    type="button"
+                    onClick={() => setFormData({ ...formData, image: '' })}
+                    className="px-3 py-1.5 bg-rose-500 text-white text-xs font-bold rounded-lg shadow-sm hover:bg-rose-600 transition-colors"
+                  >
+                    حذف
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <div 
+                onClick={() => setIsMediaPickerOpen(true)}
+                className="w-full h-32 rounded-xl bg-slate-50 border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors cursor-pointer"
+              >
+                <ImageIcon className="w-6 h-6 mb-2 text-slate-400" />
+                <p className="text-sm font-medium">برای انتخاب یا آپلود تصویر کلیک کنید</p>
+              </div>
+            )}
           </div>
 
           <div className="space-y-1">
@@ -464,6 +489,15 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
           </Button>
         </div>
       </div>
+      
+      <MediaPickerModal 
+        isOpen={isMediaPickerOpen}
+        onClose={() => setIsMediaPickerOpen(false)}
+        onSelect={(data) => {
+          setFormData({ ...formData, image: data.url });
+        }}
+        requireSeo={false}
+      />
     </div>
   );
 }
