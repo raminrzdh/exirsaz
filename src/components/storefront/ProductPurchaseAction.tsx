@@ -52,7 +52,8 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
   const [isLocationGateOpen, setIsLocationGateOpen] = useState(false);
   const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
   const [isCheckingRep, setIsCheckingRep] = useState(false);
-  const [localAgency, setLocalAgency] = useState<Agency | null>(null);
+  const [localAgencies, setLocalAgencies] = useState<Agency[] | null>(null);
+  const [activeAgencyId, setActiveAgencyId] = useState<string | undefined>(undefined);
 
   const isDirectSale = product.salesType === 'DIRECT_SALE';
 
@@ -65,15 +66,15 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
       if (userLocation && isDirectSale) {
         setIsCheckingRep(true);
         const category = product.categoryName || (product.name.includes('سایبان') ? 'توری سایبان' : 'سایر');
-        const rep = await checkRepresentative(userLocation.province, userLocation.city, category, product.id);
-        if (rep) {
-          setLocalAgency(rep as Agency);
+        const reps = await checkRepresentative(userLocation.province, userLocation.city, category, product.id);
+        if (reps && Array.isArray(reps) && reps.length > 0) {
+          setLocalAgencies(reps as Agency[]);
         } else {
-          setLocalAgency(null);
+          setLocalAgencies(null);
         }
         setIsCheckingRep(false);
       } else {
-        setLocalAgency(null);
+        setLocalAgencies(null);
       }
     }
     fetchAgency();
@@ -97,17 +98,15 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
     toast.success('محصول به سبد خرید اضافه شد!');
   };
 
-  const handleAgencyContact = async (type: 'CALL' | 'WHATSAPP') => {
-    if (!localAgency) return;
-    
+  const handleAgencyContact = async (agency: Agency, type: 'CALL' | 'WHATSAPP') => {
     // Fire and forget analytics event
-    recordLeadEvent(localAgency.id, type).catch(console.error);
-    trackEvent('contact_agent_clicked', { agencyId: localAgency.id, type, product: product.id });
+    recordLeadEvent(agency.id, type).catch(console.error);
+    trackEvent('contact_agent_clicked', { agencyId: agency.id, type, product: product.id });
     
     if (type === 'WHATSAPP') {
-      window.open(`https://wa.me/98${localAgency.phone?.substring(1)}?text=${encodeURIComponent(`سلام، درباره محصول ${product.name} سوال داشتم.`)}`, '_blank');
+      window.open(`https://wa.me/98${agency.phone?.substring(1)}?text=${encodeURIComponent(`سلام، درباره محصول ${product.name} سوال داشتم.`)}`, '_blank');
     } else {
-      window.location.href = `tel:${localAgency.phone}`;
+      window.location.href = `tel:${agency.phone}`;
     }
   };
 
@@ -129,7 +128,7 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
     <div className="bg-slate-50 border border-slate-100 rounded-3xl p-6">
       {isDirectSale ? (
         <>
-          {(!localAgency && !isCheckingRep) && (
+          {(!localAgencies && !isCheckingRep) && (
             <>
               <div className="flex items-center justify-between mb-6">
                 <span className="text-slate-500 font-medium">قیمت نهایی:</span>
@@ -177,75 +176,83 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
             <Button size="lg" className="w-full h-14 text-lg bg-slate-200 text-slate-500 gap-2" disabled>
               در حال بررسی نمایندگی...
             </Button>
-          ) : localAgency ? (
-            // Case B: Agency Exists
-            <div className="bg-white border border-amber-200 rounded-2xl overflow-hidden shadow-sm">
-              <div className="bg-amber-50 px-4 py-3 border-b border-amber-200 flex items-center gap-2 text-amber-800">
-                <Store className="w-5 h-5" />
-                <span className="font-bold text-sm">این محصول در شهر شما توسط نمایندگی رسمی عرضه میشود</span>
+          ) : localAgencies ? (
+            // Case B: Agencies Exist
+            <div className="flex flex-col gap-4">
+              <div className="bg-amber-50 px-4 py-3 border border-amber-200 rounded-xl flex items-center gap-2 text-amber-800">
+                <Store className="w-5 h-5 shrink-0" />
+                <span className="font-bold text-sm">این محصول در شهر شما توسط نمایندگان زیر عرضه می‌شود</span>
               </div>
-              <div className="p-4 space-y-4">
-                <div>
-                  <Link href={`/${localAgency.slug}`} className="font-bold text-slate-900 mb-1 hover:text-indigo-600 transition-colors block">
-                    {localAgency.name}
-                  </Link>
-                  <p className="text-sm text-slate-500 mt-1">جهت خرید و دریافت مشاوره مستقیماً با نمایندگی تماس بگیرید.</p>
-                </div>
-                
-                <div className="flex flex-col gap-2">
-                  {localAgency.hasPhoneCall && (localAgency.phoneCallNumber || localAgency.phone || localAgency.mobile) && (
-                    <a 
-                      href={`tel:${localAgency.phoneCallNumber || localAgency.phone || localAgency.mobile}`} 
-                      className="flex items-center justify-center gap-2 w-full h-11 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-medium transition-colors"
-                      onClick={() => trackEvent('contact_agent_clicked', { agencyId: localAgency.id, type: 'CALL', product: product.id })}
-                    >
-                      <PhoneCall className="w-4 h-4" />
-                      تماس تلفنی
-                    </a>
-                  )}
-                  {localAgency.hasWhatsapp && (localAgency.whatsappNumber || localAgency.mobile) && (
-                    <a 
-                      href={`https://wa.me/${(localAgency.whatsappNumber || localAgency.mobile)!.startsWith('0') ? '98' + (localAgency.whatsappNumber || localAgency.mobile)!.substring(1) : (localAgency.whatsappNumber || localAgency.mobile)}?text=${encodeURIComponent(`سلام، درباره محصول ${product.name} سوال داشتم.`)}`} 
-                      target="_blank" rel="noreferrer"
-                      className="flex items-center justify-center gap-2 w-full h-11 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-medium transition-colors"
-                      onClick={() => trackEvent('contact_agent_clicked', { agencyId: localAgency.id, type: 'WHATSAPP', product: product.id })}
-                    >
-                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
-                      واتس‌اپ
-                    </a>
-                  )}
-                  {localAgency.hasBale && (localAgency.baleNumber || localAgency.mobile) && (
-                    <a 
-                      href={`https://ble.ir/${localAgency.baleNumber || localAgency.mobile}`} 
-                      target="_blank" rel="noreferrer"
-                      className="flex items-center justify-center gap-2 w-full h-11 bg-teal-500 hover:bg-teal-600 text-white rounded-xl font-medium transition-colors"
-                      onClick={() => trackEvent('contact_agent_clicked', { agencyId: localAgency.id, type: 'BALE', product: product.id })}
-                    >
-                      <MessageCircle className="w-4 h-4" />
-                      پیام‌رسان بله
-                    </a>
-                  )}
-                  {localAgency.hasRequestForm && (
-                    <button 
-                      onClick={() => setIsInquiryModalOpen(true)}
-                      className="flex items-center justify-center gap-2 w-full h-11 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl font-medium transition-colors"
-                    >
-                      <FileText className="w-4 h-4" />
-                      ثبت درخواست
-                    </button>
-                  )}
-                  {localAgency.locationCoordinates && (
-                    <a 
-                      href={`https://nshn.ir/?lat=${localAgency.locationCoordinates.split(',')[0]}&lng=${localAgency.locationCoordinates.split(',')[1]}`} 
-                      target="_blank" rel="noreferrer"
-                      className="flex items-center justify-center gap-2 w-full h-11 border-2 border-slate-200 hover:border-indigo-500 text-slate-700 hover:text-indigo-600 rounded-xl font-medium transition-colors"
-                      onClick={() => trackEvent('contact_agent_clicked', { agencyId: localAgency.id, type: 'NAVIGATION', product: product.id })}
-                    >
-                      <MapPin className="w-4 h-4" />
-                      مسیریابی با نشان
-                    </a>
-                  )}
-                </div>
+              
+              <div className="flex flex-col gap-4">
+                {localAgencies.map(agency => (
+                  <div key={agency.id} className="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
+                    <div className="mb-4">
+                      <Link href={`/${agency.slug}`} className="font-bold text-slate-900 text-lg hover:text-indigo-600 transition-colors block">
+                        {agency.name}
+                      </Link>
+                      <p className="text-sm text-slate-500 mt-1">جهت خرید مستقیماً با نمایندگی تماس بگیرید.</p>
+                    </div>
+                    
+                    <div className="flex flex-col gap-2">
+                      {agency.hasPhoneCall && (agency.phoneCallNumber || agency.phone || agency.mobile) && (
+                        <a 
+                          href={`tel:${agency.phoneCallNumber || agency.phone || agency.mobile}`} 
+                          className="flex items-center justify-center gap-2 w-full h-11 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-medium transition-colors"
+                          onClick={() => trackEvent('contact_agent_clicked', { agencyId: agency.id, type: 'CALL', product: product.id })}
+                        >
+                          <PhoneCall className="w-4 h-4" />
+                          تماس تلفنی
+                        </a>
+                      )}
+                      {agency.hasWhatsapp && (agency.whatsappNumber || agency.mobile) && (
+                        <a 
+                          href={`https://wa.me/${(agency.whatsappNumber || agency.mobile)!.startsWith('0') ? '98' + (agency.whatsappNumber || agency.mobile)!.substring(1) : (agency.whatsappNumber || agency.mobile)}?text=${encodeURIComponent(`سلام، درباره محصول ${product.name} سوال داشتم.`)}`} 
+                          target="_blank" rel="noreferrer"
+                          className="flex items-center justify-center gap-2 w-full h-11 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-medium transition-colors"
+                          onClick={() => trackEvent('contact_agent_clicked', { agencyId: agency.id, type: 'WHATSAPP', product: product.id })}
+                        >
+                          <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                          واتس‌اپ
+                        </a>
+                      )}
+                      {agency.hasBale && (agency.baleNumber || agency.mobile) && (
+                        <a 
+                          href={`https://ble.ir/${agency.baleNumber || agency.mobile}`} 
+                          target="_blank" rel="noreferrer"
+                          className="flex items-center justify-center gap-2 w-full h-11 bg-teal-500 hover:bg-teal-600 text-white rounded-xl font-medium transition-colors"
+                          onClick={() => trackEvent('contact_agent_clicked', { agencyId: agency.id, type: 'BALE', product: product.id })}
+                        >
+                          <MessageCircle className="w-4 h-4" />
+                          پیام‌رسان بله
+                        </a>
+                      )}
+                      {agency.hasRequestForm && (
+                        <button 
+                          onClick={() => {
+                            setActiveAgencyId(agency.id);
+                            setIsInquiryModalOpen(true);
+                          }}
+                          className="flex items-center justify-center gap-2 w-full h-11 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl font-medium transition-colors"
+                        >
+                          <FileText className="w-4 h-4" />
+                          ثبت درخواست از نماینده
+                        </button>
+                      )}
+                      {agency.locationCoordinates && (
+                        <a 
+                          href={`https://nshn.ir/?lat=${agency.locationCoordinates.split(',')[0]}&lng=${agency.locationCoordinates.split(',')[1]}`} 
+                          target="_blank" rel="noreferrer"
+                          className="flex items-center justify-center gap-2 w-full h-11 border-2 border-slate-200 hover:border-indigo-500 text-slate-700 hover:text-indigo-600 rounded-xl font-medium transition-colors"
+                          onClick={() => trackEvent('contact_agent_clicked', { agencyId: agency.id, type: 'NAVIGATION', product: product.id })}
+                        >
+                          <MapPin className="w-4 h-4" />
+                          مسیریابی با نشان
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
           ) : (
@@ -299,7 +306,7 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
         onClose={() => setIsInquiryModalOpen(false)} 
         productName={product.name}
         productId={product.id}
-        agencyId={localAgency?.id}
+        agencyId={activeAgencyId}
       />
       
       <ExitIntentModal 

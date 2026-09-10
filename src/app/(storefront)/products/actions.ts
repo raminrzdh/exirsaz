@@ -25,7 +25,7 @@ export async function checkRepresentative(province: string, city: string, catego
     }
   });
 
-  const foundRep = agencies.find(agency => {
+  const foundReps = agencies.filter(agency => {
     // 1. Explicit Product Match
     if (productId && agency.products && agency.products.some(p => p.id === productId)) {
       return true;
@@ -39,8 +39,8 @@ export async function checkRepresentative(province: string, city: string, catego
     return false;
   });
 
-  if (foundRep) {
-    return {
+  if (foundReps.length > 0) {
+    return foundReps.map(foundRep => ({
       id: foundRep.id,
       name: foundRep.name,
       phone: foundRep.phone,
@@ -56,7 +56,7 @@ export async function checkRepresentative(province: string, city: string, catego
       hasRequestForm: foundRep.hasRequestForm,
       locationCoordinates: foundRep.locationCoordinates,
       slug: foundRep.slug
-    };
+    }));
   }
   
   return null;
