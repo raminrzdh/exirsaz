@@ -4,14 +4,17 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Phone, User, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { submitInquiry } from '@/app/(storefront)/products/actions';
 
 interface InquiryLeadModalProps {
   isOpen: boolean;
   onClose: () => void;
   productName: string;
+  productId?: string;
+  agencyId?: string;
 }
 
-export function InquiryLeadModal({ isOpen, onClose, productName }: InquiryLeadModalProps) {
+export function InquiryLeadModal({ isOpen, onClose, productName, productId, agencyId }: InquiryLeadModalProps) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [description, setDescription] = useState('');
@@ -32,20 +35,31 @@ export function InquiryLeadModal({ isOpen, onClose, productName }: InquiryLeadMo
     
     setIsSubmitting(true);
     
-    // Simulate API call to save lead
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const res = await submitInquiry({
+      customerName: name,
+      customerPhone: phone,
+      description: description,
+      productName: productName,
+      productId: productId,
+      agencyId: agencyId
+    });
     
     setIsSubmitting(false);
-    setIsSuccess(true);
     
-    // Reset form after a delay and close
-    setTimeout(() => {
-      setIsSuccess(false);
-      setName('');
-      setPhone('');
-      setDescription('');
-      onClose();
-    }, 3000);
+    if (res.success) {
+      setIsSuccess(true);
+      // Reset form after a delay and close
+      setTimeout(() => {
+        setIsSuccess(false);
+        setName('');
+        setPhone('');
+        setDescription('');
+        onClose();
+      }, 3000);
+    } else {
+      // Show error
+      alert('خطا در ثبت درخواست. لطفا دوباره تلاش کنید.');
+    }
   };
 
   return createPortal(

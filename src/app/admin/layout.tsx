@@ -98,6 +98,9 @@ export default function AdminLayout({
                   <Link href="/admin/settings/geo-rules" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
                     قوانین فروش منطقه‌ای
                   </Link>
+                  <Link href="/admin/inquiries" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    درخواست‌های استعلام
+                  </Link>
                 </div>
               </AccordionContent>
             </AccordionItem>

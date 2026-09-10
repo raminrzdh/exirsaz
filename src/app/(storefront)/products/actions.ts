@@ -61,14 +61,40 @@ export async function checkRepresentative(province: string, city: string, catego
   return null;
 }
 
-export async function recordLeadEvent(agencyId: string, type: string) {
-  // We use string 'CALL' or 'WHATSAPP' mapping to Enum LeadEventType if it was available, 
-  // but since prisma client failed to generate we pass string and let TS complain, or use the generated client later.
+export async function recordLeadEvent(agencyId: string, type: string, productId?: string) {
   await prisma.leadEvent.create({
     data: {
       agencyId,
-      type: type as any
+      productId: productId || null,
+      type: type
     }
   });
   return { success: true };
+}
+
+export async function submitInquiry(data: {
+  customerName: string;
+  customerPhone: string;
+  description?: string;
+  productName: string;
+  productId?: string;
+  agencyId?: string;
+}) {
+  try {
+    await prisma.inquiryRequest.create({
+      data: {
+        customerName: data.customerName,
+        customerPhone: data.customerPhone,
+        description: data.description,
+        productName: data.productName,
+        productId: data.productId,
+        agencyId: data.agencyId,
+        status: 'PENDING'
+      }
+    });
+    return { success: true };
+  } catch (error) {
+    console.error('Failed to submit inquiry:', error);
+    return { success: false, error: 'Failed to submit inquiry' };
+  }
 }

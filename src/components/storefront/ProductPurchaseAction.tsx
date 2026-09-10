@@ -290,6 +290,8 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
         isOpen={isInquiryModalOpen} 
         onClose={() => setIsInquiryModalOpen(false)} 
         productName={product.name}
+        productId={product.id}
+        agencyId={localAgency?.id}
       />
       
       <ExitIntentModal 

@@ -241,6 +241,8 @@ export function ProductCardClient({ product }: { product: Product }) {
         isOpen={isInquiryModalOpen}
         onClose={() => setIsInquiryModalOpen(false)}
         productName={product.name}
+        productId={product.id}
+        agencyId={foundRep?.id}
       />
     </>
   );
