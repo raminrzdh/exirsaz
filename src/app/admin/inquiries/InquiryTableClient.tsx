@@ -50,7 +50,15 @@ export function InquiryTableClient({ initialData }: { initialData: InquiryData[]
           ) : (
             data.map(item => (
               <tr key={item.id} className="hover:bg-slate-50/50 transition-colors">
-                <td className="px-6 py-4 text-slate-500" dir="ltr">{new Date(item.createdAt).toLocaleDateString('fa-IR')}</td>
+                <td className="px-6 py-4 text-slate-500 whitespace-nowrap" dir="ltr">
+                  {new Date(item.createdAt).toLocaleDateString('fa-IR', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </td>
                 <td className="px-6 py-4 font-medium text-slate-900">{item.customerName}</td>
                 <td className="px-6 py-4 text-slate-700 font-mono" dir="ltr">{item.customerPhone}</td>
                 <td className="px-6 py-4 text-indigo-600 font-medium">{item.productName}</td>

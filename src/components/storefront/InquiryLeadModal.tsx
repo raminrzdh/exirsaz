@@ -18,6 +18,9 @@ export function InquiryLeadModal({ isOpen, onClose, productName, productId, agen
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [description, setDescription] = useState('');
+  const [captchaAnswer, setCaptchaAnswer] = useState('');
+  const [num1, setNum1] = useState(0);
+  const [num2, setNum2] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -25,13 +28,26 @@ export function InquiryLeadModal({ isOpen, onClose, productName, productId, agen
 
   useEffect(() => {
     setMounted(true);
-  }, []);
+    generateCaptcha();
+  }, [isOpen]);
+
+  const generateCaptcha = () => {
+    setNum1(Math.floor(Math.random() * 9) + 1);
+    setNum2(Math.floor(Math.random() * 9) + 1);
+    setCaptchaAnswer('');
+  };
 
   if (!isOpen || !mounted) return null;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !phone) return;
+    
+    if (parseInt(captchaAnswer) !== num1 + num2) {
+      alert('حاصل جمع اشتباه است. لطفا دوباره تلاش کنید.');
+      generateCaptcha();
+      return;
+    }
     
     setIsSubmitting(true);
     
@@ -54,11 +70,13 @@ export function InquiryLeadModal({ isOpen, onClose, productName, productId, agen
         setName('');
         setPhone('');
         setDescription('');
+        generateCaptcha();
         onClose();
       }, 3000);
     } else {
       // Show error
       alert('خطا در ثبت درخواست. لطفا دوباره تلاش کنید.');
+      generateCaptcha();
     }
   };
 
@@ -132,6 +150,21 @@ export function InquiryLeadModal({ isOpen, onClose, productName, productId, agen
                   onChange={e => setDescription(e.target.value)}
                   className="w-full h-24 p-4 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-slate-50 resize-none"
                   placeholder="متن پیام شما..."
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5 flex items-center gap-1.5">
+                  لطفاً حاصل جمع را وارد کنید: {num1} + {num2}
+                </label>
+                <input
+                  type="number"
+                  required
+                  value={captchaAnswer}
+                  onChange={e => setCaptchaAnswer(e.target.value)}
+                  className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-slate-50 text-center text-lg tracking-widest"
+                  placeholder="؟"
+                  dir="ltr"
                 />
               </div>
               
