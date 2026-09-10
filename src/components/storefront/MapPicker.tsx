@@ -13,11 +13,13 @@ const CustomBadgeIcon = L.divIcon({
   className: 'custom-badge-icon',
   html: `
     <div class="font-estedad" style="position: absolute; transform: translate(-50%, -100%); display: flex; flex-direction: column; align-items: center; pointer-events: none;">
-      <div style="background-color: #059669; color: white; padding: 6px 14px; border-radius: 10px; font-size: 13px; font-weight: 700; white-space: nowrap; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 2px solid white; display: flex; align-items: center; gap: 6px; font-family: inherit;">
+      <div style="background-color: #059669; color: white; padding: 6px 14px; border-radius: 10px; font-size: 13px; font-weight: 700; white-space: nowrap; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border: 2px solid white; display: flex; align-items: center; gap: 6px;">
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
         شهر تحویل سفارش
       </div>
-      <div style="width: 12px; height: 12px; background-color: #059669; transform: rotate(45deg); margin-top: -6px; margin-bottom: 2px; border-right: 2px solid white; border-bottom: 2px solid white; z-index: -1;"></div>
+      <svg width="20" height="10" viewBox="0 0 20 10" style="margin-top: -2px; z-index: -1;">
+        <path d="M2,0 L10,9 L18,0" fill="#059669" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
     </div>
   `,
   iconSize: [0, 0],
