@@ -74,9 +74,11 @@ export default async function ProvincePage({ params }: Props) {
               نمایندگی رسمی اکسیرساز شمال
             </span>
             <h1 className="text-4xl md:text-5xl font-black mb-4">نمایندگی {agency.name}</h1>
-            <p className="text-xl text-emerald-100 max-w-2xl leading-relaxed">
-              {agency.company}
-            </p>
+            {agency.company && (
+              <p className="text-xl text-emerald-100 max-w-2xl leading-relaxed">
+                {agency.company}
+              </p>
+            )}
           </div>
           
           <div className="bg-white/10 backdrop-blur-md border border-white/20 p-6 rounded-3xl shrink-0 w-full md:w-80 text-center">
@@ -99,8 +101,12 @@ export default async function ProvincePage({ params }: Props) {
                 درباره نمایندگی
               </h2>
               <p className="text-slate-600 leading-loose text-lg text-justify">
-                {agency.description}
-                <br /><br />
+                {agency.description && (
+                  <>
+                    {agency.description}
+                    <br /><br />
+                  </>
+                )}
                 شما می‌توانید تمامی محصولات پلیمری اکسیرساز شمال اعم از انواع توری‌های سایبان (شید گلخانه) با درصدهای تراکم مختلف، کیسه‌های بسته‌بندی راشل، لفاف ایمنی ساختمان و سایر شبکه‌های توری را با اطمینان کامل از اصالت و کیفیت، از طریق این نمایندگی معتبر در استان {agency.name} تهیه فرمایید.
               </p>
               
@@ -126,8 +132,8 @@ export default async function ProvincePage({ params }: Props) {
               </div>
             </div>
             
-            <div className="relative aspect-video rounded-3xl overflow-hidden border border-slate-200 shadow-sm">
-              {agency.image && (
+            {agency.image && (
+              <div className="relative aspect-video rounded-3xl overflow-hidden border border-slate-200 shadow-sm">
                 <Image 
                   src={agency.image} 
                   alt={`نمای داخلی نمایندگی ${agency.company || agency.name}`} 
@@ -135,8 +141,8 @@ export default async function ProvincePage({ params }: Props) {
                   className="object-cover"
                   unoptimized
                 />
-              )}
-            </div>
+              </div>
+            )}
           </div>
 
           <div className="space-y-6">
@@ -144,45 +150,53 @@ export default async function ProvincePage({ params }: Props) {
               <h3 className="text-xl font-bold text-slate-900 mb-6 text-center">اطلاعات تماس و آدرس</h3>
               
               <div className="space-y-6">
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shrink-0 mt-1">
-                    <User className="w-5 h-5" />
+                {agency.manager && (
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shrink-0 mt-1">
+                      <User className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-900">مدیریت</p>
+                      <p className="text-slate-600 mt-1">{agency.manager}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-900">مدیریت</p>
-                    <p className="text-slate-600 mt-1">{agency.manager}</p>
-                  </div>
-                </div>
+                )}
                 
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shrink-0 mt-1">
-                    <Phone className="w-5 h-5" />
+                {agency.phone && (
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shrink-0 mt-1">
+                      <Phone className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-900">تلفن ثابت</p>
+                      <p className="text-slate-600 mt-1" dir="ltr">{agency.phone}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-900">تلفن ثابت</p>
-                    <p className="text-slate-600 mt-1" dir="ltr">{agency.phone}</p>
-                  </div>
-                </div>
+                )}
                 
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shrink-0 mt-1">
-                    <Smartphone className="w-5 h-5" />
+                {agency.mobile && (
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shrink-0 mt-1">
+                      <Smartphone className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-900">شماره موبایل</p>
+                      <p className="text-slate-600 mt-1" dir="ltr">{agency.mobile}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-900">شماره موبایل</p>
-                    <p className="text-slate-600 mt-1" dir="ltr">{agency.mobile}</p>
-                  </div>
-                </div>
+                )}
                 
-                <div className="flex items-start gap-4">
-                  <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shrink-0 mt-1">
-                    <MapPin className="w-5 h-5" />
+                {agency.address && (
+                  <div className="flex items-start gap-4">
+                    <div className="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-full flex items-center justify-center shrink-0 mt-1">
+                      <MapPin className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-slate-900">آدرس مراجعه حضوری</p>
+                      <p className="text-slate-600 mt-1 text-sm leading-relaxed">{agency.address}</p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-bold text-slate-900">آدرس مراجعه حضوری</p>
-                    <p className="text-slate-600 mt-1 text-sm leading-relaxed">{agency.address}</p>
-                  </div>
-                </div>
+                )}
               </div>
               
               <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col gap-3">

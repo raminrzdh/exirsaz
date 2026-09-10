@@ -57,12 +57,14 @@ export default async function AgenciesIndexPage() {
                 </div>
               </div>
               <div className="p-6 space-y-4">
-                <div className="flex items-start gap-3">
-                  <MapPin className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-                  <p className="text-sm text-slate-600 leading-relaxed line-clamp-2">
-                    {agency.address || 'آدرس ثبت نشده است'}
-                  </p>
-                </div>
+                {agency.address && (
+                  <div className="flex items-start gap-3">
+                    <MapPin className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+                    <p className="text-sm text-slate-600 leading-relaxed line-clamp-2">
+                      {agency.address}
+                    </p>
+                  </div>
+                )}
                 <div className="flex items-center gap-3">
                   <Phone className="w-5 h-5 text-emerald-600 shrink-0" />
                   <p className="text-sm text-slate-600 font-mono" dir="ltr">
