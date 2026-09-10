@@ -479,21 +479,20 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
             </div>
           </div>
 
+          <div className="pt-6 border-t border-slate-100 flex justify-end gap-3">
+            <Button type="button" variant="ghost" onClick={onClose} disabled={isSubmitting}>
+              انصراف
+            </Button>
+            <Button type="submit" className="bg-indigo-600 hover:bg-indigo-700 gap-2 min-w-[120px]" disabled={isSubmitting}>
+              {isSubmitting ? 'در حال ذخیره...' : (
+                <>
+                  <Save className="w-4 h-4" />
+                  ذخیره اطلاعات
+                </>
+              )}
+            </Button>
+          </div>
         </form>
-
-        <div className="p-6 border-t border-slate-100 bg-slate-50 flex justify-end gap-3">
-          <Button variant="ghost" onClick={onClose} disabled={isSubmitting}>
-            انصراف
-          </Button>
-          <Button onClick={handleSubmit} className="bg-indigo-600 hover:bg-indigo-700 gap-2 min-w-[120px]" disabled={isSubmitting}>
-            {isSubmitting ? 'در حال ذخیره...' : (
-              <>
-                <Save className="w-4 h-4" />
-                ذخیره اطلاعات
-              </>
-            )}
-          </Button>
-        </div>
       </div>
       
       <MediaPickerModal 
