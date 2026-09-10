@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import { useState, useEffect } from 'react';
 import { X, Send, PhoneCall } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { extractDigits } from '@/lib/utils/currency';
 import { trackEvent } from '@/lib/utils/analytics';
 
 interface ExitIntentModalProps {
@@ -86,7 +87,8 @@ export function ExitIntentModal({ isOpen, onClose, productName }: ExitIntentModa
                   type="tel"
                   required
                   value={mobile}
-                  onChange={e => setMobile(e.target.value)}
+                  onChange={e => setMobile(extractDigits(e.target.value))}
+                  maxLength={11}
                   placeholder="مثال: 09123456789"
                   dir="ltr"
                   pattern="^09\d{9}$"

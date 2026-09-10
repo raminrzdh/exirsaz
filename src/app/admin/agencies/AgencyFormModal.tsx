@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { X, Save, Plus, MapPin, Trash2, Phone, MessageCircle, FileText, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
+import { extractDigits } from '@/lib/utils/currency';
 import { Button } from '@/components/ui/button';
 import { createAgency, updateAgency } from './actions';
 import { Agency } from './AgencyTableClient';
@@ -213,9 +214,10 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
             <div className="space-y-1">
               <label className="text-sm font-medium text-slate-700">تلفن ثابت <span className="text-rose-500">* (اجباری)</span></label>
               <input 
-                type="text" 
+                type="tel" 
                 value={formData.phone || ''}
-                onChange={e => setFormData({ ...formData, phone: e.target.value })}
+                onChange={e => setFormData({ ...formData, phone: extractDigits(e.target.value) })}
+                maxLength={11}
                 className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm font-mono focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-right"
                 placeholder="021..."
                 dir="ltr"
@@ -228,9 +230,10 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
             <div className="space-y-1">
               <label className="text-sm font-medium text-slate-700">تلفن همراه <span className="text-slate-400 font-normal">(اختیاری)</span></label>
               <input 
-                type="text" 
+                type="tel" 
                 value={formData.mobile || ''}
-                onChange={e => setFormData({ ...formData, mobile: e.target.value })}
+                onChange={e => setFormData({ ...formData, mobile: extractDigits(e.target.value) })}
+                maxLength={11}
                 className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm font-mono focus:border-indigo-500 outline-none text-right"
                 placeholder="0912..."
                 dir="ltr"
@@ -401,11 +404,12 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
                 </label>
                 {(formData.hasPhoneCall ?? true) && (
                   <input 
-                    type="text" 
+                    type="tel" 
                     value={formData.phoneCallNumber || ''} 
-                    onChange={e => setFormData({...formData, phoneCallNumber: e.target.value})} 
+                    onChange={e => setFormData({...formData, phoneCallNumber: extractDigits(e.target.value)})} 
+                    maxLength={11}
                     placeholder="شماره تماس..."
-                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm focus:border-indigo-500 outline-none text-left" 
+                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm font-mono focus:border-indigo-500 outline-none text-left" 
                     dir="ltr"
                   />
                 )}
@@ -418,11 +422,12 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
                 </label>
                 {(formData.hasWhatsapp ?? true) && (
                   <input 
-                    type="text" 
+                    type="tel" 
                     value={formData.whatsappNumber || ''} 
-                    onChange={e => setFormData({...formData, whatsappNumber: e.target.value})} 
+                    onChange={e => setFormData({...formData, whatsappNumber: extractDigits(e.target.value)})} 
+                    maxLength={11}
                     placeholder="شماره واتس‌اپ..."
-                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm focus:border-emerald-500 outline-none text-left" 
+                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm font-mono focus:border-emerald-500 outline-none text-left" 
                     dir="ltr"
                   />
                 )}
@@ -435,11 +440,12 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
                 </label>
                 {(formData.hasBale ?? false) && (
                   <input 
-                    type="text" 
+                    type="tel" 
                     value={formData.baleNumber || ''} 
-                    onChange={e => setFormData({...formData, baleNumber: e.target.value})} 
+                    onChange={e => setFormData({...formData, baleNumber: extractDigits(e.target.value)})} 
+                    maxLength={11}
                     placeholder="شماره بله..."
-                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm focus:border-teal-500 outline-none text-left" 
+                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm font-mono focus:border-teal-500 outline-none text-left" 
                     dir="ltr"
                   />
                 )}

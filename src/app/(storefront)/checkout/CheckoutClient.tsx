@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useCart } from '@/lib/store/CartContext';
-import { formatToman, toPersianDigits } from '@/lib/utils/currency';
+import { formatToman, toPersianDigits, extractDigits } from '@/lib/utils/currency';
 import { Button } from '@/components/ui/button';
 import { ShieldCheck, MapPin, Building2, User, CreditCard, Trash2, ArrowRight, Loader2, Store, PhoneCall } from 'lucide-react';
 import Link from 'next/link';
@@ -140,7 +140,8 @@ export function CheckoutClient() {
               <input 
                 type="tel" 
                 value={mobile} 
-                onChange={e=>setMobile(e.target.value)} 
+                onChange={e=>setMobile(extractDigits(e.target.value))} 
+                maxLength={11}
                 className="w-full h-14 px-4 text-center tracking-widest text-lg rounded-xl border-2 border-slate-200 focus:border-indigo-500 outline-none transition-all dir-ltr" 
                 placeholder="0912..." 
                 pattern="^09\d{9}$"
@@ -206,7 +207,7 @@ export function CheckoutClient() {
               {customerType === 'real' ? (
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">کد ملی <span className="text-rose-500">* (اجباری)</span></label>
-                  <input required type="text" value={nationalCode} onChange={e=>setNationalCode(e.target.value)} className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none" placeholder="کد ملی ۱۰ رقمی" pattern="^\d{10}$" title="کد ملی باید دقیقاً ۱۰ رقم باشد" />
+                  <input required type="tel" value={nationalCode} onChange={e=>setNationalCode(extractDigits(e.target.value))} maxLength={10} className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-left font-mono" placeholder="کد ملی ۱۰ رقمی" pattern="^\d{10}$" title="کد ملی باید دقیقاً ۱۰ رقم باشد" dir="ltr" />
                 </div>
               ) : (
                 <>
@@ -216,7 +217,7 @@ export function CheckoutClient() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium text-slate-700 mb-1.5">کد اقتصادی <span className="text-rose-500">* (اجباری)</span></label>
-                    <input required type="text" value={economicCode} onChange={e=>setEconomicCode(e.target.value)} className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none" />
+                    <input required type="tel" value={economicCode} onChange={e=>setEconomicCode(extractDigits(e.target.value))} className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none text-left font-mono" dir="ltr" />
                   </div>
                 </>
               )}

@@ -26,3 +26,19 @@ export function toPersianDigits(str: string | number | undefined | null): string
   const persianDigits = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
   return String(str).replace(/\d/g, (w) => persianDigits[parseInt(w, 10)]);
 }
+
+/**
+ * Convert Persian and Arabic digits to English digits and strip all non-numeric characters.
+ */
+export function extractDigits(str: string | number | undefined | null): string {
+  if (str === undefined || str === null) return '';
+  const value = String(str);
+  
+  // Convert Persian and Arabic digits to English
+  const englishStr = value
+    .replace(/[\u0660-\u0669]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x0660 + 48))
+    .replace(/[\u06f0-\u06f9]/g, c => String.fromCharCode(c.charCodeAt(0) - 0x06f0 + 48));
+    
+  // Keep only digits
+  return englishStr.replace(/\D/g, '');
+}

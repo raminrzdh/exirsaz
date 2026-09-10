@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { X, Phone, User, Send } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { extractDigits } from '@/lib/utils/currency';
 import { submitInquiry } from '@/app/(storefront)/products/actions';
 
 interface InquiryLeadModalProps {
@@ -134,7 +135,8 @@ export function InquiryLeadModal({ isOpen, onClose, productName, productId, agen
                   type="tel"
                   required
                   value={phone}
-                  onChange={e => setPhone(e.target.value)}
+                  onChange={e => setPhone(extractDigits(e.target.value))}
+                  maxLength={11}
                   className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-slate-50"
                   placeholder="0912..."
                   dir="ltr"
