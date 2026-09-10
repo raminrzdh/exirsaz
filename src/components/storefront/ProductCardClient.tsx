@@ -10,7 +10,7 @@ import { useCart } from '@/lib/store/CartContext';
 import { LocationGateModal } from './LocationGateModal';
 import { InquiryLeadModal } from './InquiryLeadModal';
 import { checkRepresentative } from '@/app/(storefront)/products/actions';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 
 
 interface Representative {

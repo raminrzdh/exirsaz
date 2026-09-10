@@ -7,7 +7,7 @@ import { formatToman, toPersianDigits, extractDigits } from '@/lib/utils/currenc
 import { Button } from '@/components/ui/button';
 import { ShieldCheck, MapPin, Building2, User, CreditCard, Trash2, ArrowRight, Loader2, Store, PhoneCall } from 'lucide-react';
 import Link from 'next/link';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { checkRepresentative } from '@/app/(storefront)/products/actions';
 import { getCrossSellProducts } from './actions';
 import { CrossSellMicroCard } from '@/components/storefront/CrossSellMicroCard';

@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Upload, FileImage, Trash2, CheckCircle2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { deleteMediaFile } from '@/app/admin/posts/actions';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 
 
 export interface MediaFile {

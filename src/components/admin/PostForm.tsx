@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { RichTextEditor } from '@/components/ui/RichTextEditor';
 import { createPost, updatePost, createCategory } from '@/app/admin/posts/actions';
 import { MediaPickerModal } from './MediaPickerModal';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { InternalLinkingWidget } from './InternalLinkingWidget';
 
 

@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Plus, Edit2, Trash2, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createAttribute, updateAttribute, deleteAttribute } from './actions';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 
 export function FeaturesClient({ initialAttributes }: { initialAttributes: any[] }) {
   const [attributes, setAttributes] = useState(initialAttributes);

@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { ShieldAlert, Store, ServerCog, Check } from 'lucide-react';
 import { saveGlobalRoutingSetting, toggleCategoryRouting } from './actions';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 
 
 interface GeoRulesClientProps {

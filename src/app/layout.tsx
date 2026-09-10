@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Script from "next/script";
-import { Toaster } from "react-hot-toast";
+import { Toaster } from "sonner";
 import { LOCATIONS } from "@/lib/constants/locations";
 import "./globals.css";
 import { cn } from "@/lib/utils";
@@ -44,18 +44,7 @@ export default function RootLayout({
             `,
           }}
         />
-        <Toaster 
-          position="bottom-center" 
-          toastOptions={{
-            duration: 4000,
-            style: {
-              fontFamily: 'inherit',
-              fontSize: '14px',
-              padding: '12px 20px',
-              borderRadius: '999px',
-            },
-          }} 
-        />
+        <Toaster position="top-center" richColors theme="light" dir="rtl" className="font-estedad" />
         {children}
       </body>
     </html>

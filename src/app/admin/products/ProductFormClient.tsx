@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { ArrowRight, Save, Image as ImageIcon, Plus, Trash2, CheckCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createProduct, updateProduct } from './actions';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { InternalLinkingWidget } from '@/components/admin/InternalLinkingWidget';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
 import Image from 'next/image';

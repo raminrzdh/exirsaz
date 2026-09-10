@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Plus, Edit2, Trash2, Check, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createCategory, updateCategory, deleteCategory } from './actions';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 
 export function CategoriesClient({ initialCategories }: { initialCategories: any[] }) {
   const [categories, setCategories] = useState(initialCategories);

@@ -8,7 +8,7 @@ import { extractDigits } from '@/lib/utils/currency';
 import { Button } from '@/components/ui/button';
 import { createAgency, updateAgency } from './actions';
 import { Agency } from './AgencyTableClient';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import dynamic from 'next/dynamic';
 
 const MapPicker = dynamic(() => import('@/components/storefront/MapPicker'), {

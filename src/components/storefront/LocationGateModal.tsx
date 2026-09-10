@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button';
 import { useCart } from '@/lib/store/CartContext';
 import dynamic from 'next/dynamic';
 
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 
 
 const MapPicker = dynamic(() => import('./MapPicker'), {

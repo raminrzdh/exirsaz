@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { updateInquiryStatus } from './actions';
-import toast from 'react-hot-toast';
+import { toast } from 'sonner';
 import { Search, Download } from 'lucide-react';
 
 interface InquiryData {

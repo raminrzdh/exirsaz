@@ -5,7 +5,7 @@ import { MapContainer, TileLayer, Marker, useMapEvents, Tooltip, useMap } from '
 import L from 'leaflet';
 import { LocateFixed, Loader2 } from 'lucide-react';
 import 'leaflet/dist/leaflet.css';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 
 
 // Custom Text Badge Icon

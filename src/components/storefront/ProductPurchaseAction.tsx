@@ -9,7 +9,7 @@ import { useCart } from '@/lib/store/CartContext';
 import { InquiryLeadModal } from './InquiryLeadModal';
 import { LocationGateModal } from './LocationGateModal';
 import { checkRepresentative, recordLeadEvent } from '@/app/(storefront)/products/actions';
-import { toast } from 'react-hot-toast';
+import { toast } from 'sonner';
 import { trackEvent } from '@/lib/utils/analytics';
 import { useExitIntent } from '@/hooks/useExitIntent';
 import { ExitIntentModal } from './ExitIntentModal';
