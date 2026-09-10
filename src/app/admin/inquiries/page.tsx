@@ -11,20 +11,35 @@ export default async function AdminInquiriesPage() {
     orderBy: { createdAt: 'desc' },
     include: {
       product: { select: { name: true } },
-      agency: { select: { name: true, city: true, province: true } },
+      agency: { 
+        select: { 
+          name: true, 
+          cities: {
+            select: { name: true, province: { select: { name: true } } }
+          }
+        } 
+      },
     }
   });
 
-  const formattedInquiries = inquiries.map(inq => ({
-    id: inq.id,
-    customerName: inq.customerName,
-    customerPhone: inq.customerPhone,
-    description: inq.description || '',
-    productName: inq.productName,
-    agencyName: inq.agency ? `${inq.agency.name} (${inq.agency.province} - ${inq.agency.city})` : 'فروش مستقیم',
-    status: inq.status,
-    createdAt: inq.createdAt.toISOString()
-  }));
+  const formattedInquiries = inquiries.map(inq => {
+    let agencyInfo = 'فروش مستقیم';
+    if (inq.agency) {
+      const cityNames = inq.agency.cities.map(c => `${c.province.name} - ${c.name}`).join('، ');
+      agencyInfo = `${inq.agency.name} ${cityNames ? `(${cityNames})` : ''}`;
+    }
+
+    return {
+      id: inq.id,
+      customerName: inq.customerName,
+      customerPhone: inq.customerPhone,
+      description: inq.description || '',
+      productName: inq.productName,
+      agencyName: agencyInfo,
+      status: inq.status,
+      createdAt: inq.createdAt.toISOString()
+    };
+  });
 
   return (
     <div className="space-y-6">
