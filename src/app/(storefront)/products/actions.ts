@@ -54,7 +54,8 @@ export async function checkRepresentative(province: string, city: string, catego
       hasPhoneCall: foundRep.hasPhoneCall,
       phoneCallNumber: foundRep.phoneCallNumber,
       hasRequestForm: foundRep.hasRequestForm,
-      locationCoordinates: foundRep.locationCoordinates
+      locationCoordinates: foundRep.locationCoordinates,
+      slug: foundRep.slug
     };
   }
   

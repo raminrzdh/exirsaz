@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { ShoppingCart, MessageCircle, PhoneCall, FileText, MapPin, Store } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatToman, toPersianDigits } from '@/lib/utils/currency';
@@ -38,6 +39,7 @@ interface Agency {
   phoneCallNumber?: string;
   hasRequestForm?: boolean;
   locationCoordinates?: string;
+  slug?: string;
 }
 
 interface ProductPurchaseActionProps {
@@ -127,35 +129,39 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
     <div className="bg-slate-50 border border-slate-100 rounded-3xl p-6">
       {isDirectSale ? (
         <>
-          <div className="flex items-center justify-between mb-6">
-            <span className="text-slate-500 font-medium">قیمت نهایی:</span>
-            {product.salePrice && product.price ? (
-              <div className="flex flex-col items-end">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="bg-rose-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-md">
-                    {toPersianDigits(Math.round(((product.price - product.salePrice) / product.price) * 100))}٪
+          {(!localAgency && !isCheckingRep) && (
+            <>
+              <div className="flex items-center justify-between mb-6">
+                <span className="text-slate-500 font-medium">قیمت نهایی:</span>
+                {product.salePrice && product.price ? (
+                  <div className="flex flex-col items-end">
+                    <div className="flex items-center gap-2 mb-1">
+                      <span className="bg-rose-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-md">
+                        {toPersianDigits(Math.round(((product.price - product.salePrice) / product.price) * 100))}٪
+                      </span>
+                      <span className="text-sm text-slate-400 line-through decoration-rose-500/50">{formatToman(product.price * quantity)}</span>
+                    </div>
+                    <span className="text-2xl font-black text-rose-600">
+                      {formatToman(product.salePrice * quantity)}
+                    </span>
+                  </div>
+                ) : (
+                  <span className="text-2xl font-black text-emerald-700">
+                    {product.price ? formatToman(product.price * quantity) : 'نامشخص'}
                   </span>
-                  <span className="text-sm text-slate-400 line-through decoration-rose-500/50">{formatToman(product.price * quantity)}</span>
-                </div>
-                <span className="text-2xl font-black text-rose-600">
-                  {formatToman(product.salePrice * quantity)}
-                </span>
+                )}
               </div>
-            ) : (
-              <span className="text-2xl font-black text-emerald-700">
-                {product.price ? formatToman(product.price * quantity) : 'نامشخص'}
-              </span>
-            )}
-          </div>
-          
-          <div className="flex items-center gap-4 mb-6">
-            <span className="text-slate-500 font-medium whitespace-nowrap">تعداد:</span>
-            <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden h-12 flex-1 max-w-[150px]">
-              <button type="button" onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-12 h-full flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors">-</button>
-              <input type="text" readOnly value={toPersianDigits(quantity.toString())} className="w-full h-full text-center font-bold text-slate-800 bg-transparent outline-none" />
-              <button type="button" onClick={() => setQuantity(quantity + 1)} className="w-12 h-full flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors">+</button>
-            </div>
-          </div>
+              
+              <div className="flex items-center gap-4 mb-6">
+                <span className="text-slate-500 font-medium whitespace-nowrap">تعداد:</span>
+                <div className="flex items-center bg-white border border-slate-200 rounded-xl overflow-hidden h-12 flex-1 max-w-[150px]">
+                  <button type="button" onClick={() => setQuantity(Math.max(1, quantity - 1))} className="w-12 h-full flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors">-</button>
+                  <input type="text" readOnly value={toPersianDigits(quantity.toString())} className="w-full h-full text-center font-bold text-slate-800 bg-transparent outline-none" />
+                  <button type="button" onClick={() => setQuantity(quantity + 1)} className="w-12 h-full flex items-center justify-center text-slate-500 hover:bg-slate-100 transition-colors">+</button>
+                </div>
+              </div>
+            </>
+          )}
 
           {!userLocation ? (
             // Case A: No Location Set
@@ -180,8 +186,10 @@ export function ProductPurchaseAction({ product }: ProductPurchaseActionProps) {
               </div>
               <div className="p-4 space-y-4">
                 <div>
-                  <h4 className="font-bold text-slate-900 mb-1">{localAgency.name}</h4>
-                  <p className="text-sm text-slate-500">جهت خرید و دریافت مشاوره مستقیماً با نمایندگی تماس بگیرید.</p>
+                  <Link href={`/${localAgency.slug}`} className="font-bold text-slate-900 mb-1 hover:text-indigo-600 transition-colors block">
+                    {localAgency.name}
+                  </Link>
+                  <p className="text-sm text-slate-500 mt-1">جهت خرید و دریافت مشاوره مستقیماً با نمایندگی تماس بگیرید.</p>
                 </div>
                 
                 <div className="flex flex-col gap-2">
