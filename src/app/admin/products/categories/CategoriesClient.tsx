@@ -85,7 +85,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: any
           
           <div className="space-y-4">
             <div className="space-y-1">
-              <label className="text-sm font-semibold text-slate-700">نام دسته‌بندی</label>
+              <label className="text-sm font-semibold text-slate-700">نام دسته‌بندی <span className="text-rose-500">* (اجباری)</span></label>
               <input 
                 type="text" 
                 value={formData.name}
@@ -95,7 +95,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: any
             </div>
             
             <div className="space-y-1">
-              <label className="text-sm font-semibold text-slate-700">آدرس (Slug)</label>
+              <label className="text-sm font-semibold text-slate-700">آدرس (Slug) <span className="text-rose-500">* (اجباری)</span></label>
               <input 
                 type="text" 
                 value={formData.slug}
@@ -105,7 +105,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: any
             </div>
 
             <div className="space-y-1">
-              <label className="text-sm font-semibold text-slate-700">دسته مادر (والد)</label>
+              <label className="text-sm font-semibold text-slate-700">دسته مادر (والد) <span className="text-slate-400 font-normal">(اختیاری)</span></label>
               <select 
                 value={formData.parentId}
                 onChange={e => setFormData({ ...formData, parentId: e.target.value })}
@@ -119,7 +119,7 @@ export function CategoriesClient({ initialCategories }: { initialCategories: any
             </div>
             
             <div className="space-y-1">
-              <label className="text-sm font-semibold text-slate-700">توضیحات</label>
+              <label className="text-sm font-semibold text-slate-700">توضیحات <span className="text-slate-400 font-normal">(اختیاری)</span></label>
               <textarea 
                 rows={3}
                 value={formData.description}

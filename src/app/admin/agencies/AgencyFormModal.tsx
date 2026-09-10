@@ -159,7 +159,7 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
         <form onSubmit={handleSubmit} className="p-6 overflow-y-auto max-h-[70vh] space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700">نام نمایشی (استان / منطقه) *</label>
+              <label className="text-sm font-medium text-slate-700">نام نمایشی (استان / منطقه) <span className="text-rose-500">* (اجباری)</span></label>
               <input 
                 type="text" 
                 value={formData.name || ''}
@@ -171,7 +171,7 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
             </div>
             
             <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700">اسلاگ URL (نامک) *</label>
+              <label className="text-sm font-medium text-slate-700">اسلاگ URL (نامک) <span className="text-rose-500">* (اجباری)</span></label>
               <input 
                 type="text" 
                 value={formData.slug || ''}
@@ -186,7 +186,7 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700">نام شرکت / فروشگاه</label>
+              <label className="text-sm font-medium text-slate-700">نام شرکت / فروشگاه <span className="text-slate-400 font-normal">(اختیاری)</span></label>
               <input 
                 type="text" 
                 value={formData.company || ''}
@@ -196,7 +196,7 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
             </div>
             
             <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700">نام مدیریت</label>
+              <label className="text-sm font-medium text-slate-700">نام مدیریت <span className="text-slate-400 font-normal">(اختیاری)</span></label>
               <input 
                 type="text" 
                 value={formData.manager || ''}
@@ -208,7 +208,7 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700">تلفن ثابت</label>
+              <label className="text-sm font-medium text-slate-700">تلفن ثابت <span className="text-rose-500">* (اجباری)</span></label>
               <input 
                 type="text" 
                 value={formData.phone || ''}
@@ -216,11 +216,12 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
                 className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm font-mono focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-right"
                 placeholder="021..."
                 dir="ltr"
+                required
               />
             </div>
             
             <div className="space-y-1">
-              <label className="text-sm font-medium text-slate-700">تلفن همراه</label>
+              <label className="text-sm font-medium text-slate-700">تلفن همراه <span className="text-slate-400 font-normal">(اختیاری)</span></label>
               <input 
                 type="text" 
                 value={formData.mobile || ''}
@@ -233,7 +234,7 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700">آدرس کامل مراجعه حضوری</label>
+            <label className="text-sm font-medium text-slate-700">آدرس کامل مراجعه حضوری <span className="text-slate-400 font-normal">(اختیاری)</span></label>
             <input 
               type="text" 
               value={formData.address || ''}
@@ -243,7 +244,7 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700">آدرس تصویر (URL)</label>
+            <label className="text-sm font-medium text-slate-700">آدرس تصویر (URL) <span className="text-slate-400 font-normal">(اختیاری)</span></label>
             <input 
               type="text" 
               value={formData.image || ''}
@@ -254,7 +255,7 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
           </div>
 
           <div className="space-y-1">
-            <label className="text-sm font-medium text-slate-700">توضیحات (درباره نمایندگی)</label>
+            <label className="text-sm font-medium text-slate-700">توضیحات (درباره نمایندگی) <span className="text-slate-400 font-normal">(اختیاری)</span></label>
             <textarea 
               value={formData.description || ''}
               onChange={e => setFormData({ ...formData, description: e.target.value })}
@@ -263,7 +264,7 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
           </div>
 
           <div className="border border-slate-200 rounded-2xl p-4 bg-slate-50 space-y-4">
-            <label className="text-sm font-bold text-slate-800 block">شهرهای تحت پوشش *</label>
+            <label className="text-sm font-bold text-slate-800 block">شهرهای تحت پوشش <span className="text-rose-500">* (اجباری)</span></label>
             
             <div className="flex flex-col sm:flex-row gap-2">
               <select 
@@ -425,7 +426,7 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
           </div>
 
           <div className="space-y-3 pt-4 border-t border-slate-100">
-            <label className="text-sm font-bold text-slate-800 block">موقعیت روی نقشه (برای مسیریابی کاربر)</label>
+            <label className="text-sm font-bold text-slate-800 block">موقعیت روی نقشه (برای مسیریابی کاربر) <span className="text-slate-400 font-normal">(اختیاری)</span></label>
             <p className="text-xs text-slate-500 mb-2">در صورت انتخاب، دکمه مسیریابی برای کاربران فعال می‌شود.</p>
             <div className="w-full h-[250px] relative rounded-xl border border-slate-200 overflow-hidden z-0">
               <MapPicker 

@@ -39,7 +39,7 @@ export default function LoginPage() {
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" htmlFor="username">
-                نام کاربری
+                نام کاربری <span className="text-rose-500">* (اجباری)</span>
               </label>
               <input
                 id="username"
@@ -52,7 +52,7 @@ export default function LoginPage() {
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" htmlFor="password">
-                رمز عبور
+                رمز عبور <span className="text-rose-500">* (اجباری)</span>
               </label>
               <input
                 id="password"

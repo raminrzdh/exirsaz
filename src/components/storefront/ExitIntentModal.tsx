@@ -80,7 +80,7 @@ export function ExitIntentModal({ isOpen, onClose, productName }: ExitIntentModa
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-bold text-slate-700 mb-2 text-center">
-                  شماره موبایل خود را وارد کنید:
+                  شماره موبایل خود را وارد کنید: <span className="text-rose-500">* (اجباری)</span>
                 </label>
                 <input
                   type="tel"

@@ -271,7 +271,7 @@ export function ProductFormClient({ isEdit, agencies, categories, availableFeatu
             <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-4">اطلاعات پایه</h2>
             
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">نام محصول <span className="text-red-500">*</span></label>
+              <label className="text-sm font-semibold text-slate-700">نام محصول <span className="text-red-500">* (اجباری)</span></label>
               <input 
                 type="text" 
                 value={formData.name}
@@ -283,7 +283,7 @@ export function ProductFormClient({ isEdit, agencies, categories, availableFeatu
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">آدرس اینترنتی (Slug)</label>
+              <label className="text-sm font-semibold text-slate-700">آدرس اینترنتی (Slug) <span className="text-slate-400 font-normal">(اختیاری)</span></label>
               <input 
                 type="text" 
                 value={formData.slug}
@@ -297,7 +297,7 @@ export function ProductFormClient({ isEdit, agencies, categories, availableFeatu
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">توضیحات کوتاه</label>
+              <label className="text-sm font-semibold text-slate-700">توضیحات کوتاه <span className="text-slate-400 font-normal">(اختیاری)</span></label>
               <textarea 
                 rows={3}
                 value={formData.shortDesc}
@@ -308,7 +308,7 @@ export function ProductFormClient({ isEdit, agencies, categories, availableFeatu
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">توضیحات کامل (HTML/ویرایشگر متنی)</label>
+              <label className="text-sm font-semibold text-slate-700">توضیحات کامل (HTML/ویرایشگر متنی) <span className="text-slate-400 font-normal">(اختیاری)</span></label>
               <textarea 
                 rows={6}
                 value={formData.description}
@@ -470,7 +470,7 @@ export function ProductFormClient({ isEdit, agencies, categories, availableFeatu
             )}
             
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">قیمت (تومان) {productType === 'SIMPLE' && <span className="text-red-500">*</span>}</label>
+              <label className="text-sm font-semibold text-slate-700">قیمت (تومان) {productType === 'SIMPLE' && <span className="text-red-500">* (اجباری)</span>}</label>
               <input 
                 type="number" 
                 value={formData.price}
@@ -482,7 +482,7 @@ export function ProductFormClient({ isEdit, agencies, categories, availableFeatu
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">قیمت حراج (تومان)</label>
+              <label className="text-sm font-semibold text-slate-700">قیمت حراج (تومان) <span className="text-slate-400 font-normal">(اختیاری)</span></label>
               <input 
                 type="number" 
                 value={formData.salePrice}
@@ -493,7 +493,7 @@ export function ProductFormClient({ isEdit, agencies, categories, availableFeatu
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">موجودی انبار</label>
+              <label className="text-sm font-semibold text-slate-700">موجودی انبار <span className="text-slate-400 font-normal">(اختیاری)</span></label>
               <input 
                 type="number" 
                 value={formData.stock}
@@ -503,7 +503,7 @@ export function ProductFormClient({ isEdit, agencies, categories, availableFeatu
             </div>
             
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">شناسه محصول (SKU)</label>
+              <label className="text-sm font-semibold text-slate-700">شناسه محصول (SKU) <span className="text-slate-400 font-normal">(اختیاری)</span></label>
               <input 
                 type="text" 
                 value={formData.sku}
@@ -517,7 +517,7 @@ export function ProductFormClient({ isEdit, agencies, categories, availableFeatu
             <h2 className="text-lg font-bold text-slate-900 border-b border-slate-100 pb-4">نوع فروش و انتشار</h2>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">نوع فروش</label>
+              <label className="text-sm font-semibold text-slate-700">نوع فروش <span className="text-red-500">* (اجباری)</span></label>
               <select 
                 value={formData.salesType}
                 onChange={e => setFormData({ ...formData, salesType: e.target.value })}
@@ -530,7 +530,7 @@ export function ProductFormClient({ isEdit, agencies, categories, availableFeatu
 
             {formData.salesType === 'INQUIRY' && (
               <div className="space-y-2 p-3 bg-indigo-50/50 rounded-xl border border-indigo-100">
-                <label className="text-sm font-semibold text-indigo-900">نحوه استعلام قیمت</label>
+                <label className="text-sm font-semibold text-indigo-900">نحوه استعلام قیمت <span className="text-red-500">* (اجباری)</span></label>
                 <select 
                   value={formData.inquiryAction}
                   onChange={e => setFormData({ ...formData, inquiryAction: e.target.value })}
@@ -544,7 +544,7 @@ export function ProductFormClient({ isEdit, agencies, categories, availableFeatu
             )}
             
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">وضعیت انتشار</label>
+              <label className="text-sm font-semibold text-slate-700">وضعیت انتشار <span className="text-red-500">* (اجباری)</span></label>
               <select className="w-full h-12 px-4 rounded-lg bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none">
                 <option value="published">منتشر شده</option>
                 <option value="draft">پیش‌نویس</option>
@@ -553,7 +553,7 @@ export function ProductFormClient({ isEdit, agencies, categories, availableFeatu
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-slate-700">دسته‌بندی</label>
+              <label className="text-sm font-semibold text-slate-700">دسته‌بندی <span className="text-slate-400 font-normal">(اختیاری)</span></label>
               <select 
                 value={formData.categoryId}
                 onChange={e => setFormData({ ...formData, categoryId: e.target.value })}

@@ -194,26 +194,26 @@ export function CheckoutClient() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">نام</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">نام <span className="text-rose-500">* (اجباری)</span></label>
                 <input required type="text" value={firstName} onChange={e=>setFirstName(e.target.value)} className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none" />
               </div>
               <div>
-                <label className="block text-sm font-medium text-slate-700 mb-1.5">نام خانوادگی</label>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5">نام خانوادگی <span className="text-rose-500">* (اجباری)</span></label>
                 <input required type="text" value={lastName} onChange={e=>setLastName(e.target.value)} className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none" />
               </div>
               {customerType === 'real' ? (
                 <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-slate-700 mb-1.5">کد ملی</label>
+                  <label className="block text-sm font-medium text-slate-700 mb-1.5">کد ملی <span className="text-rose-500">* (اجباری)</span></label>
                   <input required type="text" value={nationalCode} onChange={e=>setNationalCode(e.target.value)} className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none" placeholder="کد ملی ۱۰ رقمی" />
                 </div>
               ) : (
                 <>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">نام شرکت</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">نام شرکت <span className="text-rose-500">* (اجباری)</span></label>
                     <input required type="text" value={companyName} onChange={e=>setCompanyName(e.target.value)} className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none" />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-1.5">کد اقتصادی</label>
+                    <label className="block text-sm font-medium text-slate-700 mb-1.5">کد اقتصادی <span className="text-rose-500">* (اجباری)</span></label>
                     <input required type="text" value={economicCode} onChange={e=>setEconomicCode(e.target.value)} className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none" />
                   </div>
                 </>
@@ -222,7 +222,7 @@ export function CheckoutClient() {
 
             <section className="pt-6 border-t border-slate-100">
               <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-                <MapPin className="w-5 h-5 text-indigo-500" /> آدرس دقیق پستی
+                <MapPin className="w-5 h-5 text-indigo-500" /> آدرس دقیق پستی <span className="text-rose-500 text-sm font-normal">* (اجباری)</span>
               </h2>
               <div className="grid grid-cols-2 gap-5 mb-5">
                 <input type="text" readOnly value={userLocation?.province || ''} className="w-full h-12 px-4 rounded-xl border border-slate-200 bg-slate-50 text-slate-500 cursor-not-allowed" placeholder="استان" />

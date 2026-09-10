@@ -113,7 +113,7 @@ export function InquiryLeadModal({ isOpen, onClose, productName, productId, agen
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5 flex items-center gap-1.5">
                   <User className="w-4 h-4 text-slate-400" />
-                  نام و نام خانوادگی
+                  نام و نام خانوادگی <span className="text-rose-500">* (اجباری)</span>
                 </label>
                 <input
                   type="text"
@@ -128,7 +128,7 @@ export function InquiryLeadModal({ isOpen, onClose, productName, productId, agen
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5 flex items-center gap-1.5">
                   <Phone className="w-4 h-4 text-slate-400" />
-                  شماره موبایل
+                  شماره موبایل <span className="text-rose-500">* (اجباری)</span>
                 </label>
                 <input
                   type="tel"
@@ -143,7 +143,7 @@ export function InquiryLeadModal({ isOpen, onClose, productName, productId, agen
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5 flex items-center gap-1.5">
-                  توضیحات (اختیاری)
+                  توضیحات <span className="text-slate-400 font-normal">(اختیاری)</span>
                 </label>
                 <textarea
                   value={description}
@@ -155,7 +155,7 @@ export function InquiryLeadModal({ isOpen, onClose, productName, productId, agen
 
               <div>
                 <label className="block text-sm font-medium text-slate-700 mb-1.5 flex items-center gap-1.5">
-                  لطفاً حاصل جمع را وارد کنید: {num1} + {num2}
+                  لطفاً حاصل جمع را وارد کنید: {num1} + {num2} <span className="text-rose-500">* (اجباری)</span>
                 </label>
                 <input
                   type="number"
