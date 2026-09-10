@@ -143,6 +143,8 @@ export function CheckoutClient() {
                 onChange={e=>setMobile(e.target.value)} 
                 className="w-full h-14 px-4 text-center tracking-widest text-lg rounded-xl border-2 border-slate-200 focus:border-indigo-500 outline-none transition-all dir-ltr" 
                 placeholder="0912..." 
+                pattern="^09\d{9}$"
+                title="شماره موبایل باید با 09 شروع شود و 11 رقم باشد (مثال: 09123456789)"
                 required
               />
               <Button type="submit" disabled={isVerifying} className="w-full h-14 text-lg bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200">
@@ -204,7 +206,7 @@ export function CheckoutClient() {
               {customerType === 'real' ? (
                 <div className="md:col-span-2">
                   <label className="block text-sm font-medium text-slate-700 mb-1.5">کد ملی <span className="text-rose-500">* (اجباری)</span></label>
-                  <input required type="text" value={nationalCode} onChange={e=>setNationalCode(e.target.value)} className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none" placeholder="کد ملی ۱۰ رقمی" />
+                  <input required type="text" value={nationalCode} onChange={e=>setNationalCode(e.target.value)} className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 outline-none" placeholder="کد ملی ۱۰ رقمی" pattern="^\d{10}$" title="کد ملی باید دقیقاً ۱۰ رقم باشد" />
                 </div>
               ) : (
                 <>

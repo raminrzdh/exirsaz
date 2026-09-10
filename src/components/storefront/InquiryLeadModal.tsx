@@ -138,6 +138,8 @@ export function InquiryLeadModal({ isOpen, onClose, productName, productId, agen
                   className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-slate-50"
                   placeholder="0912..."
                   dir="ltr"
+                  pattern="^09\d{9}$"
+                  title="شماره موبایل باید با 09 شروع شود و 11 رقم باشد (مثال: 09123456789)"
                 />
               </div>
 

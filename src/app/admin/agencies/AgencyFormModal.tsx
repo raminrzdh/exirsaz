@@ -216,6 +216,8 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
                 className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm font-mono focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none text-right"
                 placeholder="021..."
                 dir="ltr"
+                pattern="^0\d{10}$"
+                title="شماره تلفن ثابت باید با 0 شروع شود و شامل پیش‌شماره و 11 رقم باشد (مثال: 02188888888)"
                 required
               />
             </div>
@@ -229,6 +231,8 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
                 className="w-full h-11 rounded-xl border border-slate-200 px-4 text-sm font-mono focus:border-indigo-500 outline-none text-right"
                 placeholder="0912..."
                 dir="ltr"
+                pattern="^09\d{9}$"
+                title="شماره موبایل باید با 09 شروع شود و 11 رقم باشد (مثال: 09123456789)"
               />
             </div>
           </div>

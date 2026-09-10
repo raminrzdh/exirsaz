@@ -89,6 +89,8 @@ export function ExitIntentModal({ isOpen, onClose, productName }: ExitIntentModa
                   onChange={e => setMobile(e.target.value)}
                   placeholder="مثال: 09123456789"
                   dir="ltr"
+                  pattern="^09\d{9}$"
+                  title="شماره موبایل باید با 09 شروع شود و 11 رقم باشد (مثال: 09123456789)"
                   className="w-full h-14 text-center text-lg tracking-widest rounded-2xl border-2 border-slate-200 focus:border-amber-500 focus:ring-4 focus:ring-amber-500/20 outline-none transition-all font-mono"
                 />
               </div>

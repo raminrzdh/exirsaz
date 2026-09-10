@@ -85,7 +85,7 @@ export default function ContactPage() {
               </div>
               <div className="space-y-2">
                 <label htmlFor="phone" className="text-sm font-medium text-slate-700">شماره موبایل <span className="text-rose-500">* (اجباری)</span></label>
-                <input id="phone" type="tel" className="w-full h-12 rounded-xl border border-slate-200 px-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-left" placeholder="09123456789" dir="ltr" required />
+                <input id="phone" type="tel" className="w-full h-12 rounded-xl border border-slate-200 px-4 focus:outline-none focus:ring-2 focus:ring-emerald-500 text-left" placeholder="09123456789" dir="ltr" pattern="^09\d{9}$" title="شماره موبایل باید با 09 شروع شود و 11 رقم باشد (مثال: 09123456789)" required />
               </div>
             </div>
             <div className="space-y-2">
