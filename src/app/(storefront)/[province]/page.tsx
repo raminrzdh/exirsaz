@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { MapPin, Phone, Smartphone, User, Building2, ShieldCheck, Truck } from 'lucide-react';
 import { prisma } from '@/lib/db/prisma';
+import { AgencyContactButtonsClient } from '@/components/storefront/AgencyContactButtonsClient';
 
 interface Props {
   params: Promise<{ province: string }>;
@@ -185,10 +186,7 @@ export default async function ProvincePage({ params }: Props) {
               </div>
               
               <div className="mt-8 pt-6 border-t border-slate-100 flex flex-col gap-3">
-                <a href={`tel:${agency.mobile}`} className="flex items-center justify-center h-12 w-full rounded-xl bg-emerald-600 text-white font-bold hover:bg-emerald-700 transition-colors cursor-pointer gap-2">
-                  <Phone className="w-5 h-5" />
-                  تماس مستقیم
-                </a>
+                <AgencyContactButtonsClient agency={agency} />
               </div>
             </div>
           </div>
