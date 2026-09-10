@@ -1,7 +1,7 @@
 import { getAgencies } from './actions';
 import { AgencyTableClient } from './AgencyTableClient';
 import { prisma } from '@/lib/db/prisma';
-
+import { LOCATIONS } from '@/lib/constants/locations';
 export const metadata = {
   title: 'مدیریت نمایندگی‌ها | پنل ادمین',
 };
@@ -12,11 +12,7 @@ export default async function AgenciesPage() {
   const allCategories = dbCategories.map(c => c.name);
   const dbProducts = await prisma.product.findMany({ select: { id: true, name: true } });
   const allProducts = dbProducts.map(p => ({ id: p.id, name: p.name }));
-  const dbProvinces = await prisma.province.findMany({ include: { cities: true } });
-  const allLocations: Record<string, string[]> = {};
-  for (const prov of dbProvinces) {
-    allLocations[prov.name] = prov.cities.map(c => c.name);
-  }
+  const allLocations: Record<string, string[]> = LOCATIONS;
 
   return (
     <div className="flex flex-col gap-6">
