@@ -76,10 +76,12 @@ model Product {
   seoDescription  String?
   schemaMarkup    String?
   
-  variants        ProductVariant[]
-  orderItems      OrderItem[]
-  agencies        Agency[]    @relation("AgencyProducts")
-  comments        Comment[]
+  variants          ProductVariant[]
+  orderItems        OrderItem[]
+  comments          Comment[]
+  agencies          Agency[]         @relation("AgencyProducts")
+  leadEvents        LeadEvent[]
+  inquiryRequests   InquiryRequest[]
   productAttributes ProductAttribute[]
   
   createdAt       DateTime    @default(now())
@@ -191,12 +193,20 @@ model Agency {
   phone               String?
   address             String?
   locationCoordinates String?  // e.g., "lat,lng"
+  hasWhatsapp         Boolean  @default(true)
+  whatsappNumber      String?
+  hasBale             Boolean  @default(false)
+  baleNumber          String?
+  hasPhoneCall        Boolean  @default(true)
+  phoneCallNumber     String?
+  hasRequestForm      Boolean  @default(true)
   cities              City[]   @relation("AgencyCities") // Multi-city coverage
   isActive            Boolean  @default(true)
   createdAt           DateTime @default(now())
   
   productExclusions   ProductAgencyExclusion[]
   leadEvents          LeadEvent[]
+  inquiryRequests     InquiryRequest[]
   products            Product[] @relation("AgencyProducts")
 }
 
@@ -220,10 +230,27 @@ model StoreSettings {
 
 model LeadEvent {
   id        String        @id @default(cuid())
-  agencyId  String
-  agency    Agency        @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  agencyId  String?
+  agency    Agency?       @relation(fields: [agencyId], references: [id], onDelete: Cascade)
+  productId String?
+  product   Product?      @relation(fields: [productId], references: [id], onDelete: SetNull)
   type      String
   createdAt DateTime      @default(now())
+}
+
+model InquiryRequest {
+  id             String    @id @default(cuid())
+  customerName   String
+  customerPhone  String
+  description    String?   @db.Text
+  productName    String
+  productId      String?
+  product        Product?  @relation(fields: [productId], references: [id], onDelete: SetNull)
+  agencyId       String?
+  agency         Agency?   @relation(fields: [agencyId], references: [id], onDelete: SetNull)
+  status         String    @default("PENDING") // PENDING, CONTACTED, CLOSED
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
 }
 
 model Post {

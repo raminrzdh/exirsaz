@@ -21,6 +21,14 @@ export interface Agency {
   categories: string[];
   products: string[];
   isActive: boolean;
+  hasWhatsapp?: boolean;
+  whatsappNumber?: string;
+  hasBale?: boolean;
+  baleNumber?: string;
+  hasPhoneCall?: boolean;
+  phoneCallNumber?: string;
+  hasRequestForm?: boolean;
+  locationCoordinates?: string;
 }
 
 interface AgencyTableClientProps {

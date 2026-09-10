@@ -1,11 +1,17 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { X, Save, Plus, MapPin, Trash2 } from 'lucide-react';
+import { X, Save, Plus, MapPin, Trash2, Phone, MessageCircle, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createAgency, updateAgency } from './actions';
 import { Agency } from './AgencyTableClient';
 import { toast } from 'react-hot-toast';
+import dynamic from 'next/dynamic';
+
+const MapPicker = dynamic(() => import('@/components/storefront/MapPicker'), {
+  ssr: false,
+  loading: () => <div className="w-full h-full min-h-[200px] flex items-center justify-center bg-slate-100 rounded-xl animate-pulse text-slate-400">در حال بارگذاری نقشه...</div>
+});
 
 
 interface AgencyFormModalProps {
@@ -29,6 +35,14 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
     cities: [],
     categories: [],
     isActive: true,
+    hasWhatsapp: true,
+    whatsappNumber: '',
+    hasBale: false,
+    baleNumber: '',
+    hasPhoneCall: true,
+    phoneCallNumber: '',
+    hasRequestForm: true,
+    locationCoordinates: ''
   });
 
   const [selectedProvince, setSelectedProvince] = useState<string>('');
@@ -52,6 +66,14 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
         categories: [],
         products: [],
         isActive: true,
+        hasWhatsapp: true,
+        whatsappNumber: '',
+        hasBale: false,
+        baleNumber: '',
+        hasPhoneCall: true,
+        phoneCallNumber: '',
+        hasRequestForm: true,
+        locationCoordinates: ''
       });
     }
     setSelectedProvince('');
@@ -337,6 +359,88 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
               <div className={`w-4 h-4 rounded-full bg-white transition-transform ${formData.isActive ? '-translate-x-6' : 'translate-x-0'}`} />
             </div>
             <span className="text-sm font-medium text-slate-700">نمایندگی فعال است</span>
+          </div>
+
+          <div className="space-y-4 pt-4 border-t border-slate-100">
+            <label className="text-sm font-bold text-slate-800 block">راه‌های ارتباطی در سایت</label>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="flex flex-col gap-2 p-3 border border-slate-200 rounded-xl bg-white hover:border-slate-300 transition-colors">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={formData.hasPhoneCall ?? true} onChange={e => setFormData({...formData, hasPhoneCall: e.target.checked})} className="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500" />
+                  <span className="text-sm font-medium text-slate-700 flex items-center gap-2"><Phone className="w-4 h-4 text-slate-400" /> تماس تلفنی</span>
+                </label>
+                {(formData.hasPhoneCall ?? true) && (
+                  <input 
+                    type="text" 
+                    value={formData.phoneCallNumber || ''} 
+                    onChange={e => setFormData({...formData, phoneCallNumber: e.target.value})} 
+                    placeholder="شماره تماس..."
+                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm focus:border-indigo-500 outline-none text-left" 
+                    dir="ltr"
+                  />
+                )}
+              </div>
+
+              <div className="flex flex-col gap-2 p-3 border border-slate-200 rounded-xl bg-white hover:border-slate-300 transition-colors">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={formData.hasWhatsapp ?? true} onChange={e => setFormData({...formData, hasWhatsapp: e.target.checked})} className="w-5 h-5 text-emerald-600 rounded border-slate-300 focus:ring-emerald-500" />
+                  <span className="text-sm font-medium text-slate-700 flex items-center gap-2"><MessageCircle className="w-4 h-4 text-emerald-500" /> واتس‌اپ</span>
+                </label>
+                {(formData.hasWhatsapp ?? true) && (
+                  <input 
+                    type="text" 
+                    value={formData.whatsappNumber || ''} 
+                    onChange={e => setFormData({...formData, whatsappNumber: e.target.value})} 
+                    placeholder="شماره واتس‌اپ..."
+                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm focus:border-emerald-500 outline-none text-left" 
+                    dir="ltr"
+                  />
+                )}
+              </div>
+
+              <div className="flex flex-col gap-2 p-3 border border-slate-200 rounded-xl bg-white hover:border-slate-300 transition-colors">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={formData.hasBale ?? false} onChange={e => setFormData({...formData, hasBale: e.target.checked})} className="w-5 h-5 text-teal-600 rounded border-slate-300 focus:ring-teal-500" />
+                  <span className="text-sm font-medium text-slate-700 flex items-center gap-2"><MessageCircle className="w-4 h-4 text-slate-400" /> پیام‌رسان بله</span>
+                </label>
+                {(formData.hasBale ?? false) && (
+                  <input 
+                    type="text" 
+                    value={formData.baleNumber || ''} 
+                    onChange={e => setFormData({...formData, baleNumber: e.target.value})} 
+                    placeholder="شماره بله..."
+                    className="w-full h-10 px-3 rounded-lg border border-slate-200 text-sm focus:border-teal-500 outline-none text-left" 
+                    dir="ltr"
+                  />
+                )}
+              </div>
+
+              <div className="flex flex-col gap-2 p-3 border border-slate-200 rounded-xl bg-white hover:border-slate-300 transition-colors justify-center">
+                <label className="flex items-center gap-3 cursor-pointer">
+                  <input type="checkbox" checked={formData.hasRequestForm ?? true} onChange={e => setFormData({...formData, hasRequestForm: e.target.checked})} className="w-5 h-5 text-indigo-600 rounded border-slate-300 focus:ring-indigo-500" />
+                  <span className="text-sm font-medium text-slate-700 flex items-center gap-2"><FileText className="w-4 h-4 text-slate-400" /> فرم ثبت درخواست</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-3 pt-4 border-t border-slate-100">
+            <label className="text-sm font-bold text-slate-800 block">موقعیت روی نقشه (برای مسیریابی کاربر)</label>
+            <p className="text-xs text-slate-500 mb-2">در صورت انتخاب، دکمه مسیریابی برای کاربران فعال می‌شود.</p>
+            <div className="w-full h-[250px] relative rounded-xl border border-slate-200 overflow-hidden z-0">
+              <MapPicker 
+                onLocationSelect={(lat, lng) => setFormData({...formData, locationCoordinates: `${lat},${lng}`})} 
+              />
+              {formData.locationCoordinates && (
+                <div className="absolute bottom-4 left-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-lg shadow-sm text-xs font-mono z-[1000] border border-slate-200 flex items-center gap-2">
+                  <span className="text-emerald-600 font-bold">✓ ثبت شد</span>
+                  <span className="text-slate-500">{formData.locationCoordinates}</span>
+                  <button type="button" onClick={() => setFormData({...formData, locationCoordinates: ''})} className="text-rose-500 hover:text-rose-700 mr-2 border-r border-slate-200 pr-2">
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
 
         </form>

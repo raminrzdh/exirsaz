@@ -14,6 +14,7 @@ interface InquiryLeadModalProps {
 export function InquiryLeadModal({ isOpen, onClose, productName }: InquiryLeadModalProps) {
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
+  const [description, setDescription] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
@@ -42,6 +43,7 @@ export function InquiryLeadModal({ isOpen, onClose, productName }: InquiryLeadMo
       setIsSuccess(false);
       setName('');
       setPhone('');
+      setDescription('');
       onClose();
     }, 3000);
   };
@@ -104,6 +106,18 @@ export function InquiryLeadModal({ isOpen, onClose, productName }: InquiryLeadMo
                   className="w-full h-12 px-4 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-slate-50"
                   placeholder="0912..."
                   dir="ltr"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-slate-700 mb-1.5 flex items-center gap-1.5">
+                  توضیحات (اختیاری)
+                </label>
+                <textarea
+                  value={description}
+                  onChange={e => setDescription(e.target.value)}
+                  className="w-full h-24 p-4 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all bg-slate-50 resize-none"
+                  placeholder="متن پیام شما..."
                 />
               </div>
               

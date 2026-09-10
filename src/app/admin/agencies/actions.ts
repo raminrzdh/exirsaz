@@ -30,7 +30,15 @@ export async function getAgencies() {
     cities: a.cities.map(c => ({ province: c.province.name, city: c.name })), // Assuming simple mapping, actual DB might need joins
     categories: a.productExclusions.map(e => e.category?.name).filter(Boolean) as string[],
     products: a.products.map(p => p.id),
-    isActive: a.isActive
+    isActive: a.isActive,
+    hasWhatsapp: a.hasWhatsapp,
+    whatsappNumber: a.whatsappNumber || '',
+    hasBale: a.hasBale,
+    baleNumber: a.baleNumber || '',
+    hasPhoneCall: a.hasPhoneCall,
+    phoneCallNumber: a.phoneCallNumber || '',
+    hasRequestForm: a.hasRequestForm,
+    locationCoordinates: a.locationCoordinates || ''
   }));
 }
 
@@ -68,6 +76,14 @@ export async function createAgency(data: any) {
       description: data.description,
       phone: data.phone,
       address: data.address,
+      locationCoordinates: data.locationCoordinates || null,
+      hasWhatsapp: data.hasWhatsapp ?? true,
+      whatsappNumber: data.whatsappNumber || null,
+      hasBale: data.hasBale ?? false,
+      baleNumber: data.baleNumber || null,
+      hasPhoneCall: data.hasPhoneCall ?? true,
+      phoneCallNumber: data.phoneCallNumber || null,
+      hasRequestForm: data.hasRequestForm ?? true,
       isActive: data.isActive,
       products: {
         connect: data.products?.map((id: string) => ({ id })) || []
@@ -122,7 +138,15 @@ export async function createAgency(data: any) {
       cities: completeAgency.cities.map(c => ({ province: c.province.name, city: c.name })),
       categories: completeAgency.productExclusions.map(e => e.category?.name).filter(Boolean) as string[],
       products: completeAgency.products.map(p => p.id),
-      isActive: completeAgency.isActive
+      isActive: completeAgency.isActive,
+      hasWhatsapp: completeAgency.hasWhatsapp,
+      whatsappNumber: completeAgency.whatsappNumber || '',
+      hasBale: completeAgency.hasBale,
+      baleNumber: completeAgency.baleNumber || '',
+      hasPhoneCall: completeAgency.hasPhoneCall,
+      phoneCallNumber: completeAgency.phoneCallNumber || '',
+      hasRequestForm: completeAgency.hasRequestForm,
+      locationCoordinates: completeAgency.locationCoordinates || ''
     }
   };
 }
@@ -161,6 +185,14 @@ export async function updateAgency(id: string, data: any) {
       description: data.description,
       phone: data.phone,
       address: data.address,
+      locationCoordinates: data.locationCoordinates || null,
+      hasWhatsapp: data.hasWhatsapp ?? true,
+      whatsappNumber: data.whatsappNumber || null,
+      hasBale: data.hasBale ?? false,
+      baleNumber: data.baleNumber || null,
+      hasPhoneCall: data.hasPhoneCall ?? true,
+      phoneCallNumber: data.phoneCallNumber || null,
+      hasRequestForm: data.hasRequestForm ?? true,
       isActive: data.isActive,
       products: {
         set: data.products?.map((id: string) => ({ id })) || []
@@ -218,7 +250,15 @@ export async function updateAgency(id: string, data: any) {
       cities: completeAgency.cities.map(c => ({ province: c.province.name, city: c.name })),
       categories: completeAgency.productExclusions.map(e => e.category?.name).filter(Boolean) as string[],
       products: completeAgency.products.map(p => p.id),
-      isActive: completeAgency.isActive
+      isActive: completeAgency.isActive,
+      hasWhatsapp: completeAgency.hasWhatsapp,
+      whatsappNumber: completeAgency.whatsappNumber || '',
+      hasBale: completeAgency.hasBale,
+      baleNumber: completeAgency.baleNumber || '',
+      hasPhoneCall: completeAgency.hasPhoneCall,
+      phoneCallNumber: completeAgency.phoneCallNumber || '',
+      hasRequestForm: completeAgency.hasRequestForm,
+      locationCoordinates: completeAgency.locationCoordinates || ''
     }
   };
 }

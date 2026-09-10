@@ -43,7 +43,18 @@ export async function checkRepresentative(province: string, city: string, catego
     return {
       id: foundRep.id,
       name: foundRep.name,
-      phone: foundRep.phone
+      phone: foundRep.phone,
+      mobile: foundRep.mobile,
+      province: province,
+      city: city,
+      hasWhatsapp: foundRep.hasWhatsapp,
+      whatsappNumber: foundRep.whatsappNumber,
+      hasBale: foundRep.hasBale,
+      baleNumber: foundRep.baleNumber,
+      hasPhoneCall: foundRep.hasPhoneCall,
+      phoneCallNumber: foundRep.phoneCallNumber,
+      hasRequestForm: foundRep.hasRequestForm,
+      locationCoordinates: foundRep.locationCoordinates
     };
   }
   

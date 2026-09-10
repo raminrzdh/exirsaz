@@ -3,20 +3,31 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Star, MapPin, Phone, ArrowLeft } from 'lucide-react';
+import { Star, MapPin, Phone, ArrowLeft, MessageCircle, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { formatToman, toPersianDigits } from '@/lib/utils/currency';
 import { useCart } from '@/lib/store/CartContext';
 import { LocationGateModal } from './LocationGateModal';
+import { InquiryLeadModal } from './InquiryLeadModal';
 import { checkRepresentative } from '@/app/(storefront)/products/actions';
 import { toast } from 'react-hot-toast';
 
 
 interface Representative {
+  id: string;
   name: string;
   province: string;
   city: string;
-  contactUrl?: string;
+  phone?: string;
+  mobile?: string;
+  hasWhatsapp?: boolean;
+  whatsappNumber?: string;
+  hasBale?: boolean;
+  baleNumber?: string;
+  hasPhoneCall?: boolean;
+  phoneCallNumber?: string;
+  hasRequestForm?: boolean;
+  locationCoordinates?: string;
 }
 
 interface Product {
@@ -34,6 +45,7 @@ export function ProductCardClient({ product }: { product: Product }) {
   const [isLocationGateOpen, setIsLocationGateOpen] = useState(false);
   const [isCheckingRep, setIsCheckingRep] = useState(false);
   const [foundRep, setFoundRep] = useState<Representative | null>(null);
+  const [isInquiryModalOpen, setIsInquiryModalOpen] = useState(false);
 
   const handleBuyClick = async () => {
     if (!userLocation) {
@@ -54,10 +66,20 @@ export function ProductCardClient({ product }: { product: Product }) {
 
     if (rep) {
       setFoundRep({
+        id: rep.id,
         name: rep.name,
-        province,
-        city,
-        contactUrl: rep.phone ? `tel:${rep.phone}` : undefined
+        province: province,
+        city: city,
+        phone: rep.phone,
+        mobile: rep.mobile,
+        hasWhatsapp: rep.hasWhatsapp,
+        whatsappNumber: rep.whatsappNumber,
+        hasBale: rep.hasBale,
+        baleNumber: rep.baleNumber,
+        hasPhoneCall: rep.hasPhoneCall,
+        phoneCallNumber: rep.phoneCallNumber,
+        hasRequestForm: rep.hasRequestForm,
+        locationCoordinates: rep.locationCoordinates
       });
     } else {
       // Add to cart directly!
@@ -155,17 +177,56 @@ export function ProductCardClient({ product }: { product: Product }) {
                 <h4 className="font-bold text-slate-900 mb-1">{foundRep.name}</h4>
                 <p className="text-sm text-slate-500 mb-4">نماینده رسمی فروش محصولات اکسیرساز شمال</p>
                 
-                {foundRep.contactUrl && (
-                  <a 
-                    href={foundRep.contactUrl} 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="flex items-center justify-center gap-2 w-full h-11 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-medium transition-colors"
-                  >
-                    <Phone className="w-4 h-4" />
-                    تماس با نماینده
-                  </a>
-                )}
+                <div className="flex flex-col gap-2">
+                  {foundRep.hasPhoneCall && (foundRep.phoneCallNumber || foundRep.phone || foundRep.mobile) && (
+                    <a 
+                      href={`tel:${foundRep.phoneCallNumber || foundRep.phone || foundRep.mobile}`} 
+                      className="flex items-center justify-center gap-2 w-full h-11 bg-amber-500 hover:bg-amber-600 text-white rounded-xl font-medium transition-colors"
+                    >
+                      <Phone className="w-4 h-4" />
+                      تماس تلفنی
+                    </a>
+                  )}
+                  {foundRep.hasWhatsapp && (foundRep.whatsappNumber || foundRep.mobile) && (
+                    <a 
+                      href={`https://wa.me/${(foundRep.whatsappNumber || foundRep.mobile)!.startsWith('0') ? '98' + (foundRep.whatsappNumber || foundRep.mobile)!.substring(1) : (foundRep.whatsappNumber || foundRep.mobile)}`} 
+                      target="_blank" rel="noreferrer"
+                      className="flex items-center justify-center gap-2 w-full h-11 bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl font-medium transition-colors"
+                    >
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-5 h-5"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51a12.8 12.8 0 0 0-.57-.01c-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/></svg>
+                      واتس‌اپ
+                    </a>
+                  )}
+                  {foundRep.hasBale && (foundRep.baleNumber || foundRep.mobile) && (
+                    <a 
+                      href={`https://ble.ir/${foundRep.baleNumber || foundRep.mobile}`} 
+                      target="_blank" rel="noreferrer"
+                      className="flex items-center justify-center gap-2 w-full h-11 bg-teal-500 hover:bg-teal-600 text-white rounded-xl font-medium transition-colors"
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      پیام‌رسان بله
+                    </a>
+                  )}
+                  {foundRep.hasRequestForm && (
+                    <button 
+                      onClick={() => setIsInquiryModalOpen(true)}
+                      className="flex items-center justify-center gap-2 w-full h-11 bg-indigo-500 hover:bg-indigo-600 text-white rounded-xl font-medium transition-colors"
+                    >
+                      <FileText className="w-4 h-4" />
+                      ثبت درخواست
+                    </button>
+                  )}
+                  {foundRep.locationCoordinates && (
+                    <a 
+                      href={`https://nshn.ir/?lat=${foundRep.locationCoordinates.split(',')[0]}&lng=${foundRep.locationCoordinates.split(',')[1]}`} 
+                      target="_blank" rel="noreferrer"
+                      className="flex items-center justify-center gap-2 w-full h-11 border-2 border-slate-200 hover:border-indigo-500 text-slate-700 hover:text-indigo-600 rounded-xl font-medium transition-colors"
+                    >
+                      <MapPin className="w-4 h-4" />
+                      مسیریابی با نشان
+                    </a>
+                  )}
+                </div>
               </div>
               
               <Button variant="ghost" className="w-full text-slate-500 hover:bg-slate-100" onClick={() => setFoundRep(null)}>
@@ -175,6 +236,12 @@ export function ProductCardClient({ product }: { product: Product }) {
           </div>
         </div>
       )}
+      
+      <InquiryLeadModal 
+        isOpen={isInquiryModalOpen}
+        onClose={() => setIsInquiryModalOpen(false)}
+        productName={product.name}
+      />
     </>
   );
 }

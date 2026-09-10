@@ -162,9 +162,9 @@ export function LocationGateModal({ isOpen, onClose, onLocationSet }: LocationGa
         </div>
 
         {/* Body */}
-        <div className="flex-1 overflow-hidden p-6 flex flex-col gap-4">
+        <div className="flex-1 overflow-visible p-6 flex flex-col gap-4">
           
-          <form id="location-form" onSubmit={handleSubmit} className="space-y-5">
+          <form id="location-form" onSubmit={handleSubmit} className="space-y-5 relative z-[1000]">
             <div className="relative z-20">
               <label className="block text-sm font-medium text-slate-700 mb-1.5">استان خود را انتخاب کنید</label>
               <input
@@ -240,7 +240,7 @@ export function LocationGateModal({ isOpen, onClose, onLocationSet }: LocationGa
           </form>
 
           {/* Map Section */}
-          <div className="w-full flex-1 min-h-[200px] relative flex items-center justify-center border border-slate-200 rounded-xl overflow-hidden shadow-inner shrink-0">
+          <div className="w-full flex-1 min-h-[200px] relative z-0 flex items-center justify-center border border-slate-200 rounded-xl overflow-hidden shadow-inner shrink-0">
             {isGeocoding && (
               <div className="absolute inset-0 z-50 bg-white/50 backdrop-blur-sm flex flex-col items-center justify-center text-emerald-700 animate-in fade-in">
                 <Loader2 className="w-8 h-8 animate-spin mb-2" />
