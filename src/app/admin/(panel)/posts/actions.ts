@@ -3,7 +3,7 @@
 import { revalidatePath } from 'next/cache';
 import { prisma } from '@/lib/db/prisma';
 
-export async function createPost(data: { title: string; content: string; category: string; status: string; thumbnail?: string }) {
+export async function createPost(data: { title: string; content: string; category: string; status: string; thumbnail?: string; slug?: string; allowComments?: boolean }) {
   if (!data.title) {
     throw new Error('Title is required');
   }
@@ -11,10 +11,12 @@ export async function createPost(data: { title: string; content: string; categor
   await prisma.post.create({
     data: {
       title: data.title,
+      slug: data.slug || data.title.replace(/\s+/g, '-').toLowerCase(),
       content: data.content,
       category: data.category || 'بدون دسته‌بندی',
       status: data.status,
       thumbnail: data.thumbnail,
+      allowComments: data.allowComments !== false,
       date: new Intl.DateTimeFormat('fa-IR').format(new Date()),
     }
   });
@@ -23,7 +25,7 @@ export async function createPost(data: { title: string; content: string; categor
   return { success: true };
 }
 
-export async function updatePost(id: string, data: { title: string; content: string; category: string; status: string; thumbnail?: string }) {
+export async function updatePost(id: string, data: { title: string; content: string; category: string; status: string; thumbnail?: string; slug?: string; allowComments?: boolean }) {
   if (!data.title) {
     throw new Error('Title is required');
   }
@@ -32,10 +34,12 @@ export async function updatePost(id: string, data: { title: string; content: str
     where: { id },
     data: {
       title: data.title,
+      slug: data.slug,
       content: data.content,
       category: data.category || 'بدون دسته‌بندی',
       status: data.status,
       thumbnail: data.thumbnail,
+      allowComments: data.allowComments !== false,
     }
   });
 

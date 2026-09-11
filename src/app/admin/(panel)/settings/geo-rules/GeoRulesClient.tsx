@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ShieldAlert, Store, ServerCog, Check } from 'lucide-react';
 import { saveGlobalRoutingSetting, toggleCategoryRouting } from './actions';
 import { toast } from 'sonner';
+import { Switch } from '@/components/ui/switch';
 
 
 interface GeoRulesClientProps {
@@ -62,14 +63,12 @@ export function GeoRulesClient({ initialSettings, initialCategories }: GeoRulesC
               </p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={handleGlobalToggle}
+          <div className="flex items-center gap-3" dir="ltr">
+            <Switch 
+              checked={globalEnabled} 
+              onCheckedChange={handleGlobalToggle}
               disabled={isSavingGlobal}
-              className={`relative inline-flex h-8 w-14 shrink-0 cursor-pointer items-center justify-center rounded-full border-2 border-transparent transition-colors focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${globalEnabled ? 'bg-indigo-600' : 'bg-slate-300'} disabled:opacity-50`}
-            >
-              <span className={`inline-block h-6 w-6 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${globalEnabled ? '-translate-x-6' : 'translate-x-0'}`} />
-            </button>
+            />
           </div>
         </div>
       </div>
@@ -100,13 +99,13 @@ export function GeoRulesClient({ initialSettings, initialCategories }: GeoRulesC
                   </div>
                 </div>
               </div>
-              <button
-                onClick={() => handleCategoryToggle(cat.name, cat.isAgencyRouted)}
-                disabled={savingCategory === cat.name}
-                className={`flex items-center justify-center w-6 h-6 rounded-md border transition-colors ${cat.isAgencyRouted ? 'bg-indigo-600 border-indigo-600 text-white' : 'bg-white border-slate-300 text-transparent'}`}
-              >
-                <Check className="w-4 h-4" />
-              </button>
+              <div dir="ltr">
+                <Switch
+                  checked={cat.isAgencyRouted}
+                  onCheckedChange={() => handleCategoryToggle(cat.name, cat.isAgencyRouted)}
+                  disabled={savingCategory === cat.name}
+                />
+              </div>
             </div>
           ))}
           

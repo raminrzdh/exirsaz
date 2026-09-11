@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { ArrowRight, Save, Image as ImageIcon, Plus, Trash2, CheckCircle, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { RichTextEditor } from '@/components/ui/RichTextEditor';
 import { createProduct, updateProduct } from './actions';
 import { toast } from 'sonner';
 import { InternalLinkingWidget } from '@/components/admin/InternalLinkingWidget';
@@ -309,13 +310,13 @@ export function ProductFormClient({ isEdit, agencies, categories, availableFeatu
             
             <div className="space-y-2">
               <label className="text-sm font-semibold text-slate-700">توضیحات کامل (HTML/ویرایشگر متنی) <span className="text-slate-400 font-normal">(اختیاری)</span></label>
-              <textarea 
-                rows={6}
-                value={formData.description}
-                onChange={e => setFormData({ ...formData, description: e.target.value })}
-                placeholder="توضیحات کامل محصول را وارد کنید..."
-                className="w-full p-4 rounded-lg bg-slate-50 border border-slate-200 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-colors resize-y"
-              />
+              <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+                <RichTextEditor 
+                  content={formData.description}
+                  onChange={content => setFormData({ ...formData, description: content })}
+                  placeholder="توضیحات کامل محصول را وارد کنید..."
+                />
+              </div>
             </div>
           </div>
 

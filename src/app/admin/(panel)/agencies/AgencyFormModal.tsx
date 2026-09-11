@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { X, Save, Plus, MapPin, Trash2, Phone, MessageCircle, FileText, ImageIcon } from 'lucide-react';
 import Image from 'next/image';
 import { MediaPickerModal } from '@/components/admin/MediaPickerModal';
+import { RichTextEditor } from '@/components/ui/RichTextEditor';
 import { extractDigits } from '@/lib/utils/currency';
 import { Button } from '@/components/ui/button';
 import { createAgency, updateAgency } from './actions';
@@ -288,11 +289,12 @@ export function AgencyFormModal({ isOpen, onClose, agency, allCategories, allPro
 
           <div className="space-y-1">
             <label className="text-sm font-medium text-slate-700">توضیحات (درباره نمایندگی) <span className="text-slate-400 font-normal">(اختیاری)</span></label>
-            <textarea 
-              value={formData.description || ''}
-              onChange={e => setFormData({ ...formData, description: e.target.value })}
-              className="w-full h-24 rounded-xl border border-slate-200 p-4 text-sm focus:border-indigo-500 outline-none resize-none"
-            />
+            <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+              <RichTextEditor 
+                content={formData.description || ''}
+                onChange={content => setFormData({ ...formData, description: content })}
+              />
+            </div>
           </div>
 
           <div className="border border-slate-200 rounded-2xl p-4 bg-slate-50 space-y-4">

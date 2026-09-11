@@ -37,7 +37,7 @@ export default async function BlogPage() {
           {posts.map((post) => (
             <Link 
               key={post.id}
-              href={`/blog/${post.id}`}
+              href={`/blog/${post.slug}`}
               className="group bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl hover:border-indigo-100 transition-all duration-300 flex flex-col"
             >
               <div className="relative aspect-[16/9] overflow-hidden bg-slate-100">

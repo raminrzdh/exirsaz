@@ -13,13 +13,36 @@ model User {
   phoneNumber   String    @unique
   firstName     String?
   lastName      String?
-  role          String    @default("USER")
+  roleId        String?
+  role          Role?     @relation(fields: [roleId], references: [id])
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  
+  password      String?
+  otpCode       String?
+  otpExpiresAt  DateTime?
   
   addresses     Address[]
   orders        Order[]
   funnelEvents  FunnelEvent[]
+}
+
+model Role {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  description String?
+  isSystem    Boolean      @default(false) // System roles cannot be deleted
+  permissions Permission[] @relation("RolePermissions")
+  users       User[]
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+}
+
+model Permission {
+  id          String   @id @default(cuid())
+  action      String   @unique
+  description String?
+  roles       Role[]   @relation("RolePermissions")
 }
 
 model Address {
@@ -225,6 +248,14 @@ model ProductAgencyExclusion {
 model StoreSettings {
   id                   String   @id @default(cuid()) // Will just have one row 'global'
   agencyRoutingEnabled Boolean  @default(true)       // Master toggle
+  siteName             String   @default("Exirsaz")
+  siteDescription      String?
+  logoUrl              String?
+  faviconUrl           String?
+  supportPhone         String?
+  supportEmail         String?
+  whatsappNumber       String?
+  customHeaderScripts  String?  // Store HTML/JS for GTM, Analytics, etc.
   updatedAt            DateTime @updatedAt
 }
 
@@ -254,16 +285,36 @@ model InquiryRequest {
 }
 
 model Post {
-  id        String   @id @default(cuid())
-  title     String
-  content   String
-  category  String
-  status    String   @default("published")
-  views     Int      @default(0)
-  date      String
-  thumbnail String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  title         String
+  content       String
+  category      String
+  status        String   @default("published")
+  views         Int      @default(0)
+  date          String
+  thumbnail     String?
+  allowComments Boolean  @default(true)
+  
+  comments      PostComment[]
+  
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model PostComment {
+  id          String   @id @default(cuid())
+  postId      String
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  authorName  String
+  content     String
+  isApproved  Boolean  @default(false)
+  
+  parentId    String?
+  parent      PostComment?  @relation("PostCommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies     PostComment[] @relation("PostCommentReplies")
+  
+  createdAt   DateTime @default(now())
 }
 
 // --- Variable Products & Comments ---

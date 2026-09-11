@@ -20,6 +20,8 @@ export interface PostFormProps {
     category: string;
     status: 'published' | 'draft' | 'archived';
     thumbnail?: string;
+    slug?: string;
+    allowComments?: boolean;
   };
   categories: string[];
 }
@@ -32,6 +34,8 @@ export function PostForm({ initialData, categories }: PostFormProps) {
   const [content, setContent] = useState(initialData?.content || '');
   const [category, setCategory] = useState(initialData?.category || '');
   const [thumbnail, setThumbnail] = useState(initialData?.thumbnail || '');
+  const [slug, setSlug] = useState(initialData?.slug || '');
+  const [allowComments, setAllowComments] = useState(initialData?.allowComments !== false);
   const [isAddingNewCategory, setIsAddingNewCategory] = useState(false);
   const [localCategories, setLocalCategories] = useState<string[]>([]);
   const [isMediaModalOpen, setIsMediaModalOpen] = useState(false);
@@ -96,10 +100,10 @@ export function PostForm({ initialData, categories }: PostFormProps) {
     setIsSubmitting(true);
     try {
       if (initialData?.id) {
-        await updatePost(initialData.id, { title, content, category, status, thumbnail });
+        await updatePost(initialData.id, { title, content, category, status, thumbnail, slug, allowComments });
         toast.success(status === 'published' ? 'تغییرات با موفقیت منتشر شد!' : 'تغییرات به عنوان پیش‌نویس ذخیره شد.');
       } else {
-        await createPost({ title, content, category, status, thumbnail });
+        await createPost({ title, content, category, status, thumbnail, slug, allowComments });
         toast.success(status === 'published' ? 'مقاله با موفقیت منتشر شد!' : 'مقاله به عنوان پیش‌نویس ذخیره شد.');
       }
       router.push('/admin/posts');
@@ -158,6 +162,19 @@ export function PostForm({ initialData, categories }: PostFormProps) {
               onChange={(e) => setTitle(e.target.value)}
               className="w-full text-2xl font-bold placeholder-slate-300 border-none outline-none bg-transparent"
             />
+            
+            <div className="flex items-center gap-2 text-sm text-slate-500">
+              <span className="font-semibold">پیوند یکتا (Slug):</span>
+              <span dir="ltr" className="text-slate-400">/blog/</span>
+              <input 
+                type="text" 
+                placeholder="مثلاً: how-to-buy-phone" 
+                value={slug}
+                onChange={(e) => setSlug(e.target.value)}
+                className="flex-1 text-slate-600 border-none outline-none bg-transparent"
+                dir="ltr"
+              />
+            </div>
             
             <div className="h-px w-full bg-slate-100 my-4" />
             
@@ -266,6 +283,25 @@ export function PostForm({ initialData, categories }: PostFormProps) {
                     <option value="new" className="font-bold text-indigo-600">+ افزودن دسته جدید</option>
                   </select>
                 )}
+              </div>
+
+              <div className="flex items-center justify-between pt-2">
+                <div className="space-y-0.5">
+                  <label className="text-sm font-semibold text-slate-700">امکان ثبت نظر</label>
+                  <p className="text-xs text-slate-500">کاربران بتوانند دیدگاه ثبت کنند</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setAllowComments(!allowComments)}
+                  className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:ring-offset-2 ${allowComments ? 'bg-indigo-600' : 'bg-slate-200'}`}
+                  role="switch"
+                  aria-checked={allowComments}
+                >
+                  <span
+                    aria-hidden="true"
+                    className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out ${allowComments ? '-translate-x-5' : 'translate-x-0'}`}
+                  />
+                </button>
               </div>
 
               <div className="space-y-2">

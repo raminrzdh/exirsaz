@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { Plus, Search, Edit, Trash2 } from 'lucide-react';
+import { Plus, Search, Edit, Trash2, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { prisma } from '@/lib/db/prisma';
 
@@ -60,6 +60,13 @@ export default async function AdminPostsPage() {
                 <td className="px-6 py-4 text-slate-500">{post.date}</td>
                 <td className="px-6 py-4">
                   <div className="flex items-center justify-end gap-2">
+                    {post.status === 'published' && post.slug && (
+                      <Link href={`/blog/${post.slug}`} target="_blank" rel="noopener noreferrer">
+                        <button className="p-2 text-slate-400 hover:text-green-600 hover:bg-green-50 rounded-lg transition-colors" title="مشاهده در سایت">
+                          <ExternalLink className="w-4 h-4" />
+                        </button>
+                      </Link>
+                    )}
                     <Link href={`/admin/posts/${post.id}`}>
                       <button className="p-2 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
                         <Edit className="w-4 h-4" />

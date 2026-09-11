@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Plus, Edit2, Trash2, Check, X } from 'lucide-react';
+import { Plus, Edit2, Trash2, Tag, Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { createCategory, updateCategory, deleteCategory } from './actions';
 import { toast } from 'sonner';
+import { RichTextEditor } from '@/components/ui/RichTextEditor';
 
 export function CategoriesClient({ initialCategories }: { initialCategories: any[] }) {
   const [categories, setCategories] = useState(initialCategories);
@@ -120,12 +121,12 @@ export function CategoriesClient({ initialCategories }: { initialCategories: any
             
             <div className="space-y-1">
               <label className="text-sm font-semibold text-slate-700">توضیحات <span className="text-slate-400 font-normal">(اختیاری)</span></label>
-              <textarea 
-                rows={3}
-                value={formData.description}
-                onChange={e => setFormData({ ...formData, description: e.target.value })}
-                className="w-full p-3 rounded-lg border border-slate-200 focus:border-indigo-500 outline-none resize-y text-sm"
-              />
+              <div className="border border-slate-200 rounded-xl overflow-hidden bg-white">
+                <RichTextEditor 
+                  content={formData.description}
+                  onChange={content => setFormData({ ...formData, description: content })}
+                />
+              </div>
             </div>
 
             <div className="pt-2 flex gap-2">

@@ -24,7 +24,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { logoutAction } from './login/actions';
+import { logoutAction } from '@/app/admin/login/actions';
 
 export default function AdminLayout({
   children,
@@ -92,6 +92,9 @@ export default function AdminLayout({
                   <Link href="/admin/orders" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
                     مدیریت سفارشات
                   </Link>
+                  <Link href="/admin/crm" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    CRM و مشتریان
+                  </Link>
                   <Link href="/admin/agencies" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
                     نمایندگی‌ها
                   </Link>
@@ -120,6 +123,9 @@ export default function AdminLayout({
                   </Link>
                   <Link href="/admin/posts/categories" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
                     دسته‌بندی مقالات
+                  </Link>
+                  <Link href="/admin/posts/comments" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
+                    مدیریت نظرات مقالات
                   </Link>
                   <Link href="/admin/media" className="flex items-center gap-3 px-4 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/5 transition-colors">
                     مدیریت رسانه‌ها
