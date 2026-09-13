@@ -8,12 +8,42 @@ import { prisma } from "@/lib/db/prisma";
 
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await prisma.storeSettings.findFirst();
+  const title = settings?.siteName ? `${settings.siteName} - فروشگاه آنلاین` : "Exirsaz - Next-Gen E-commerce";
+  const description = settings?.siteDescription || "High-performance, RTL-native Persian e-commerce platform";
+  const url = "https://exirsaz.com";
+
   return {
-    title: settings?.siteName ? `${settings.siteName} - فروشگاه آنلاین` : "Exirsaz - Next-Gen E-commerce",
-    description: settings?.siteDescription || "High-performance, RTL-native Persian e-commerce platform",
+    metadataBase: new URL(url),
+    title: title,
+    description: description,
     icons: settings?.faviconUrl ? {
       icon: settings.faviconUrl,
     } : undefined,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      siteName: settings?.siteName || "Exirsaz",
+      locale: "fa_IR",
+      type: "website",
+      images: [
+        {
+          url: "https://exirsaz.com/wp-content/uploads/2023/02/توری-سایبان-شید-گلخانه.jpg", // Using a fallback image for OG
+          width: 1200,
+          height: 630,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["https://exirsaz.com/wp-content/uploads/2023/02/توری-سایبان-شید-گلخانه.jpg"],
+    },
   };
 }
 

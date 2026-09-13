@@ -18,10 +18,46 @@ export async function generateMetadata({ params }: BlogPostPageProps): Promise<M
   const post = await prisma.post.findUnique({ where: { slug } });
   
   if (!post) {
-    return { title: 'پست یافت نشد' };
+    return { title: 'مقاله یافت نشد | مجله اکسیرساز' };
   }
 
-  return { title: post.title };
+  const title = `${post.title} | مجله اکسیرساز`;
+  // Simple extraction of first 150 chars from content (stripped of basic HTML) for description if needed
+  const rawDescription = post.content.replace(/<[^>]+>/g, '').substring(0, 160).trim() + '...';
+  const description = rawDescription || `مطالعه مقاله ${post.title} در مجله اکسیرساز`;
+  const url = `https://exirsaz.com/blog/${post.slug}`;
+  const imageUrl = post.thumbnail || 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg';
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      type: 'article',
+      publishedTime: new Date(post.createdAt).toISOString(),
+      modifiedTime: new Date(post.updatedAt).toISOString(),
+      authors: ['مدیریت اکسیرساز'],
+      images: [
+        {
+          url: imageUrl,
+          width: 800,
+          height: 600,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
+    },
+  };
 }
 
 export default async function BlogPostPage({ params }: BlogPostPageProps) {

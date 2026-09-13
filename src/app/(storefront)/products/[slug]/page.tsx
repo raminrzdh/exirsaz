@@ -17,9 +17,36 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'محصول یافت نشد | اکسیرساز' };
   }
 
+  const title = product.seoTitle || product.metaTitle || `${product.name} | فروشگاه اکسیرساز`;
+  const description = product.seoDescription || product.metaDescription || product.description || `خرید ${product.name} با بهترین قیمت از اکسیرساز شمال.`;
+  const imageUrl = (typeof product.images === 'string' ? JSON.parse(product.images) : product.images)?.[0] || 'https://exirsaz.com/wp-content/uploads/2023/04/توری-سایبان-80-درصد.jpg';
+  const url = `https://exirsaz.com/products/${product.slug}`;
+
   return {
-    title: `${product.name} | فروشگاه اکسیرساز`,
-    description: product.description || `خرید ${product.name} با بهترین قیمت از اکسیرساز شمال.`,
+    title,
+    description,
+    alternates: {
+      canonical: url,
+    },
+    openGraph: {
+      title,
+      description,
+      url,
+      images: [
+        {
+          url: imageUrl,
+          width: 800,
+          height: 600,
+          alt: title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [imageUrl],
+    },
   };
 }
 
